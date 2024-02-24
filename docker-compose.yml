@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  frontend: 
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile
+    env_file:
+      - ./frontend/.env
+    environment:
+      PORT: ${FRONTEND_HOST_PORT}
+    ports:
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_HOST_PORT}"
+  backend:
+    restart: unless-stopped
+    build:
+      context: ./delivery-service
+      dockerfile: ./docker/Dockerfile

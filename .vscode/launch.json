@@ -1,0 +1,43 @@
+{
+  // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
+  // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
+  // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Docker:finleo-crm:frontend",
+      "url": "http://localhost:3000",
+      "request": "launch",
+      "type": "chrome",
+      "webRoot": "${workspaceFolder}/bankClient",
+      "sourceMapPathOverrides": {
+        "/app/*": "${webRoot}/*"
+      }
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Docker:finleo-crm:backend",
+      "remoteRoot": "/app",
+      "localRoot": "${workspaceFolder}/bankServer",
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "name": "vscode-jest-tests",
+      "request": "launch",
+      "program": "${workspaceFolder}/bankServer/node_modules/jest/bin/jest",
+      "args": [
+        "--runInBand",
+        // "test/stable_tests/passwordRecovery.test.ts",
+        // "-t",
+        // "\"showing error on uncorrect fill fields phone\""
+      ],
+      "cwd": "${workspaceFolder}/bankServer",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
+    },
+  ]
+}

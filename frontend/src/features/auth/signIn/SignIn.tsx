@@ -1,8 +1,13 @@
-import { Box } from "@mui/material"
+import { Box, Input } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { ILogin } from "./types";
 
 export const SignIn = () => {
-    return 
+  const { register, error } = useForm<ILogin>();
+  return (
     <Box>
-        <Input />
+      <Input placeholder="Имя" {...register("name")} />
+      <Input placeholder="пароль" {...register("password")} />
     </Box>
-}
+  );
+};

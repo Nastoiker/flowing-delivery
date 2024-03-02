@@ -1,11 +1,30 @@
 import { createBrowserRouter } from "react-router-dom";
+import { RequireAuth } from "../helpers/RequireAuth";
+import { AuthLayout } from "../layout/Auth/AuthLayout";
+import { Login } from "../pages/Auth/Login/Login";
+import { Register } from "../pages/Auth/Register/Register";
+import { Profile } from "../pages/profile/Profile";
 
 const router = createBrowserRouter([
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+    ],
+  },
   {
     path: "/",
     element: (
       <RequireAuth>
-        <Layout />
+        <div></div>
       </RequireAuth>
     ),
     children: [
@@ -13,7 +32,6 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <RequireAuth>
-            <Navbar />
             <Profile />
           </RequireAuth>
         ),

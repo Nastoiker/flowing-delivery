@@ -1,0 +1,42 @@
+version: '3.8'
+networks:
+  copy-star:
+    driver: bridge
+volumes:
+  dbdata:
+    driver: local
+services:
+  backend:
+    restart: unless-stopped
+    expose:
+      - '3004:3004'
+    build:
+      context: ./
+    environment:
+      FILE_SERVICE_DB_LOGGING: 'false'
+      FILE_SERVICE_DB_LOG_QUERY_PARAMETERS: 'true'
+      FILE_SERVICE_DB_TYPE: postgres
+      FILE_SERVICE_DB_PASSWORD: 12345
+      FILE_SERVICE_DB_NAME: CopyStar
+      FILE_SERVICE_DB_USER: CopyStar-user
+      FILE_SERVICE_DB_HOST: localhost
+      PRIVATE_JWT_KEY: secret
+      PORT: 3004
+    depends_on:
+      - postgres
+    networks:
+      - copy-star
+  postgres:
+    image: postgres:copy-star
+    restart: always
+    build:
+      context: ./dbs
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./dbs/.env
+    ports:
+      - '5432:5432'
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - copy-star

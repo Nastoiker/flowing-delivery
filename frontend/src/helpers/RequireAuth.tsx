@@ -8,3 +8,4 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
   }
   return children;
 };
+  

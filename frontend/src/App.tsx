@@ -15,7 +15,7 @@ function App() {
         </QueryClientProvider>
       </Theme>
     </>
-  );
+  );  
 }
 
 export default App;

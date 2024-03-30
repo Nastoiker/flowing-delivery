@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import { queryClient } from "./libs/react-query";
-import router from "./router/router";
+import router from "./shared/router/router";
 function App() {
   return (
     <>

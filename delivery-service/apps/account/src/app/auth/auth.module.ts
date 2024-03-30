@@ -1,4 +1,12 @@
 import { Module } from '@nestjs/common';
-
-@Module({})
+import { JwtModule } from '@nestjs/jwt';
+import { geJwtConfig } from '../configs/jwt.config';
+import { UserModule } from '../user/user.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+@Module({
+  imports: [UserModule, JwtModule.registerAsync(geJwtConfig())],
+  providers: [AuthService],
+  controllers: [AuthController],
+})
 export class AuthModule {}

@@ -1,14 +1,24 @@
 import { Module } from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
+import { ConfigModule } from '@nestjs/config';
+import { RMQModule } from 'nestjs-rmq';
+import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from './auth/auth.module';
+import configuration from './configs/configuration';
+import { getRMQConfig } from './configs/rmq.config';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [AuthModule],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  imports: [
+    AuthModule,
+    DatabaseModule,
+    ConfigModule.forRoot({
+      load: [configuration],
+      envFilePath: 'envs/.account.env',
+      isGlobal: true,
+    }),
+    UserModule,
+    RMQModule.forRootAsync(getRMQConfig()),
+  ],
 })
 export class AppModule {}

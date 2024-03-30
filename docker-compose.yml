@@ -1,5 +1,7 @@
 version: "3.8"
-
+# networks:
+#   delivery-service:
+#     driver: bridge
 services:
   rmq:
     image: rabbitmq:3-management
@@ -7,22 +9,31 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
-  frontend: 
-    restart: unless-stopped
+  # frontend:
+  #   restart: unless-stopped
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ./docker/Dockerfile
+  #   env_file:
+  #     - ./frontend/.env
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_module
+  #   environment:
+  #     PORT: ${FRONTEND_HOST_PORT}
+  #   ports:
+  #     - "${FRONTEND_HOST_PORT}:${FRONTEND_HOST_PORT}"
+  postgres:
+    image: postgres:delivery-users
+    restart: always
     build:
-      context: ./frontend
-      dockerfile: ./docker/Dockerfile
+      context: ./dbs/postgresql
+      dockerfile: ./Dockerfile
     env_file:
-      - ./frontend/.env
-    volumes:
-      - ./frontend:/app
-      - /app/node_module
-    environment:
-      PORT: ${FRONTEND_HOST_PORT}
+      - ./dbs/postgresql/.env
     ports:
-      - "${FRONTEND_HOST_PORT}:${FRONTEND_HOST_PORT}"
-  backend:
-    restart: unless-stopped
-    build:
-      context: ./delivery-service
-      dockerfile: ./docker/Dockerfile
+      - "5432:5432"
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+    # networks:
+    #   - delivery-service

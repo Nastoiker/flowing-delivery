@@ -1,7 +1,7 @@
 {
   "name": "contracts",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "contracts/src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "lib/contracts/src",
   "projectType": "library",
   "targets": {},
   "tags": []

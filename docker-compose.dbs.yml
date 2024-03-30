@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  rmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  frontend: 
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_module
+    environment:
+      PORT: ${FRONTEND_HOST_PORT}
+    ports:
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_HOST_PORT}"
+  db:
+    restart: unless-stopped
+    build:
+      context: ./delivery-service
+      dockerfile: ./docker/Dockerfile

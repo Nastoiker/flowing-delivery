@@ -1,10 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace AccountLogin {
-    export const topic = 'account.login.command';
-    export class Request {
-        email: string;
-        password: string;
-    }
-    export class Response {
-        access_token: string;
-    }
+  export const topic = 'account.login.command';
+  export class Request {
+    email: string | undefined;
+    password: string | undefined;
+  }
+  export class Response {
+    access_token: string | undefined;
+  }
 }

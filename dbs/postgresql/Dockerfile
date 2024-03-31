@@ -1,4 +1,4 @@
-FROM postgres:16.2-alpine
+FROM postgres:13.8
 
 EXPOSE 5432 
 RUN ls -la

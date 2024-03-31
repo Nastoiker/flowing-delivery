@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@delivery-service/contracts": ["lib/contracts/src/index.ts"]
+      "@delivery-service/contracts": ["lib/contracts/src/index.ts"],
+      "@delivery-service/interfaces": ["lib/interfaces/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

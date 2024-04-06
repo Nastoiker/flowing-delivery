@@ -9,4 +9,8 @@ export class AuthController {
   async register() {
     
   }
+  @Post('login')
+  async login() {
+    
+  }
 }

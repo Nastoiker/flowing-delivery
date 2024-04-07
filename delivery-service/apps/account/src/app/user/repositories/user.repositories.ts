@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { IUser } from '@delivery-service/interfaces';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserEntity } from '../entities/user.entity';
 import { User } from '../models/user.model';
@@ -8,11 +9,13 @@ import { User } from '../models/user.model';
 export class UserRepository {
   constructor(@InjectModel(User) private readonly userModel: typeof User) {}
 
-  async createUser(user: UserEntity) {
+  async createUser(user: IUser) {
     const userCreated = await this.userModel.create({
       ...user,
     });
-
+    if (!userCreated) {
+      throw new Error('Ошибка создания пользователя');
+    }
     return userCreated;
   }
 

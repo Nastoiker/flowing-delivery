@@ -4,6 +4,9 @@ export namespace AccountRegister {
   export class Request {
     email: string | undefined;
     password: string | undefined;
+    name: string | undefined;
+    surname: string | undefined;
+    username: string | undefined;
     displayName?: string | undefined;
   }
   export class Response {

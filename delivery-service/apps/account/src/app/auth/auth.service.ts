@@ -12,7 +12,14 @@ export class AuthService {
     private readonly jwtToken: JwtService
   ) {}
 
-  async register({ email, password, displayName }: AccountRegister.Request) {
+  async register({
+    email,
+    password,
+    displayName,
+    name,
+    surname,
+    username,
+  }: AccountRegister.Request) {
     const oldUser = await this.userRepository.findUser(email);
     if (oldUser) {
       throw new Error('Такой пользователь уже существует');
@@ -20,10 +27,20 @@ export class AuthService {
     const userEntity = await new UserEntity({
       displayName,
       email,
-      role: UserRole.buye,
+      roles: UserRole.buye,
       password: '',
+      name,
+      surname,
+      username,
     }).setPassword(password);
-    const newUser = await this.userRepository.createUser(userEntity);
+    const newUser = await this.userRepository.createUser({
+      email,
+      roles: userEntity.roles,
+      password: userEntity.password,
+      name,
+      surname,
+      username,
+    });
     return { email: newUser.email };
   }
   async validateUser(email: string, password: string) {

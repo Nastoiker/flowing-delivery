@@ -7,5 +7,8 @@ export interface IUser {
   displayName?: string;
   email: string;
   password: string;
-  role: UserRole;
+  roles: UserRole;
+  name: string;
+  surname: string;
+  username: string;
 }

@@ -5,21 +5,24 @@ export class UserEntity implements IUser {
   id?: number;
   displayName?: string;
   email: string;
+  name: string;
+  surname: string;
+  username: string;
   password: string;
-  role: UserRole;
+  roles: UserRole;
   events: IDomainEvent[] = [];
   constructor(user: IUser) {
     this.id = user.id;
     this.displayName = user.displayName;
     this.password = user.password;
     this.email = user.email;
-    this.role = user.role;
+    this.roles = user.roles;
   }
   passwordHash: string;
   public async getInfo() {
     return {
       email: this.email,
-      role: this.role,
+      role: this.roles,
     };
   }
   public async setPassword(password: string): Promise<UserEntity> {

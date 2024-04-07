@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ScheduleModule } from '@nestjs/schedule';
 import { RMQModule } from 'nestjs-rmq';
-import { AppService } from './app.service';
 import { getJWTConfig } from './configs/jwt.config';
 import { getRMQConfig } from './configs/rmg.config';
 import { UserController } from './controllers/api.controller';
@@ -16,8 +16,9 @@ import { AuthController } from './controllers/auth.controller';
     RMQModule.forRootAsync(getRMQConfig()),
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule,
+    ScheduleModule.forRoot()
+
   ],
   controllers: [AuthController, UserController],
-  providers: [AppService],
 })
 export class AppModule {}

@@ -27,7 +27,7 @@ export class AuthService {
     const userEntity = await new UserEntity({
       displayName,
       email,
-      roles: UserRole.buye,
+      roles: UserRole.buyer,
       password: '',
       name,
       surname,

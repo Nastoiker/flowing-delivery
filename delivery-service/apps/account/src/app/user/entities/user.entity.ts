@@ -33,6 +33,13 @@ export class UserEntity implements IUser {
   public async PasswordValidate(password: string): Promise<boolean> {
     return compare(password, this.password);
   }
+  public getPublicProfile() {
+    return {
+      email: this.email,
+      roles: this.roles,
+      displayName: this.displayName,
+    };
+  }
   public async updateProfile(displayName: string): Promise<UserEntity> {
     this.displayName = displayName;
     return this;

@@ -1,7 +1,3 @@
-export enum UserRole {
-  seller = 1,
-  buye = 2,
-}
 export interface IUser {
   id?: number;
   displayName?: string;
@@ -11,4 +7,21 @@ export interface IUser {
   name: string;
   surname: string;
   username: string;
+  orders?: IUserOrdersFood[];
+}
+export enum UserRole {
+  seller = 1,
+  buyer = 2,
+}
+
+export enum PurchaseState {
+  Started = 'Started',
+  WaitingForPayment = 'WaitingForPayment',
+  Purchased = 'Purchased',
+  Cenceled = 'Cenceled',
+}
+
+export interface IUserOrdersFood {
+  courseId: string;
+  purchaseState: PurchaseState;
 }

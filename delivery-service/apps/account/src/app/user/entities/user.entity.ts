@@ -35,6 +35,9 @@ export class UserEntity implements IUser {
   }
   public getPublicProfile() {
     return {
+      name: this.name,
+      surname: this.surname,
+      username: this.username,
       email: this.email,
       roles: this.roles,
       displayName: this.displayName,

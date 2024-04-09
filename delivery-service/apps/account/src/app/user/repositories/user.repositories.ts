@@ -38,7 +38,7 @@ export class UserRepository {
     return this.userModel.findOne({ where: { email } });
   }
 
-  async findUserById(id: string) {
+  async findUserById(id: number) {
     return this.userModel.findByPk(id);
   }
 

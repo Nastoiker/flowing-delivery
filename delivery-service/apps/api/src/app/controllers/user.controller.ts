@@ -17,12 +17,16 @@ export class UserController {
 
   @UseGuards(JWTAuthGuard)
   @Post('info')
-  async info(@UserId() userId: string) {
+  async info(@UserId() userId: number) {
     try {
       return await this.rmqService.send<
         AccountUserInfo.Request,
         AccountUserInfo.Response
-      >(AccountUserInfo.topic, userId, { headers: { requestId: 'adad' } });
+      >(
+        AccountUserInfo.topic,
+        { id: userId },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

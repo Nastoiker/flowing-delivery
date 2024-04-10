@@ -7,8 +7,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { RMQModule } from 'nestjs-rmq';
 import { getJWTConfig } from './configs/jwt.config';
 import { getRMQConfig } from './configs/rmg.config';
-import { UserController } from './controllers/api.controller';
 import { AuthController } from './controllers/auth.controller';
+import { FoodController } from './controllers/food.controller';
+import { ShoppingCartController } from './controllers/shopping-cart.controller';
+import { UserController } from './controllers/user.controller';
 
 @Module({
   imports: [
@@ -16,9 +18,13 @@ import { AuthController } from './controllers/auth.controller';
     RMQModule.forRootAsync(getRMQConfig()),
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule,
-    ScheduleModule.forRoot()
-
+    ScheduleModule.forRoot(),
   ],
-  controllers: [AuthController, UserController],
+  controllers: [
+    AuthController,
+    UserController,
+    ShoppingCartController,
+    FoodController,
+  ],
 })
 export class AppModule {}

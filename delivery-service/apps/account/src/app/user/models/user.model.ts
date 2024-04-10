@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { ShoppingCart } from '../../shopping-cart/model/shopping-cart.model';
 @Table({ timestamps: true })
 export class User extends Model {
   @Column({
@@ -26,4 +27,8 @@ export class User extends Model {
   password: string;
   @Column({ type: DataType.INTEGER, allowNull: true })
   roles: number;
+  // @HasMany(() => Food)
+  // purchased?: Food[];
+  @HasMany(() => ShoppingCart)
+  shoppingCart?: ShoppingCart[];
 }

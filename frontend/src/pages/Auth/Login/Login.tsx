@@ -48,7 +48,7 @@ export function Login() {
   };
   return (
     <div className={styles["login"]}>
-    Вход
+      Вход
       <form className={styles["form"]} onSubmit={handleSubmit(submit)}>
         <div className={styles["field"]}>
           <label htmlFor="email">Ваш email</label>

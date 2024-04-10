@@ -1,3 +1,5 @@
+import { IShoppingCart } from './shopping-cart.interface';
+
 export interface IUser {
   id?: number;
   displayName?: string;
@@ -7,6 +9,7 @@ export interface IUser {
   name: string;
   surname: string;
   username: string;
+  shoppingCart?: IShoppingCart[];
   orders?: IUserOrdersFood[];
 }
 export enum UserRole {
@@ -22,6 +25,10 @@ export enum PurchaseState {
 }
 
 export interface IUserOrdersFood {
-  courseId: string;
-  purchaseState: PurchaseState;
+  id: number;
+  productId: number;
+  totalPrice: number;
+  count: number;
+  userId: number;
+  purchaseState: PurchaseState | string;
 }

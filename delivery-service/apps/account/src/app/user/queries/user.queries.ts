@@ -25,12 +25,12 @@ export class UserQueries {
 
   @RMQValidate()
   @RMQRoute(AccountUserOrders.topic)
-  async userCourses(
+  async userShoppingCart(
     @Body() { id }: AccountUserOrders.Request
   ): Promise<AccountUserOrders.Response> {
     const user = await this.userRepository.findUserById(id);
     return {
-      orders: user,
+      purchased: user.shoppingCart,
     };
   }
 }

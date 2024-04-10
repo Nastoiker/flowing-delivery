@@ -11,6 +11,6 @@ export namespace AccountUserOrders {
   }
 
   export class Response {
-    orders: IUserOrdersFood[] | undefined;
+    purchased: IUserOrdersFood[] | undefined;
   }
 }

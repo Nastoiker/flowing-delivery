@@ -1,38 +1,22 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Outlet, createBrowserRouter } from "react-router-dom";
 import { RequireAuth } from "../../helpers/RequireAuth";
 import { AuthLayout } from "../../layout/Auth/AuthLayout";
 import { Login } from "../../pages/Auth/Login/Login";
 import { Register } from "../../pages/Auth/Register/Register";
 import { Profile } from "../../pages/profile/Profile";
+import { NotFoundErrorPage } from "../Error/NotFoundPage";
+import { RoutesBoundary } from "./RoutesBoundary";
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
-    ],
-  },
-  {
     path: "/",
-    element: (
-      <RequireAuth>
-        <div></div>
-      </RequireAuth>
-    ),
+    element: <Root />,
     children: [
       {
-        path: "/",
+        path: "",
         element: (
           <RequireAuth>
-            <Profile />
+            <Outlet />
           </RequireAuth>
         ),
       },
@@ -42,9 +26,29 @@ const router = createBrowserRouter([
       },
       {
         path: "menu",
-        element: <Profile />,
+        element: <Home />,
+      },
+      {
+        path: "/auth",
+        element: <AuthLayout />,
+        errorElement: <RoutesBoundary />,
+        children: [
+          {
+            path: "login",
+            element: <Login />,
+          },
+          {
+            path: "register",
+            element: <Register />,
+          },
+        ],
       },
     ],
+  },
+
+  {
+    path: "*",
+    element: <NotFoundErrorPage />,
   },
 ]);
 

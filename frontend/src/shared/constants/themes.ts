@@ -1,0 +1,9 @@
+export const SCROLLBAR_Z_INDEX = 1300;
+export const SPINNER_Z_INDEX = 1e5;
+export const BASED_Z_INDEX = 10000;
+export const APP_BAR_Z_INDEX = BASED_Z_INDEX + 1;
+export const THROUGH_BANNER_Z_INDEX = APP_BAR_Z_INDEX + 10;
+export const DRAWER_Z_INDEX = THROUGH_BANNER_Z_INDEX + 3;
+export const MODAL_Z_INDEX = DRAWER_Z_INDEX + 10;
+export const TOOLTIP_Z_INDEX = MODAL_Z_INDEX + 10;
+export const FLASH_Z_INDEX = TOOLTIP_Z_INDEX + 10;

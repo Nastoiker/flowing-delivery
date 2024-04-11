@@ -1,42 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;1,100&display=swap");
 #root {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: auto;
+  height: 100vh;
   text-align: center;
+  width: 100%;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+html,
+body {
+  /*@apply  max-w-screen-xl;*/
+
+  color: var(--black);
+  background: #f5f6f8;
+
+  font-family: "Montserrat", serif;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+h2 {
+  font-size: 40px;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+h1 {
+  font-size: 40px;
+}
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+* {
+  box-sizing: border-box;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/*.logo {*/
+/*  height: 6em;*/
+/*  padding: 1.5em;*/
+/*  will-change: filter;*/
+/*}*/
+/*.logo:hover {*/
+/*  filter: drop-shadow(0 0 2em #646cffaa);*/
+/*}*/
+/*.logo.react:hover {*/
+/*  filter: drop-shadow(0 0 2em #61dafbaa);*/
+/*}*/
+:root {
+  --black: #3b434e;
+  --gray-light: #ebebeb;
+  --gray: #a4a4a4;
+  --white: rgb(255 255 255);
+  --primary: #0f172b;
+  --green: green;
+  --red: rgb(187 99 99);
+  --red-light: #dc6969;
+  --footer-color: #2c2c2c;
+  --green-ligth: rgb(196 238 196);
+  --font-family: "Noto Sans KR", sans-serif;
+  --primary-hover: purple;
+  --paragraph-color: #3b434e;
+  --gray-dark: #787d85;
 }
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+footer {
+  width: 1300px;
 }

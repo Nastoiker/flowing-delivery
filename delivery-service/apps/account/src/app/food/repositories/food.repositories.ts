@@ -8,7 +8,7 @@ import { Food } from '../models/food.model';
 export class FoodRepository {
   constructor(@InjectModel(Food) private readonly foodModel: typeof Food) {}
 
-  async createFood(food: IFood) {
+  async createFood(food: any) {
     const foodCreated = await this.foodModel.create({
       ...food,
     });
@@ -33,8 +33,8 @@ export class FoodRepository {
     return food;
   }
 
-  async findFood(email: string) {
-    return this.foodModel.findOne({ where: { email } });
+  async findFood(id: number) {
+    return this.foodModel.findOne({ where: { id } });
   }
 
   async findUserById(id: number) {

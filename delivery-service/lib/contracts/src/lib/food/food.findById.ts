@@ -4,9 +4,9 @@ import { IFood } from '@delivery-service/interfaces';
 export namespace FoodFindById {
   export const topic = 'food.find-id.command';
   export class Request {
-    id: number;
+    id: number | undefined;
   }
   export class Response {
-    foods: IFood | undefined;
+    food: IFood | undefined;
   }
 }

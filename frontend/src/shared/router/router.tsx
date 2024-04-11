@@ -5,17 +5,22 @@ import { Login } from "../../pages/Auth/Login/Login";
 import { Register } from "../../pages/Auth/Register/Register";
 import { Profile } from "../../pages/profile/Profile";
 import { NotFoundErrorPage } from "../Error/NotFoundPage";
+import {
+  default as AccountMenu,
+  default as NavigationBar,
+} from "../components/navigation/NavigationBar";
 import { RoutesBoundary } from "./RoutesBoundary";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <NavigationBar />,
     children: [
       {
         path: "",
         element: (
           <RequireAuth>
+            <AccountMenu />
             <Outlet />
           </RequireAuth>
         ),
@@ -23,10 +28,6 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
-      },
-      {
-        path: "menu",
-        element: <Home />,
       },
       {
         path: "/auth",

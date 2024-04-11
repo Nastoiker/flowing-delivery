@@ -8,14 +8,19 @@ export const FoodPage = () => {
     return <div>Ошибка</div>;
   }
   const Wrapper = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 50px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  `;
+  const GridEL = styled.div`
+    margin: 0 auto;
   `;
   return (
     <Wrapper>
       {data.data?.foods.map((f) => (
-        <FoodCard key={f.id} food={f} />
+        <GridEL>
+          <FoodCard key={f.id} food={f} />
+        </GridEL>
       ))}
     </Wrapper>
   );

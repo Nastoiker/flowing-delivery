@@ -15,7 +15,7 @@ export function FoodCard(props: { food: IFood }) {
   const { food } = props;
   const [imgIsLoaded, setImgIsLoaded] = useState(false);
   return (
-    <Card sx={{ maxWidth: 345, width: 300 }}>
+    <Card sx={{ width: 300 }}>
       <CardActionArea>
         {imgIsLoaded ? (
           <CardMedia
@@ -37,16 +37,16 @@ export function FoodCard(props: { food: IFood }) {
             {food.description}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Price: ${food.price}
+            Цена: ${food.price}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            In Stock: {food.in_stock}
+            В наличии: {food.in_stock}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Grams: {food.grams}
+            Граммов: {food.grams}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Calories: {food.calories}
+            Калорий: {food.calories}
           </Typography>
         </CardContent>
       </CardActionArea>

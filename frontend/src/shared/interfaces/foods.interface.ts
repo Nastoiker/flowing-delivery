@@ -3,6 +3,8 @@ export interface IFood {
   categoryId: number;
   title: string;
   price: number;
+  grams: number;
+  calories: number;
   count: number;
   in_stock: number;
   description: string;

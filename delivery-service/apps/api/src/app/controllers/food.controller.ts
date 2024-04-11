@@ -1,7 +1,12 @@
-import { FoodCreate, FoodFindById } from '@delivery-service/contracts';
+import {
+  FoodCreate,
+  FoodFindById,
+  FoodGetAll,
+} from '@delivery-service/contracts';
 import {
   Body,
   Controller,
+  Get,
   Logger,
   Post,
   UnauthorizedException,
@@ -16,7 +21,19 @@ import { UserId } from '../guards/user.decorator';
 @Controller('food')
 export class FoodController {
   constructor(private readonly rmqService: RMQService) {}
-
+  @Get()
+  async getFoods() {
+    try {
+      return await this.rmqService.send<
+        FoodGetAll.Request,
+        FoodGetAll.Response
+      >(FoodGetAll.topic, {}, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
   @UseGuards(JWTAuthGuard)
   @Post('info')
   async info(@UserId() id: number) {

@@ -1,5 +1,9 @@
-import { FoodCreate, FoodFindById } from '@delivery-service/contracts';
-import { Body, Controller } from '@nestjs/common';
+import {
+  FoodCreate,
+  FoodFindById,
+  FoodGetAll,
+} from '@delivery-service/contracts';
+import { Body, Controller, Query } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { FoodRepository } from '../repositories/food.repositories';
 
@@ -15,6 +19,14 @@ export class FoodQueries {
     const food = await this.foodRepository.findFood(id);
     return {
       food,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(FoodGetAll.topic)
+  async foodAll(@Query() query: any): Promise<FoodGetAll.Response> {
+    const foods = await this.foodRepository.findAllFood();
+    return {
+      foods,
     };
   }
   @RMQValidate()

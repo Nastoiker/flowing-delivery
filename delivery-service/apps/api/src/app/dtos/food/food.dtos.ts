@@ -11,6 +11,10 @@ export class FoodDto {
   count: number;
   @IsNumber()
   in_stock: number;
+  @IsNumber()
+  calories: number;
+  @IsNumber()
+  grams: number;
   @IsString()
   description: string;
   @IsString()

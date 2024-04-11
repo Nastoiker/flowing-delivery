@@ -40,7 +40,9 @@ export class FoodRepository {
   async findUserById(id: number) {
     return this.foodModel.findByPk(id);
   }
-
+  async findAllFood() {
+    return this.foodModel.findAll();
+  }
   async deleteFood(id: number) {
     const food = await this.foodModel.findOne({ where: { id } });
     await food.destroy();

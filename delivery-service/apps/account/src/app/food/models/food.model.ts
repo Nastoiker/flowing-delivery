@@ -26,6 +26,10 @@ export class Food extends Model {
   @Column({ defaultValue: 0 })
   count: number;
   @Column({ defaultValue: 0 })
+  calories: number;
+  @Column({ defaultValue: 0 })
+  grams: number;
+  @Column({ defaultValue: 0 })
   in_stock: number;
   @Column
   description: string;

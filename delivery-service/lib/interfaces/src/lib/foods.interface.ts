@@ -5,6 +5,8 @@ export interface IFood {
   price: number;
   count: number;
   in_stock: number;
+  grams: number;
+  calories: number;
   description: string;
   pictures: string;
 }

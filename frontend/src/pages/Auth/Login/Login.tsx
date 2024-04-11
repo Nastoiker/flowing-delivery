@@ -36,7 +36,7 @@ export function Login() {
     try {
       setError(false);
       const { email, password } = data;
-      const token = await api.post("/auth/login", {
+      const token = await api.post("auth/login", {
         email,
         password,
       });

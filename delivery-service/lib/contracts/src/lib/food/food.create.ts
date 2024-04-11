@@ -14,6 +14,10 @@ export namespace FoodCreate {
     @IsNumber()
     count: number | undefined;
     @IsNumber()
+    calories: number | undefined;
+    @IsNumber()
+    grams: number | undefined;
+    @IsNumber()
     in_stock: number | undefined;
     @IsString()
     description: string | undefined;

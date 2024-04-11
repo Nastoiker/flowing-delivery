@@ -1,3 +1,4 @@
+import { CategoriesPage } from "@/pages/Categories/Categories";
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import { RequireAuth } from "../../helpers/RequireAuth";
 import { AuthLayout } from "../../layout/Auth/AuthLayout";
@@ -14,23 +15,19 @@ import { RoutesBoundary } from "./RoutesBoundary";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <NavigationBar />,
+    element: (
+      <>
+        <NavigationBar />
+        <Outlet />
+      </>
+    ),
     children: [
       {
-        path: "",
-        element: (
-          <RequireAuth>
-            <AccountMenu />
-            <Outlet />
-          </RequireAuth>
-        ),
+        path: "categories",
+        element: <CategoriesPage />,
       },
       {
-        path: "profile",
-        element: <Profile />,
-      },
-      {
-        path: "/auth",
+        path: "auth",
         element: <AuthLayout />,
         errorElement: <RoutesBoundary />,
         children: [
@@ -43,6 +40,25 @@ const router = createBrowserRouter([
             element: <Register />,
           },
         ],
+      },
+      {
+        path: "",
+        element: (
+          <RequireAuth>
+            <AccountMenu />
+            <Outlet />
+          </RequireAuth>
+        ),
+        children: [
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+        ],
+      },
+      {
+        path: "menu",
+        element: <CategoriesPage />,
       },
     ],
   },

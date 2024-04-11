@@ -1,5 +1,6 @@
-import { FoodFindById } from '@delivery-service/contracts';
+import { FoodCreate, FoodFindById } from '@delivery-service/contracts';
 import {
+  Body,
   Controller,
   Logger,
   Post,
@@ -8,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { RMQService } from 'nestjs-rmq';
+import { FoodDto } from '../dtos/food/food.dtos';
 import { JWTAuthGuard } from '../guards/jwt.guard';
 import { UserId } from '../guards/user.decorator';
 
@@ -29,7 +31,20 @@ export class FoodController {
       }
     }
   }
-
+  @UseGuards(JWTAuthGuard)
+  @Post('create')
+  async create(@Body() foodDto: FoodDto) {
+    try {
+      return await this.rmqService.send<
+        FoodCreate.Request,
+        FoodCreate.Response
+      >(FoodCreate.topic, foodDto, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
   @Cron('*/5 * * * * *')
   async cron() {
     Logger.log('Done');

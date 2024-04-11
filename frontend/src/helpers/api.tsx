@@ -1,6 +1,6 @@
 import type { AxiosHeaders } from "axios";
 import axios from "axios";
-const PREFIX = "";
+const PREFIX = "http://localhost:3444/api/";
 export const api = axios.create({
   baseURL: PREFIX,
   paramsSerializer: {

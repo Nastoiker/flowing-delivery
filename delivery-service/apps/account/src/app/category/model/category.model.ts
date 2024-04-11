@@ -22,7 +22,7 @@ export class Category extends Model {
   @Column
   parentId: number;
 
-  @BelongsTo(() => Category, 'parentId')
+  @BelongsTo(() => Category, { foreignKey: 'parentId', onDelete: 'SET NULL' })
   parent: Category;
 
   @HasMany(() => Category, 'parentId')

@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material';
+import { createTheme } from "@mui/material";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Palette {
     basic: {
       white: string;
@@ -29,7 +29,14 @@ declare module '@mui/material/styles' {
 
 const defaultTheme = createTheme({
   typography: {
-    fontFamily: 'Montserrat, Roboto',
+    fontFamily: "Montserrat, Roboto",
+  },
+  palette: {
+    basic: {
+      white: "#f2eeea",
+      purple: "#F7F7FE",
+      gray: "#999999",
+    },
   },
   shape: {
     borderRadius: 8,
@@ -49,16 +56,16 @@ const defaultTheme = createTheme({
 export const AppTheme = createTheme(defaultTheme, {
   palette: {
     primary: {
-      dark: '#413FC0',
-      main: '#6765F2',
+      dark: "#413FC0",
+      main: "#6765F2",
     },
     basic: {
-      white: '#FFFFFF',
-      purple: '#F7F7FE',
-      gray: '#999999',
+      white: "#FFFFFF",
+      purple: "#F7F7FE",
+      gray: "#999999",
     },
     text: {
-      secondary: '#656565',
+      secondary: "#656565",
     },
   },
 });

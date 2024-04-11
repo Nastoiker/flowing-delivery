@@ -8,6 +8,7 @@ import { RMQModule } from 'nestjs-rmq';
 import { getJWTConfig } from './configs/jwt.config';
 import { getRMQConfig } from './configs/rmg.config';
 import { AuthController } from './controllers/auth.controller';
+import { CategoryController } from './controllers/category.controller';
 import { FoodController } from './controllers/food.controller';
 import { ShoppingCartController } from './controllers/shopping-cart.controller';
 import { UserController } from './controllers/user.controller';
@@ -25,6 +26,7 @@ import { UserController } from './controllers/user.controller';
     UserController,
     ShoppingCartController,
     FoodController,
+    CategoryController,
   ],
 })
 export class AppModule {}

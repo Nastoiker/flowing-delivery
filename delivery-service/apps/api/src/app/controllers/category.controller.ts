@@ -3,7 +3,7 @@ import { Controller, Get, Logger, UnauthorizedException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { RMQService } from 'nestjs-rmq';
 
-@Controller('user')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly rmqService: RMQService) {}
 

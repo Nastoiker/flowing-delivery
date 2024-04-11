@@ -5,7 +5,6 @@ import { MODAL_Z_INDEX } from "../constants/themes";
 export const Wrapper = styled.div`
   display: flex;
   position: fixed;
-  background-color: white;
   top: 0;
   right: 0;
   left: 0;
@@ -33,7 +32,6 @@ export const Container = styled.div`
   flex-direction: column;
   max-width: 720px;
   height: 100%;
-  background-color: #fff;
 `;
 
 export const CloudContainer = styled.div`

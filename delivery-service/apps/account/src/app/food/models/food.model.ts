@@ -21,11 +21,11 @@ export class Food extends Model {
   categoryId: number;
   @Column
   title: string;
-  @Column
+  @Column({ defaultValue: 0 })
   price: number;
-  @Column
+  @Column({ defaultValue: 0 })
   count: number;
-  @Column
+  @Column({ defaultValue: 0 })
   in_stock: number;
   @Column
   description: string;

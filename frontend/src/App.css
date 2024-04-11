@@ -1,18 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;1,100&display=swap");
 #root {
-  max-width: 1280px;
   margin: auto;
-  height: 100vh;
-  text-align: center;
+  height: 100%;
   width: 100%;
+  max-width: 1280px;
 }
 
 html,
 body {
   /*@apply  max-w-screen-xl;*/
+  width: 100vw;
 
+  margin: auto;
+  height: 100vh;
+  text-align: center;
+  width: 100%;
   color: var(--black);
-  background: #f5f6f8;
+  background: #f2eeea !important;
 
   font-family: "Montserrat", serif;
 }

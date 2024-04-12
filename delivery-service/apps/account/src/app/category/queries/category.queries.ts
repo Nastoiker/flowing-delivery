@@ -14,7 +14,15 @@ export class CategoryQueries {
       categories: category,
     };
   }
-
+  // @RMQValidate()
+  // @RMQRoute(CategoryGetAll.topic)
+  // async categoryFoods(@Query() query: CategoryFoodsInfo.Request): Promise<CategoryFoodsInfo.Response> {
+  //   // const { category, foods } = await this.categoryRepository.findAllCategory();
+  //   return {
+  //     // category,
+  //     // foods,
+  //   };
+  // }
   //   @RMQValidate()
   //   @RMQRoute(CategoryGetAll.topic)
   //   async categoryCreate(

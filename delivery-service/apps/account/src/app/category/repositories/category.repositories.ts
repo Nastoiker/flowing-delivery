@@ -38,6 +38,10 @@ export class CategoryRepository {
   async findCategory(id: number) {
     return this.categoryModel.findOne({ where: { id } });
   }
+  async getProductsByCategory(categoryId: number) {
+    //{ include: [{ association: 'products'}]}
+    return this.categoryModel.findOne({ where: { id:categoryId } },);
+  }
   async findAllCategory() {
     return this.categoryModel.findAll();
   }

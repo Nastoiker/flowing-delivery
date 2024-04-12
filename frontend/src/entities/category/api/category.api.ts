@@ -6,3 +6,6 @@ export async function getCategories(): Promise<{
 }> {
   return api.get("categories");
 }
+export async function createCategory(): Promise<void> {
+  return api.post("category")
+}

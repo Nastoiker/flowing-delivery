@@ -1,8 +1,9 @@
 import {
   AccountUserInfo,
+  AccountUserMe,
   AccountUserOrders,
 } from '@delivery-service/contracts';
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Query } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { UserEntity } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repositories';
@@ -31,6 +32,16 @@ export class UserQueries {
     const user = await this.userRepository.findUserById(id);
     return {
       purchased: user.shoppingCart,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(AccountUserMe.topic)
+  async me(
+    @Query() { id }: AccountUserMe.Request
+  ): Promise<AccountUserMe.Response> {
+    const user = await this.userRepository.me(id);
+    return {
+      profile: user,
     };
   }
 }

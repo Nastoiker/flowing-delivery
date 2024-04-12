@@ -1,7 +1,4 @@
-import {
-  AccountShoppingCart,
-  AccountUserInfo,
-} from '@delivery-service/contracts';
+import { AccountShoppingCart } from '@delivery-service/contracts';
 import {
   Controller,
   Logger,
@@ -24,8 +21,12 @@ export class ShoppingCartController {
     try {
       return await this.rmqService.send<
         AccountShoppingCart.Request,
-        AccountUserInfo.Response
-      >(AccountUserInfo.topic, { userId }, { headers: { requestId: 'adad' } });
+        AccountShoppingCart.Response
+      >(
+        AccountShoppingCart.topic,
+        { userId },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

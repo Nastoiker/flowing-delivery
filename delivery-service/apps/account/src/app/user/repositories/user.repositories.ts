@@ -37,7 +37,9 @@ export class UserRepository {
   async findUser(email: string) {
     return this.userModel.findOne({ where: { email } });
   }
-
+  async me(id: number) {
+    return this.userModel.findByPk(id, { include: ['shoppingCart'] });
+  }
   async findUserById(id: number) {
     return this.userModel.findByPk(id);
   }

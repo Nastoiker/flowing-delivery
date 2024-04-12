@@ -1,4 +1,5 @@
 export * from './lib/account/account.login';
+export * from './lib/account/account.me';
 export * from './lib/account/account.register';
 export * from './lib/account/account.shopping-cart';
 export * from './lib/account/account.user-info';

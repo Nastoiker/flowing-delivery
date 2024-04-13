@@ -21,3 +21,8 @@ export * from './lib/shopping-cart/shopping-cart.remove';
 export * from './lib/shopping-cart/shopping-cart.update';
 
 export * from './lib/shopping-cart/shopping-cart.get-user';
+
+export * from './lib/file/file.create';
+export * from './lib/file/file.delete';
+export * from './lib/file/file.get';
+export * from './lib/file/file.update';

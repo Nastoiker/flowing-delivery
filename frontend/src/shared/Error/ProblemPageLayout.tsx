@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import styled from "styled-components";
 import { useOnAMobileDevice } from "../hooks/useOnAMobileDevice";
 import { useAppThunkDispatch } from "../store/hooks";
-import { fetchCurrentUser } from "../store/slices/currentUser";
 import {
   Container,
   ContentContainer,
@@ -20,7 +18,6 @@ const ButtonsWrapper = styled.div`
   justify-content: space-between;
   gap: 24px;
   align-items: center;
-
   @media screen and (max-width: 759px) {
     flex-direction: column;
     justify-content: center;
@@ -37,9 +34,9 @@ export const ProblemPageLayout = ({ title }: Props) => {
 
   const isMobile = useOnAMobileDevice();
 
-  useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchCurrentUser());
+  // }, []);
 
   return (
     <Wrapper>

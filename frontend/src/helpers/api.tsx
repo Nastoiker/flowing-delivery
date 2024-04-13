@@ -1,6 +1,7 @@
 import type { AxiosHeaders } from "axios";
 import axios from "axios";
-const PREFIX = "http://localhost:3444/api/";
+import { getItem } from "./localStorage";
+const PREFIX = "http://localhost:3444/api/" as const;
 export const api = axios.create({
   baseURL: PREFIX,
   paramsSerializer: {
@@ -12,7 +13,7 @@ export const api = axios.create({
 api.interceptors.request.use((config) => {
   (config.headers as AxiosHeaders).set(
     "Authorization",
-    `Bearer ${localStorage.getItem("token")}`
+    `Bearer ${getItem("token")}`
   );
 
   return config;

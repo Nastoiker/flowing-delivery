@@ -1,0 +1,70 @@
+import { removeItem } from "@/helpers/localStorage";
+import { IconButton } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { UserCircle } from "@phosphor-icons/react";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+
+export default function BasicMenuAuth({ user }) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleRedirect = (url: string) => {
+    handleClose();
+    navigate(url);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleLogout = (url: string) => {
+    removeItem("token");
+
+    handleRedirect(url);
+  };
+  return (
+    <div>
+      <IconButton
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <UserCircle />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        {user.name ? (
+          <>
+            <MenuItem onClick={() => handleRedirect("profile")}>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={() => handleLogout("/auth/login")}>
+              Logout
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem onClick={() => handleRedirect("/auth/login")}>
+              Войти
+            </MenuItem>
+            <MenuItem onClick={() => handleRedirect("/auth/register")}>
+              Зарегестироваться
+            </MenuItem>
+          </>
+        )}
+      </Menu>
+    </div>
+  );
+}

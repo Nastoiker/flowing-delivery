@@ -1,7 +1,6 @@
 import { Drawer } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
 import { PROFILE_PIC_PATH } from "constants/imagePaths";
-import { USER_CLASSES } from "constants/userClasses";
 import { useCurrentUser } from "hooks/useCurrentUser";
 import { useModalState } from "hooks/useModal";
 import { useCallback } from "react";

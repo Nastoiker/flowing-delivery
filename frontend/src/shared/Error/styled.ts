@@ -6,7 +6,9 @@ export const Wrapper = styled.div`
   display: flex;
   position: fixed;
   top: 0;
+  padding-top: 10%;
   right: 0;
+  background: white !important;
   left: 0;
   bottom: 0;
   z-index: ${MODAL_Z_INDEX};

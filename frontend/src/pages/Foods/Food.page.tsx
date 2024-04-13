@@ -17,7 +17,7 @@ export const FoodPage = () => {
   `;
   return (
     <Wrapper>
-      {data.data?.foods.map((f) => (
+      {data?.data?.foods.map((f) => (
         <GridEL>
           <FoodCard key={f.id} food={f} />
         </GridEL>

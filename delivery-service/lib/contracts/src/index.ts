@@ -13,3 +13,11 @@ export * from './lib/food/food.create';
 export * from './lib/food/food.findById';
 
 export * from './lib/contracts.module';
+
+export * from './lib/shopping-cart/shopping-cart.create';
+
+export * from './lib/shopping-cart/shopping-cart.remove';
+
+export * from './lib/shopping-cart/shopping-cart.update';
+
+export * from './lib/shopping-cart/shopping-cart.get-user';

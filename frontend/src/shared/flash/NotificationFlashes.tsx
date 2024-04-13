@@ -40,6 +40,6 @@ export const NotificationFlashes = () => {
   //     dispatch(removeNotificationFlash(notification._id))
   //   );
   // };
-
-  return <Container></Container>;
+  return <div></div>;
+  // return <Container></Container>;
 };

@@ -33,21 +33,31 @@ export function Register() {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-  } = useForm<{ email: string; password: string; name: string }>();
+  } = useForm<{
+    email: string;
+    password: string;
+    name: string;
+    username: string;
+    surname: string;
+  }>();
   const submit = async (data: {
     name: string;
     email: string;
     password: string;
+    username: string;
+    surname: string;
   }) => {
     try {
       setError(true);
-      const { name, email, password } = data;
-      await api.post("/user/register", {
+      const { name, email, password, username, surname } = data;
+      await api.post("auth/register", {
         email,
         password,
         name,
+        username,
+        surname,
       });
-      navigate("/login");
+      navigate("/auth/login");
     } catch (e) {
       setError(true);
     }
@@ -80,18 +90,37 @@ export function Register() {
             placeholder="Пароль"
           />
         </div>
-        <div
-          {...register("name", {
-            required: { value: true, message: "Заполните login" },
-          })}
-          className={styles["field"]}
-        >
+        <div className={styles["field"]}>
           <label htmlFor="name">Ваше имя</label>
-          <Input id="name" name="name" placeholder="Имя" />
+
+          <Input
+            {...register("name", {
+              required: { value: true, message: "Заполните login" },
+            })}
+          />
         </div>
-        <Button>
-          Зарегистрироваться
-        </Button>
+        <div className={styles["field"]}>
+          <label htmlFor="surname">Ваша фамилия</label>
+          <Input
+            id="surname"
+            {...register("surname", {
+              required: { value: true, message: "Заполните login" },
+            })}
+            placeholder="Имя"
+          />
+        </div>
+        <div className={styles["field"]}>
+          <label htmlFor="username">Ваше пользовательское имя</label>
+          <Input
+            id="username"
+            {...register("username", {
+              required: { value: true, message: "Заполните username" },
+            })}
+            name="username"
+            placeholder="Имя"
+          />
+        </div>
+        <Button type="submit">Зарегистрироваться</Button>
         {error && "Ошибка"}
       </form>
       <div className={styles["links"]}>

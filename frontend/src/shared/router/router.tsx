@@ -8,7 +8,6 @@ import { Register } from "../../pages/Auth/Register/Register";
 import { Profile } from "../../pages/profile/Profile";
 import { NotFoundErrorPage } from "../Error/NotFoundPage";
 import { default as NavigationBar } from "../components/navigation/NavigationBar";
-import { RoutesBoundary } from "./RoutesBoundary";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +26,7 @@ const router = createBrowserRouter([
       {
         path: "auth",
         element: <AuthLayout />,
-        errorElement: <RoutesBoundary />,
+        // errorElement: <RoutesBoundary />,
         children: [
           {
             path: "login",

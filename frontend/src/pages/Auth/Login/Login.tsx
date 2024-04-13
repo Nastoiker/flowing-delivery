@@ -1,5 +1,4 @@
-import { Input } from "@mui/material";
-import { Button } from "@radix-ui/themes";
+import { Button, Input, InputLabel, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -48,10 +47,10 @@ export function Login() {
   };
   return (
     <div className={styles["login"]}>
-      Вход
+      <Typography>Вход</Typography>
       <form className={styles["form"]} onSubmit={handleSubmit(submit)}>
         <div className={styles["field"]}>
-          <label htmlFor="email">Ваш email</label>
+          <InputLabel>Ваш email</InputLabel>
           <Input
             {...register("email", {
               required: { value: true, message: "Заполните login" },
@@ -62,7 +61,7 @@ export function Login() {
           />
         </div>
         <div className={styles["field"]}>
-          <label htmlFor="password">Ваш пароль</label>
+          <InputLabel>Ваш пароль</InputLabel>
           <Input
             {...register("password", {
               required: { value: true, message: "Заполните password" },
@@ -73,7 +72,7 @@ export function Login() {
             placeholder="Пароль"
           />
         </div>
-        <Button>Вход</Button>
+        <Button type="submit">Вход</Button>
       </form>
       <div className={styles["links"]}>
         <div>Нет акканута?</div>

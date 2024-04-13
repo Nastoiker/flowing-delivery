@@ -1,4 +1,8 @@
-import { CardAdd, CardGetAll, CardRemove } from '@delivery-service/contracts';
+import {
+  ShoppingCardCreate,
+  ShoppingCardGetByUserId,
+  ShoppingCardRemove,
+} from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { ShoppingCartRepository } from '../repositories/Shopping-cart.repositories';
@@ -8,33 +12,39 @@ export class ShoppingCardQueries {
   constructor(private readonly cardRepository: ShoppingCartRepository) {}
 
   @RMQValidate()
-  @RMQRoute(CardAdd.topic)
+  @RMQRoute(ShoppingCardCreate.topic)
   async addCard(
-    @Body() cardDetails: CardAdd.Request
-  ): Promise<CardAdd.Response> {
-    const success = await this.cardRepository.createShoppingCart(cardDetails);
+    @Body() cardDetails: ShoppingCardCreate.Request
+  ): Promise<ShoppingCardCreate.Response> {
+    const shoppingCard = await this.cardRepository.createShoppingCart(
+      cardDetails
+    );
     return {
-      success,
+      shoppingCard,
     };
   }
 
   @RMQValidate()
-  @RMQRoute(CardRemove.topic)
+  @RMQRoute(ShoppingCardRemove.topic)
   async removeCard(
-    @Body() { cardId }: CardRemove.Request
-  ): Promise<CardRemove.Response> {
-    const success = await this.cardRepository.deleteShoppingCart(cardId);
+    @Body() { id: cardId }: ShoppingCardRemove.Request
+  ): Promise<ShoppingCardRemove.Response> {
+    await this.cardRepository.deleteShoppingCart(cardId);
     return {
-      success,
+      message: 'succes deleted',
     };
   }
 
   @RMQValidate()
-  @RMQRoute(CardGetAll.topic)
-  async getAllCards(): Promise<CardGetAll.Response> {
-    const cards = await this.cardRepository.findShoppingCart();
+  @RMQRoute(ShoppingCardGetByUserId.topic)
+  async getAllCards(
+    @Body() { userId }: ShoppingCardGetByUserId.Request
+  ): Promise<ShoppingCardGetByUserId.Response> {
+    const shoppingCard = await this.cardRepository.getShoppingCardByUserId(
+      userId
+    );
     return {
-      cards,
+      shoppingCard,
     };
   }
 }

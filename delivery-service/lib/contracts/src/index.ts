@@ -26,3 +26,4 @@ export * from './lib/file/file.create';
 export * from './lib/file/file.delete';
 export * from './lib/file/file.get';
 export * from './lib/file/file.update';
+export * from './lib/file/file.upload';

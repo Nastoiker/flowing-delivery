@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { path } from 'app-root-path';
+import { FilesQueries } from './file.queries';
 import { FilesService } from './file.service';
 
 @Module({
@@ -11,6 +12,7 @@ import { FilesService } from './file.service';
       serveRoot: '/uploads',
     }),
   ],
+  controllers: [FilesQueries],
   providers: [FilesService],
 })
 export class FilesModule {}

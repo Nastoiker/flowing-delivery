@@ -5,7 +5,7 @@
 
 import { NestFactory } from '@nestjs/core';
 
-import { FilesModule } from './app/fiole.module';
+import { FilesModule } from './app/file.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(FilesModule);

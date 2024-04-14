@@ -1,3 +1,4 @@
+import { Footer } from "@/layout/Footer/Footer";
 import { CategoriesPage } from "@/pages/Categories/Categories";
 import { FoodPage } from "@/pages/Foods/Food.page";
 import { Outlet, createBrowserRouter } from "react-router-dom";
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       <>
         <NavigationBar />
         <Outlet />
+        <Footer />
       </>
     ),
     children: [

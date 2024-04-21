@@ -9,6 +9,7 @@ import { getJWTConfig } from './configs/jwt.config';
 import { getRMQConfig } from './configs/rmg.config';
 import { AuthController } from './controllers/auth.controller';
 import { CategoryController } from './controllers/category.controller';
+import { FileController } from './controllers/file.controller';
 import { FoodController } from './controllers/food.controller';
 import { ShoppingCartController } from './controllers/shopping-cart.controller';
 import { UserController } from './controllers/user.controller';
@@ -28,6 +29,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     ShoppingCartController,
     FoodController,
     CategoryController,
+    FileController,
   ],
   providers: [JwtStrategy],
 })

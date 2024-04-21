@@ -1,14 +1,30 @@
-import { FileUpload } from '@delivery-service/contracts';
+import { FileCreate } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
+import { path } from 'app-root-path';
+import { writeFile } from 'fs/promises';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
-import { join } from 'path';
 import { FilesService } from './file.service';
-import { MFile } from './mfile';
 @Controller()
 export class FilesQueries {
-  private readonly baseDir = join(__dirname, '../files');
+  private readonly baseDir = path + '/uploads/';
 
   constructor(private readonly filesService: FilesService) {}
+  @RMQValidate()
+  @RMQRoute(FileCreate.topic)
+  async createFile(
+    @Body() { file }: FileCreate.Request
+  ): Promise<FileCreate.Response> {
+    const extension = file.originalname.split('.');
+
+    await writeFile(
+      // `${this.baseDir + new Date().getTime()}.${
+      //   extension[extension.length - 1]
+      // }`,
+      `${this.baseDir + new Date().getTime()}.jpg`,
+      file.buffer.buffer
+    );
+    return { message: file };
+  }
   @RMQValidate()
   @RMQRoute(FileUpload.topic)
   async uploadFile(
@@ -28,16 +44,8 @@ export class FilesQueries {
     return { message: 'File created successfully' };
   }
   private getFilePath(fileName: string): string {
-    return join(this.baseDir, `${fileName}.txt`);
+    return join(this.baseDir, `${fileName}.`);
   }
-  // @RMQValidate()
-  // @RMQRoute(FileCreate.topic)
-  // async createFile(
-  //   @Body() file: FileCreate.Request
-  // ): Promise<FileCreate.Response> {
-  //   await fs.writeFile(this.getFilePath(fileName), content, 'utf8');
-  //   return { message: 'File created successfully' };
-  // }
 
   // @RMQValidate()
   // @RMQRoute(FileDelete.topic)

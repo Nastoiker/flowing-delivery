@@ -12,17 +12,15 @@ import {
   Post,
   Put,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RMQService } from 'nestjs-rmq';
 import { FileDto } from '../dtos/file/file.dto';
-import { JWTAuthGuard } from '../guards/jwt.guard';
 import { UserId } from '../guards/user.decorator';
 
 @Controller('files')
-@UseGuards(JWTAuthGuard)
+// @UseGuards(JWTAuthGuard)
 export class FileController {
   constructor(private readonly rmqService: RMQService) {}
 
@@ -41,7 +39,7 @@ export class FileController {
     };
     return await this.rmqService.send<FileCreate.Request, FileCreate.Response>(
       FileCreate.topic,
-      fileData
+      { file }
     );
   }
 

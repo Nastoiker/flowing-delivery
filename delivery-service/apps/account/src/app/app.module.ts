@@ -8,8 +8,8 @@ import { CategoryModule } from './category/category.module';
 import configuration from './configs/configuration';
 import { getRMQConfig } from './configs/rmq.config';
 import { FoodModule } from './food/food.module';
-import { UserModule } from './user/user.module';
 import { ShoppingCartModule } from './shopping-cart/shopping-cart.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [

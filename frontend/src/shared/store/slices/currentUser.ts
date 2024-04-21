@@ -4,16 +4,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 enum USER_ROLES {}
 interface UserAttributes {
   id: number;
-  email: string | null;
-  password: string | null;
-  roles: USER_ROLES | null;
+  email: string;
+  password: string;
+  roles: USER_ROLES;
   username: string;
   name: string;
   surname: string;
 }
 
 export type CurrentUserState = UserAttributes & {
-  profile: Record<string, unknown>;
+  profile:any;
 };
 
 const initialState: CurrentUserState = {

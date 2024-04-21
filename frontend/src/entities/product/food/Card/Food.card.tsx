@@ -1,3 +1,4 @@
+import img from '@/assets/istockphoto-1192094401-612x612.jpg';
 import { IFood } from "@/shared/interfaces/foods.interface";
 import {
   Button,
@@ -6,29 +7,27 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  Skeleton,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useState } from "react";
-
 export function FoodCard(props: { food: IFood }) {
   const { food } = props;
   const [imgIsLoaded, setImgIsLoaded] = useState(false);
   return (
     <Card sx={{ width: 300 }}>
       <CardActionArea>
-        {imgIsLoaded ? (
-          <CardMedia
+        {/* {imgIsLoaded ? (
+           
+        ) : (
+          <Skeleton variant="rectangular" height={140} />
+        )} */}
+       <CardMedia
             component="img"
             height="140"
             onLoad={() => setImgIsLoaded((p) => !p)}
-            image={food.pictures}
+            image={img}
             alt={food.title}
           />
-        ) : (
-          <Skeleton variant="rectangular" height={140} />
-        )}
-
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {food.title}

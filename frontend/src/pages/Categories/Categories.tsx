@@ -23,6 +23,7 @@ const CategoryList = styled.div`
   margin-top: 20px;
   display: flex;
   gap: 50px;
+  justify-content: center;
   flex-wrap: wrap;
 `;
 

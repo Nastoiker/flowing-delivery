@@ -12,3 +12,13 @@ export function useCategories() {
   });
   return query;
 }
+export function useFoodsByCategory(categoryId: number) {
+  // const flash = useFlash();
+  const query = useQuery(["foods-by-category", categoryId], async () => getCategories(), {
+    retry: false,
+    onError: (err: AxiosError<{ message?: string }>) => {
+      console.error(err);
+    },
+  });
+  return query;
+}

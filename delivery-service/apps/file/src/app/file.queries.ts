@@ -25,27 +25,27 @@ export class FilesQueries {
     );
     return { message: file };
   }
-  @RMQValidate()
-  @RMQRoute(FileUpload.topic)
-  async uploadFile(
-    @Body() { file }: FileUpload.Request
-  ): Promise<FileUpload.Response> {
-    if (file.mimetype.includes('image')) {
-      const saveArray: MFile[] = [new MFile(file)];
+  // @RMQValidate()
+  // @RMQRoute(FileUpload.topic)
+  // async uploadFile(
+  //   @Body() { file }: FileUpload.Request
+  // ): Promise<FileUpload.Response> {
+  //   if (file.mimetype.includes('image')) {
+  //     const saveArray: MFile[] = [new MFile(file)];
 
-      const buffer = await this.filesService.convertToWebP(file.buffer);
-      saveArray.push(
-        new MFile({
-          originalname: `${file.originalname.split('.')[0]}.webp`,
-          buffer,
-        })
-      );
-    }
-    return { message: 'File created successfully' };
-  }
-  private getFilePath(fileName: string): string {
-    return join(this.baseDir, `${fileName}.`);
-  }
+  //     const buffer = await this.filesService.convertToWebP(file.buffer);
+  //     saveArray.push(
+  //       new MFile({
+  //         originalname: `${file.originalname.split('.')[0]}.webp`,
+  //         buffer,
+  //       })
+  //     );
+  //   }
+  //   return { message: 'File created successfully' };
+  // }
+  // private getFilePath(fileName: string): string {
+  //   return join(this.baseDir, `${fileName}.`);
+  // }
 
   // @RMQValidate()
   // @RMQRoute(FileDelete.topic)

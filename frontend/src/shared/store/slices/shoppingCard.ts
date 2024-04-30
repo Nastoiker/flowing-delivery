@@ -56,6 +56,12 @@ export const cartSlice = createSlice({
       });
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(
+      fetchCurrentUser.fulfilled,
+      (state, { payload }) => payload
+    );
+  },
 });
 
 export default cartSlice.reducer;

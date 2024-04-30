@@ -1,4 +1,6 @@
-import img from '@/assets/istockphoto-1192094401-612x612.jpg';
+import { useCreateShoppingCart } from "@/features/shopping-card/hooks/useCrudShoppingCard";
+import { HOST } from "@/helpers/api";
+import { AppImage } from "@/shared/components/image/AppImage";
 import { IFood } from "@/shared/interfaces/foods.interface";
 import {
   Button,
@@ -6,28 +8,35 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
-  CardMedia,
-  Typography
+  Skeleton,
+  Typography,
 } from "@mui/material";
-import { useState } from "react";
 export function FoodCard(props: { food: IFood }) {
   const { food } = props;
-  const [imgIsLoaded, setImgIsLoaded] = useState(false);
+  const { createShoppingCart } = useCreateShoppingCart();
+  const handleAddToCart = async () => {
+    await createShoppingCart({
+      purchaseState: "",
+      productId: food.id,
+      totalPrice: food.price,
+      count: 1,
+    });
+  };
   return (
     <Card sx={{ width: 300 }}>
       <CardActionArea>
         {/* {imgIsLoaded ? (
            
         ) : (
-          <Skeleton variant="rectangular" height={140} />
+         
         )} */}
-       <CardMedia
-            component="img"
-            height="140"
-            onLoad={() => setImgIsLoaded((p) => !p)}
-            image={img}
-            alt={food.title}
-          />
+        <AppImage
+          fallback={<Skeleton variant="rectangular" height={140} />}
+          src={`${HOST + food.pictures}`}
+          alt={food.title}
+          height="140px"
+          width="100%"
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {food.title}
@@ -50,7 +59,7 @@ export function FoodCard(props: { food: IFood }) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <Button onClick={() => handleAddToCart()} size="small" color="primary">
           Добавить в корзину
         </Button>
       </CardActions>

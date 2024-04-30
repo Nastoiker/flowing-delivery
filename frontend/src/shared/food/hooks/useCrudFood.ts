@@ -1,4 +1,4 @@
-import { getFoods, updateFood } from "@/entities/product/food/food.api";
+import { createFoodFetch, getFoods } from "@/entities/product/food/food.api";
 import { api } from "@/helpers/api";
 import { IFood } from "@/shared/interfaces/foods.interface";
 import { AxiosError } from "axios";
@@ -27,7 +27,7 @@ export function useCreateFood() {
     error,
   } = useMutation(
     "createFood",
-    async (food: Partial<IFood>) => updateFood(food),
+    async (food: FormData) => createFoodFetch(food),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("foods");

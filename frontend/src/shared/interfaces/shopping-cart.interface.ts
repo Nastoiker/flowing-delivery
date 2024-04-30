@@ -7,5 +7,5 @@ export interface IShoppingCart {
   productId: number;
   totalPrice: number;
   count: number;
-  product?: IFood;
+  product: IFood;
 }

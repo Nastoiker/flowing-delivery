@@ -1,0 +1,35 @@
+import { useShoppingCart } from "@/features/shopping-card/hooks/useCrudShoppingCard";
+import { Button, Divider } from "@mui/material";
+import styled from "styled-components";
+import { ShoppintCartItem } from "./ShoppingCart.item";
+
+export const Wrapper = styled.div``;
+export const ShoppingCardPage = () => {
+  const { data: shoppingCarts, isError } = useShoppingCart();
+
+  if (isError || !shoppingCarts) {
+    return <div>Ошибка</div>;
+  }
+
+  return (
+    <Wrapper>
+      <h1>Корзина</h1>
+      {shoppingCarts.data.shoppingCart.map((s) => (
+        <ShoppintCartItem key={s.id} shoppingCart={s} />
+      ))}
+      <Divider />
+      <div>
+        <h4>Итог:</h4>
+      </div>
+      <Divider />
+      <div>
+        <h4>Доставка:</h4>
+      </div>
+      <Divider />
+      <div>
+        <h4>Сумма:</h4>
+      </div>
+      <Button type="submit">оформить</Button>
+    </Wrapper>
+  );
+};

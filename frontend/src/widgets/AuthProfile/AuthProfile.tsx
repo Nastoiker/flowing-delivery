@@ -45,13 +45,17 @@ export default function BasicMenuAuth({ user }) {
           "aria-labelledby": "basic-button",
         }}
       >
-        {user.name ? (
+        {user?.name ? (
           <>
             <MenuItem onClick={() => handleRedirect("profile")}>
-              Profile
+              Профиль
+            </MenuItem>
+            <MenuItem onClick={() => handleRedirect("admin")}>Админка</MenuItem>
+            <MenuItem onClick={() => handleRedirect("shopping-cart")}>
+              Корзина
             </MenuItem>
             <MenuItem onClick={() => handleLogout("/auth/login")}>
-              Logout
+              Выйти
             </MenuItem>
           </>
         ) : (

@@ -1,5 +1,7 @@
 import { CategoriesPage } from "@/pages/Categories/Categories";
 import { FoodPage } from "@/pages/Foods/Food.page";
+import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
+import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import { RequireAuth } from "../../helpers/RequireAuth";
 import { AuthLayout } from "../../layout/Auth/AuthLayout";
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
           </RequireAuth>
         ),
         children: [
+          {
+            path: "admin",
+            element: <AdminPanel />,
+          },
+          {
+            path: "shopping-cart",
+            element: <ShoppingCardPage />,
+          },
           {
             path: "profile",
             element: <Profile />,

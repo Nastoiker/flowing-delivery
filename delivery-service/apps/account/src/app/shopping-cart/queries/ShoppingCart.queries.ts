@@ -1,7 +1,8 @@
 import {
+  AccountShoppingCart,
   ShoppingCardCreate,
-  ShoppingCardGetByUserId,
   ShoppingCardRemove,
+  ShoppingCardUpdate,
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
@@ -23,6 +24,18 @@ export class ShoppingCardQueries {
       shoppingCard,
     };
   }
+  @RMQValidate()
+  @RMQRoute(ShoppingCardUpdate.topic)
+  async updateCart(
+    @Body() { shoppingCart }: ShoppingCardUpdate.Request
+  ): Promise<ShoppingCardUpdate.Response> {
+    const shoppingCard = await this.cardRepository.updateShoppingCart(
+      shoppingCart
+    );
+    return {
+      shoppingCard,
+    };
+  }
 
   @RMQValidate()
   @RMQRoute(ShoppingCardRemove.topic)
@@ -36,15 +49,15 @@ export class ShoppingCardQueries {
   }
 
   @RMQValidate()
-  @RMQRoute(ShoppingCardGetByUserId.topic)
+  @RMQRoute(AccountShoppingCart.topic)
   async getAllCards(
-    @Body() { userId }: ShoppingCardGetByUserId.Request
-  ): Promise<ShoppingCardGetByUserId.Response> {
-    const shoppingCard = await this.cardRepository.getShoppingCardByUserId(
+    @Body() { userId }: AccountShoppingCart.Request
+  ): Promise<AccountShoppingCart.Response> {
+    const shoppingCart = await this.cardRepository.getShoppingCardByUserId(
       userId
     );
     return {
-      shoppingCard,
+      shoppingCart,
     };
   }
 }

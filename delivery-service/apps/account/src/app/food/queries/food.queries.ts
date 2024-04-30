@@ -23,7 +23,7 @@ export class FoodQueries {
   }
   @RMQValidate()
   @RMQRoute(FoodGetAll.topic)
-  async foodAll(): Promise<FoodGetAll.Response> {
+  async foodAll(_: FoodGetAll.Request): Promise<FoodGetAll.Response> {
     const foods = await this.foodRepository.findAllFood();
     return {
       foods,

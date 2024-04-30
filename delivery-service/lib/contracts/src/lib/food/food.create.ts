@@ -1,6 +1,5 @@
 import { IFood } from '@delivery-service/interfaces';
 import { IsNumber, IsString } from 'class-validator';
-
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace FoodCreate {
   export const topic = 'food.create.command';
@@ -21,8 +20,8 @@ export namespace FoodCreate {
     in_stock: number | undefined;
     @IsString()
     description: string | undefined;
-    @IsString()
-    pictures: string | undefined;
+    // TODO: Express.Multer.File
+    pictures: any | undefined;
   }
   export class Response {
     food: IFood | undefined;

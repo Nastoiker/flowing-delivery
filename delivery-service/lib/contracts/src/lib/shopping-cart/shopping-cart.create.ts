@@ -1,13 +1,19 @@
 import { IShoppingCart } from '@delivery-service/interfaces';
-import { IsObject } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ShoppingCardCreate {
   export const topic = 'shopping-card.create.command';
 
   export class Request {
-    @IsObject()
-    shoppingCard: Partial<IShoppingCart> | undefined;
+    @IsNumber()
+    userId: number | undefined;
+    @IsNumber()
+    productId: number | undefined;
+    @IsNumber()
+    totalPrice: number | undefined;
+    @IsNumber()
+    count: number | undefined;
   }
 
   export class Response {

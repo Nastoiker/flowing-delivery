@@ -4,8 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { path } from 'app-root-path';
 import { RMQModule } from 'nestjs-rmq';
 import { getJwtConfig } from './configs/jwt.config';
 import { getRMQConfig } from './configs/rmq.config';
@@ -19,10 +17,6 @@ import { FilesService } from './file.service';
     JwtModule.registerAsync(getJwtConfig()),
     PassportModule,
     ScheduleModule.forRoot(),
-    ServeStaticModule.forRoot({
-      rootPath: `${path}/uploads`,
-      serveRoot: '/uploads',
-    }),
   ],
   controllers: [FilesQueries],
   providers: [FilesService],

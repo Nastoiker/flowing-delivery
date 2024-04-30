@@ -3,7 +3,9 @@ import {
   FileGetInfo,
   FileUpdate,
 } from '@delivery-service/contracts';
+import { FileElementResponse, MFile } from '@delivery-service/interfaces';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,12 +19,58 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RMQService } from 'nestjs-rmq';
 import { FileDto } from '../dtos/file/file.dto';
+import { FilesService } from '../file.service';
 import { UserId } from '../guards/user.decorator';
 
 @Controller('files')
 // @UseGuards(JWTAuthGuard)
 export class FileController {
-  constructor(private readonly rmqService: RMQService) {}
+  constructor(
+    private readonly rmqService: RMQService,
+    private readonly filesService: FilesService
+  ) {}
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File
+    // @Query() params: PayloadDto
+  ): Promise<FileElementResponse> {
+    const saveFile: MFile = new MFile(file);
+    if (!file.mimetype.includes('image')) {
+      throw new BadRequestException('Неверный формат файла');
+    }
+    // console.log({
+    //   width: Number(params.width),
+    //   height: Number(params.height),
+    //   quality: Number(params.quality),
+    //   format: params.type,
+    // });
+    // const res = await this.rmqService.send<
+    //   GenerateImages.Request,
+    //   GenerateImages.Response
+    // >(GenerateImages.Topic, {
+    //   image: saveFile.buffer.toString('base64'),
+    //   requirements: [
+    //     {
+    //       width: Number(params.width),
+    //       height: Number(params.height),
+    //       quality: Number(params.quality),
+    //       format: params.type,
+    //     },
+    //   ],
+    // });
+    const extension = file.originalname.split('.');
+
+    return this.filesService.saveFile(
+      new MFile({
+        originalname:
+          file.originalname.split('.')[0] +
+          '.' +
+          extension[extension.length - 1],
+        buffer: Buffer.from(file.buffer),
+      })
+    );
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))

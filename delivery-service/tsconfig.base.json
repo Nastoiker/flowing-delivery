@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "types": ["node", "express", "multer"],
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
@@ -14,6 +15,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
       "@delivery-service/contracts": ["lib/contracts/src/index.ts"],
       "@delivery-service/interfaces": ["lib/interfaces/src/index.ts"]

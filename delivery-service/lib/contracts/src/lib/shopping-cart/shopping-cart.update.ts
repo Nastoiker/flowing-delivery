@@ -7,7 +7,7 @@ export namespace ShoppingCardUpdate {
 
   export class Request {
     @IsObject()
-    id: Partial<IShoppingCart> | undefined;
+    shoppingCart: IShoppingCart | undefined;
   }
 
   export class Response {

@@ -1,6 +1,7 @@
 import { IShoppingCart } from '@delivery-service/interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Food } from '../../food/models/food.model';
 import { User } from '../../user/models/user.model';
 import { ShoppingCart } from '../model/shopping-cart.model';
 
@@ -22,16 +23,10 @@ export class ShoppingCartRepository {
   }
 
   async updateShoppingCart({ id, ...rest }: IShoppingCart) {
-    const shoppingCart = await this.shoppingCartModel.update(
-      {
-        ...rest,
-      },
-      {
-        where: {
-          id,
-        },
-      }
-    );
+    const checkExist = await this.shoppingCartModel.findByPk(id);
+    const shoppingCart = await checkExist.update({
+      ...rest,
+    });
 
     return shoppingCart;
   }
@@ -40,18 +35,19 @@ export class ShoppingCartRepository {
     return this.shoppingCartModel.findOne({ where: { id } });
   }
   async getShoppingCardByUserId(userId: number) {
-    return this.shoppingCartModel.findOne({
+    return this.shoppingCartModel.findAll({
       where: { userId },
-      include: [{ model: User }],
+      include: [{ model: User }, { model: Food }],
     });
   }
   async findShoppingCartById(id: number) {
     return this.shoppingCartModel.findByPk(id);
   }
   async deleteShoppingCart(id: number) {
-    const shoppingCart = await this.shoppingCartModel.findOne({
-      where: { id },
-    });
+    const shoppingCart = await this.shoppingCartModel.findByPk(id);
+    if (!shoppingCart) {
+      throw new Error('Корза не найдена');
+    }
     await shoppingCart.destroy();
   }
 }

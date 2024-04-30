@@ -1,5 +1,5 @@
-import { CategoryGetAll } from '@delivery-service/contracts';
-import { Controller, Query } from '@nestjs/common';
+import { CategoryCreate, CategoryGetAll } from '@delivery-service/contracts';
+import { Body, Controller, Query } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { CategoryRepository } from '../repositories/category.repositories';
 
@@ -12,6 +12,16 @@ export class CategoryQueries {
     const category = await this.categoryRepository.findAllCategory();
     return {
       categories: category,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(CategoryCreate.topic)
+  async categoryCreate(
+    @Body() { category: categoryDto }: CategoryCreate.Request
+  ): Promise<CategoryCreate.Response> {
+    const category = await this.categoryRepository.createCategory(categoryDto);
+    return {
+      category,
     };
   }
   // @RMQValidate()

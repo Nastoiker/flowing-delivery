@@ -1,22 +1,20 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class FoodDto {
-  @IsNumber()
-  categoryId: number;
+  //@IsNumber()
+  categoryId: string;
   @IsString()
   title: string;
-  @IsNumber()
-  price: number;
-  @IsNumber()
-  count: number;
-  @IsNumber()
-  in_stock: number;
-  @IsNumber()
-  calories: number;
-  @IsNumber()
-  grams: number;
-  @IsString()
+  //@IsNumber()
+  price: string;
+  // @IsNumber()
+  count: string;
+  //@IsNumber()
+  in_stock: string;
+  // @IsNumber()
+  calories: string;
+  // @IsNumber()
+  grams: string;
+  // @IsString()
   description: string;
-  @IsString()
-  pictures: string;
 }

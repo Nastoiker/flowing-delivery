@@ -1,10 +1,22 @@
-import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Food } from '../../food/models/food.model';
 import { User } from '../../user/models/user.model';
 
 @Table({ timestamps: true })
 export class ShoppingCart extends Model {
-  @Column({ primaryKey: true })
+  @Column({
+    type: DataType.INTEGER,
+    unique: true,
+    primaryKey: true,
+    autoIncrement: true,
+  })
   id: number;
   @ForeignKey(() => User)
   @Column
@@ -20,4 +32,8 @@ export class ShoppingCart extends Model {
 
   @Column({ defaultValue: 1 })
   count: number;
+  @BelongsTo(() => Food)
+  product: Food;
+  @BelongsTo(() => User)
+  user: User;
 }

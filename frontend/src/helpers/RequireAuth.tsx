@@ -1,6 +1,7 @@
 import { useAppThunkDispatch } from "@/shared/store/hooks";
 import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import { ReactNode, useEffect } from "react";
+import toast from "react-hot-toast";
 import { Navigate } from "react-router-dom";
 
 export const RequireAuth = ({ children }: { children: ReactNode }) => {
@@ -17,7 +18,9 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
       };
       fetch();
       console.log("fetchMe");
-    } catch (e) {
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message)
+
       console.log(e);
     }
   }, [dispatch]);

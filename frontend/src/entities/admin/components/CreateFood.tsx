@@ -1,10 +1,9 @@
-import { logger } from "@/app/Logger/Logger";
 import { SelectCategoryController } from "@/shared/components/Select/SelectCategory";
 import { useCreateFood } from "@/shared/food/hooks/useCrudFood";
 import { Button, Input } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import styled from "styled-components";
-
 interface ICreateCategory {}
 const Wrapper = styled.form`
   display: flex;
@@ -54,10 +53,9 @@ export const CreateFood = () => {
       data.append("price", food.price?.toString());
       data.append("grams", food.grams?.toString());
       await createFood(data);
-    } catch (e) {
-      if (e instanceof Error) {
-        logger.error(e?.message);
-      }
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message)
+
     }
   };
   return (

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from "react-router-dom";
 
+import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { Button, Input } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { api } from "../../../helpers/api";
@@ -20,13 +22,13 @@ export type RegisterForm = {
 
 export function Register() {
   const navigate = useNavigate();
-  const jwt = localStorage.getItem("jwt");
+  const currentUser = useCurrentUser();
   const [error, setError] = useState<boolean>();
   useEffect(() => {
-    if (jwt) {
+    if (currentUser.name) {
       navigate("/");
     }
-  }, [jwt, navigate]);
+  }, [currentUser, navigate]);
   const {
     register,
     control,
@@ -58,7 +60,9 @@ export function Register() {
         surname,
       });
       navigate("/auth/login");
-    } catch (e) {
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message)
+
       setError(true);
     }
   };
@@ -72,8 +76,12 @@ export function Register() {
           <Input
             id="email"
             {...register("email", {
-              required: { value: true, message: "Заполните login" },
-            })}
+              required: { value: true, message: "Заполните email" }, pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Нужен email",
+              },} 
+            )}
+            error={Boolean(errors.email)}
             name="email"
             placeholder="Email"
           />
@@ -130,3 +138,5 @@ export function Register() {
     </div>
   );
 }
+
+

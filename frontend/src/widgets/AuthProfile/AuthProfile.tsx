@@ -64,7 +64,7 @@ export default function BasicMenuAuth({ user }) {
               Войти
             </MenuItem>
             <MenuItem onClick={() => handleRedirect("/auth/register")}>
-              Зарегестироваться
+              Зарегистироваться
             </MenuItem>
           </>
         )}

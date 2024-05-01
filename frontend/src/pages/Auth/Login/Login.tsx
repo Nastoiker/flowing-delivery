@@ -1,6 +1,7 @@
 import { Button, Input, InputLabel, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../../helpers/api";
 import styles from "./Login.module.css";
@@ -41,7 +42,8 @@ export function Login() {
       });
       localStorage.setItem("token", token.data.access_token);
       navigate("/menu");
-    } catch (e) {
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message)
       setError(false);
     }
   };
@@ -53,8 +55,11 @@ export function Login() {
           <InputLabel>Ваш email</InputLabel>
           <Input
             {...register("email", {
-              required: { value: true, message: "Заполните login" },
-            })}
+              required: { value: true, message: "Заполните email" }, pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Нужен email",
+              },} 
+            )}
             id="email"
             name="email"
             placeholder="Email"

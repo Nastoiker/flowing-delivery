@@ -1,4 +1,6 @@
 import {
+  AccountGetAll,
+  AccountUpdate,
   AccountUserInfo,
   AccountUserMe,
   AccountUserOrders,
@@ -23,7 +25,14 @@ export class UserQueries {
       profile,
     };
   }
-
+  @RMQValidate()
+  @RMQRoute(AccountGetAll.topic)
+  async users(_: AccountGetAll.Request): Promise<AccountGetAll.Response> {
+    const users = await this.userRepository.getAllUsers();
+    return {
+      users,
+    };
+  }
   @RMQValidate()
   @RMQRoute(AccountUserOrders.topic)
   async userShoppingCart(
@@ -32,6 +41,16 @@ export class UserQueries {
     const user = await this.userRepository.findUserById(id);
     return {
       purchased: user.shoppingCart,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(AccountUpdate.topic)
+  async updateMe(
+    @Body() { user }: AccountUpdate.Request
+  ): Promise<AccountUpdate.Response> {
+    await this.userRepository.updateUser(user);
+    return {
+      message: 'Данные обновлены',
     };
   }
   @RMQValidate()

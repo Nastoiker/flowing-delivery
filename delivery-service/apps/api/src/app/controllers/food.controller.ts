@@ -10,6 +10,7 @@ import {
   Controller,
   Get,
   Logger,
+  Param,
   Post,
   UnauthorizedException,
   UploadedFile,
@@ -37,6 +38,19 @@ export class FoodController {
         FoodGetAll.Request,
         FoodGetAll.Response
       >(FoodGetAll.topic, {}, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @Get(':id')
+  async getFoodById(@Param('id') id: number) {
+    try {
+      return await this.rmqService.send<
+        FoodFindById.Request,
+        FoodFindById.Response
+      >(FoodFindById.topic, { id }, { headers: { requestId: 'adad' } });
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

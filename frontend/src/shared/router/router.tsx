@@ -1,5 +1,7 @@
 import { CategoriesPage } from "@/pages/Categories/Categories";
+import { CategoriesFoodsById } from "@/pages/Categories/CategoriesFoodsById";
 import { FoodPage } from "@/pages/Foods/Food.page";
+import { FoodById } from "@/pages/Foods/FoodById.page";
 import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
 import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
 import { Outlet, createBrowserRouter } from "react-router-dom";
@@ -27,9 +29,12 @@ const router = createBrowserRouter([
         element: <CategoriesPage />,
       },
       {
+        path: "categories/:id",
+        element: <CategoriesFoodsById />,
+      },
+      {
         path: "auth",
         element: <AuthLayout />,
-        // errorElement: <RoutesBoundary />,
         children: [
           {
             path: "login",
@@ -66,6 +71,10 @@ const router = createBrowserRouter([
       {
         path: "menu",
         element: <FoodPage />,
+      },
+      {
+        path: "menu/:id",
+        element: <FoodById />,
       },
     ],
   },

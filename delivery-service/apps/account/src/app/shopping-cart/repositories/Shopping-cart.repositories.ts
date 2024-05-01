@@ -22,9 +22,20 @@ export class ShoppingCartRepository {
     return shoppingCartCreated;
   }
 
-  async updateShoppingCart({ id, ...rest }: IShoppingCart) {
-    const checkExist = await this.shoppingCartModel.findByPk(id);
+  async updateShoppingCart({ id, count, totalPrice, ...rest }: IShoppingCart) {
+    const checkExist = await this.shoppingCartModel.findByPk(id, {
+      include: [{ model: Food }],
+    });
+    if (count === 0) {
+      await checkExist.destroy();
+      return;
+    }
+    if (count !== checkExist.count) {
+      totalPrice = count * checkExist.product.price;
+    }
     const shoppingCart = await checkExist.update({
+      count,
+      totalPrice,
       ...rest,
     });
 

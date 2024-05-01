@@ -12,13 +12,26 @@ export function useFoods() {
     isLoading,
   } = useQuery(["foods"], async () => getFoods(), {
     retry: false,
+    staleTime: 3000,
     onError: (err: AxiosError<{ message?: string }>) => {
       console.error(err);
     },
   });
   return { data, isError, isFetched, isLoading };
 }
-
+export function useFoodById(foodId: number) {
+  const query = useQuery(
+    ["food-by-id", foodId],
+    async (): Promise<{ data: { food: IFood } }> => api.get(`/food/${foodId}`),
+    {
+      retry: false,
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
+    }
+  );
+  return query;
+}
 export function useCreateFood() {
   const queryClient = useQueryClient();
   const {

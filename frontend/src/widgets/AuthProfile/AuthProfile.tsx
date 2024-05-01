@@ -3,11 +3,11 @@ import { IconButton } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { UserCircle } from "@phosphor-icons/react";
-import * as React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function BasicMenuAuth({ user }) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

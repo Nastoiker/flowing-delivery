@@ -1,13 +1,16 @@
-import { CategoryCreate, CategoryGetAll } from '@delivery-service/contracts';
+import {
+  CategoryCreate,
+  CategoryFoodsInfo,
+  CategoryGetAll,
+} from '@delivery-service/contracts';
 import {
   Body,
   Controller,
   Get,
-  Logger,
+  Param,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 import { RMQService } from 'nestjs-rmq';
 import { CreateCategoryDto } from '../dtos/category/category.dto';
 
@@ -28,6 +31,23 @@ export class CategoryController {
       }
     }
   }
+  @Get(':id')
+  async getCategoryById(@Param('id') id: number) {
+    try {
+      return await this.rmqService.send<
+        CategoryFoodsInfo.Request,
+        CategoryFoodsInfo.Response
+      >(
+        CategoryFoodsInfo.topic,
+        { categoryId: id },
+        { headers: { requestId: 'adad' } }
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
   @Post('create')
   async createCategory(@Body() category: CreateCategoryDto) {
     try {
@@ -40,9 +60,5 @@ export class CategoryController {
         throw new UnauthorizedException(e.message);
       }
     }
-  }
-  @Cron('*/5 * * * * *')
-  async cron() {
-    Logger.log('Done');
   }
 }

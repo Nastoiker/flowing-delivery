@@ -85,7 +85,7 @@ export const CreateFood = () => {
         />
 
         <Input
-          placeholder="Калорий"
+          placeholder="Энерг. ценность          "
           type="number"
           required
           {...register("calories")}

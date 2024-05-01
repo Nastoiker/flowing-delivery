@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/entities/user/api/user.api";
+import { IShoppingCart } from "@/shared/interfaces/shopping-cart.interface";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 enum USER_ROLES {}
@@ -10,10 +11,11 @@ interface UserAttributes {
   username: string;
   name: string;
   surname: string;
+  shoppingCart?: Array<IShoppingCart>;
 }
 
 export type CurrentUserState = UserAttributes & {
-  profile:any;
+  profile: any;
 };
 
 const initialState: CurrentUserState = {

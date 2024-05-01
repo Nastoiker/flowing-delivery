@@ -1,9 +1,17 @@
-import { AccountUserInfo, AccountUserMe } from '@delivery-service/contracts';
 import {
+  AccountGetAll,
+  AccountUpdate,
+  AccountUserInfo,
+  AccountUserMe,
+} from '@delivery-service/contracts';
+import { IUser } from '@delivery-service/interfaces';
+import {
+  Body,
   Controller,
   Get,
   Logger,
   Post,
+  Put,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -34,6 +42,23 @@ export class UserController {
       }
     }
   }
+  @Put()
+  async update(@UserId() userId: number, @Body() updateDto: Partial<IUser>) {
+    try {
+      return await this.rmqService.send<
+        AccountUpdate.Request,
+        AccountUpdate.Response
+      >(
+        AccountUpdate.topic,
+        { user: { id: userId, ...updateDto } },
+        { headers: { requestId: 'adad' } }
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
   @Get('me')
   async me(@UserId() userId: number) {
     try {
@@ -45,6 +70,20 @@ export class UserController {
         { id: userId },
         { headers: { requestId: 'adad' } }
       );
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log(e);
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @Get()
+  async users() {
+    try {
+      return await this.rmqService.send<
+        AccountGetAll.Request,
+        AccountGetAll.Response
+      >(AccountGetAll.topic, {}, { headers: { requestId: 'adad' } });
     } catch (e) {
       if (e instanceof Error) {
         console.log(e);

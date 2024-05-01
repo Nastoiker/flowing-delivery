@@ -1,6 +1,7 @@
 import { ICategory } from '@delivery-service/interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Food } from '../../food/models/food.model';
 import { Category } from '../model/category.model';
 
 @Injectable()
@@ -40,13 +41,13 @@ export class CategoryRepository {
   }
   async getProductsByCategory(categoryId: number) {
     //{ include: [{ association: 'products'}]}
-    return this.categoryModel.findOne({ where: { id:categoryId } },);
+    return this.categoryModel.findOne({ where: { id: categoryId } });
   }
   async findAllCategory() {
     return this.categoryModel.findAll();
   }
   async findCategoryById(id: number) {
-    return this.categoryModel.findByPk(id);
+    return this.categoryModel.findByPk(id, { include: [{ model: Food }] });
   }
 
   async deleteCategory(id: number) {

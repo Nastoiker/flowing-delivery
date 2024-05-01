@@ -1,4 +1,5 @@
 import { useCategories } from "@/shared/category/hooks/useCategories";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const CategoryBall = styled.div`
@@ -49,9 +50,11 @@ const CategoryBalls = ({ categories }) => {
     <CategoryList>
       {categories?.map((category) => (
         <>
-          <CategoryBall key={category.id} color={getRandomColor()}>
-            <InnerElement>{category.name}</InnerElement>
-          </CategoryBall>
+          <Link to={`/categories/${category.id}`}>
+            <CategoryBall key={category.id} color={getRandomColor()}>
+              <InnerElement>{category.name}</InnerElement>
+            </CategoryBall>
+          </Link>
         </>
       ))}
     </CategoryList>

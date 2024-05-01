@@ -13,7 +13,7 @@ export class FoodQueries {
 
   @RMQValidate()
   @RMQRoute(FoodFindById.topic)
-  async foodInfo(
+  async foodByIdInfo(
     @Body() { id }: FoodFindById.Request
   ): Promise<FoodFindById.Response> {
     const food = await this.foodRepository.findFood(id);

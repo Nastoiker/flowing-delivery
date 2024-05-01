@@ -19,7 +19,7 @@ export function useFoodsByCategory(categoryId: number) {
   // const flash = useFlash();
   const query = useQuery(
     ["foods-by-category", categoryId],
-    async () => getCategories(),
+    async () => api.get(`/categories/${categoryId}`),
     {
       retry: false,
       onError: (err: AxiosError<{ message?: string }>) => {

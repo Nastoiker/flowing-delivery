@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -18,6 +19,9 @@ export const NotFoundErrorPage = () => {
     <Container>
       <Heading>404</Heading>
       <Text>К сожалению, ничего не найдено</Text>
+      <Link to={`/menu`}>
+        <Text>Вернуться на главную</Text>
+      </Link>
     </Container>
   );
 };

@@ -1,3 +1,5 @@
+import noImg from "@/assets/no-image.jpg";
+import { Skeleton } from "@mui/material";
 import {
   ImgHTMLAttributes,
   ReactElement,
@@ -5,7 +7,6 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-
 interface AppImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   className?: string;
   fallback?: ReactElement;
@@ -18,8 +19,8 @@ export const AppImage = memo((props: AppImageProps) => {
     className,
     src,
     alt = "image",
-    errorFallback,
-    fallback,
+    errorFallback = <Skeleton variant="rectangular" height={140} />,
+    fallback = <Skeleton variant="rectangular" height={140} />,
     height,
     width,
     ...otherProps
@@ -34,6 +35,7 @@ export const AppImage = memo((props: AppImageProps) => {
       setIsLoading(false);
     };
     img.onerror = () => {
+      img.src = noImg;
       setIsLoading(false);
       setHasError(true);
     };

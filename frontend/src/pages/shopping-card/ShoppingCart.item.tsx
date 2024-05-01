@@ -16,13 +16,16 @@ export const CartItem = styled.div`
   border-radius: 20px;
 `;
 const Actions = styled.div`
-  margin-left: auto;
   display: flex;
   gap: 40px;
   align-items: center;
   align-self: flex-start;
 `;
-
+const ActionsButttons = styled.div`
+  display: flex;
+  gap: 40px;
+  align-items: center;
+`;
 const Description = styled.div`
   display: flex;
   flex-direction: column;
@@ -88,6 +91,10 @@ const Number = styled.div`
 `;
 const Wrapper = styled.div`
   max-width: 700px;
+  flex-direction: column;
+  display: flex;
+  gap: 50px;
+  margin: 50px 0;
 `;
 export const ShoppintCartItem = ({
   shoppingCart,
@@ -120,18 +127,20 @@ export const ShoppintCartItem = ({
         />
         <Description>
           <Name>{shoppingCart.product?.title}</Name>
-          <Price>Цена: {shoppingCart.product?.price}р</Price>
+          <Price>Цена: {shoppingCart.product?.price}₽</Price>
         </Description>
-        <Actions>
-          <Plus onClick={() => handleIncrement()}>+</Plus>
+        <ActionsButttons>
+          <Minus onClick={() => handleDicrement()}>-</Minus>
           <Number>{shoppingCart.count}</Number>
 
-          <Minus onClick={() => handleDicrement()}>-</Minus>
+          <Plus onClick={() => handleIncrement()}>+</Plus>
+
           <Remove onClick={() => deleteShoppingCart(shoppingCart.id)}>
             Удалить все
           </Remove>
-        </Actions>
+        </ActionsButttons>
       </Actions>
+      <Price>Итогая сумма: {shoppingCart.totalPrice}₽</Price>
     </Wrapper>
   );
 };

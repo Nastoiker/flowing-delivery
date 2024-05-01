@@ -1,5 +1,6 @@
 import { api } from "@/helpers/api";
 import { getItem } from "@/helpers/localStorage";
+import { IUser } from "@/shared/interfaces/user.interface";
 
 export const getCurrentUser = async () => {
   if (!getItem("token")) {
@@ -10,3 +11,8 @@ export const getCurrentUser = async () => {
 };
 export const fetchMe = async () => {};
 export const updateMe = async () => {};
+export async function getUsers(): Promise<{
+  data: { users: IUser[] };
+}> {
+  return api.get("user");
+}

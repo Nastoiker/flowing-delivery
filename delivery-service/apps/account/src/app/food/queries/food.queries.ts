@@ -1,6 +1,7 @@
 import {
   FoodCreate,
   FoodFindById,
+  FoodFindBySearch,
   FoodGetAll,
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
@@ -29,7 +30,16 @@ export class FoodQueries {
       foods,
     };
   }
-
+  @RMQValidate()
+  @RMQRoute(FoodFindBySearch.topic)
+  async foodFindBySearch({
+    search,
+  }: FoodFindBySearch.Request): Promise<FoodFindBySearch.Response> {
+    const foods = await this.foodRepository.findBySearch(search);
+    return {
+      foods,
+    };
+  }
   @RMQValidate()
   @RMQRoute(FoodCreate.topic)
   async foodCreate(

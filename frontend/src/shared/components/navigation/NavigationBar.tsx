@@ -1,10 +1,12 @@
+import { SearchContext } from "@/app/Context/SearchContext";
 import Logo from "@/assets/logo.svg";
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
+import { SearchField } from "@/shared/search/SearchField";
 import BasicMenuAuth from "@/widgets/AuthProfile/AuthProfile";
 import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -14,10 +16,7 @@ export default function AccountMenu() {
   };
   const navigate = useNavigate();
   const profile = useCurrentUser();
-  const isLogin = Boolean(localStorage.getItem("token"));
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { setSearch, search } = useContext(SearchContext);
   return (
     <Box
       sx={{
@@ -42,9 +41,20 @@ export default function AccountMenu() {
       <Button sx={{ minWidth: 100 }} onClick={() => navigate("/menu")}>
         Меню
       </Button>
+
       <Button sx={{ minWidth: 100 }} onClick={() => navigate("/categories")}>
         Категории
       </Button>
+      <div style={{ maxWidth: "300px" }}>
+        <SearchField
+          onEnter={() => navigate("/menu/search")}
+          value={search}
+          size="small"
+          onChange={(value) => {
+            setSearch(value);
+          }}
+        />
+      </div>
       <IconButton
         onClick={handleClick}
         size="small"

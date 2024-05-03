@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { RouterProvider } from "react-router-dom";
 
@@ -36,7 +36,7 @@ function App() {
       <ErrorBoundary fallback={<ErrorPage />}>
         <CssBaseline />
         <ThemeProvider theme={AppTheme}>
-        <Toaster />
+          <Toaster />
 
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools />

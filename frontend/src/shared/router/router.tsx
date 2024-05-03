@@ -2,6 +2,7 @@ import { CategoriesPage } from "@/pages/Categories/Categories";
 import { CategoriesFoodsById } from "@/pages/Categories/CategoriesFoodsById";
 import { FoodPage } from "@/pages/Foods/Food.page";
 import { FoodById } from "@/pages/Foods/FoodById.page";
+import { FoodFindBySearch } from "@/pages/Foods/FoodFindBySearch";
 import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
 import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
 import { Outlet, createBrowserRouter } from "react-router-dom";
@@ -71,10 +72,15 @@ const router = createBrowserRouter([
       {
         path: "menu",
         element: <FoodPage />,
+        children: [],
       },
       {
         path: "menu/:id",
         element: <FoodById />,
+      },
+      {
+        path: "menu/search",
+        element: <FoodFindBySearch />,
       },
     ],
   },

@@ -1,6 +1,7 @@
 import {
   FoodCreate,
   FoodFindById,
+  FoodFindBySearch,
   FoodGetAll,
 } from '@delivery-service/contracts';
 import { MFile } from '@delivery-service/interfaces';
@@ -51,6 +52,19 @@ export class FoodController {
         FoodFindById.Request,
         FoodFindById.Response
       >(FoodFindById.topic, { id }, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @Get('/search/:search')
+  async findBySearchValue(@Param('search') search: string) {
+    try {
+      return await this.rmqService.send<
+        FoodFindBySearch.Request,
+        FoodFindBySearch.Response
+      >(FoodFindBySearch.topic, { search }, { headers: { requestId: 'adad' } });
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

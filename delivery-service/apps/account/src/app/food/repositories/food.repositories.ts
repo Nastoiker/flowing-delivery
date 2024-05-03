@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { IFood } from '@delivery-service/interfaces';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { Food } from '../models/food.model';
-
 @Injectable()
 export class FoodRepository {
   constructor(@InjectModel(Food) private readonly foodModel: typeof Food) {}
@@ -42,6 +42,24 @@ export class FoodRepository {
   }
   async findAllFood() {
     return this.foodModel.findAll();
+  }
+  async findBySearch(search: string) {
+    return this.foodModel.findAll({
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            description: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+        ],
+      },
+    });
   }
   async deleteFood(id: number) {
     const food = await this.foodModel.findOne({ where: { id } });

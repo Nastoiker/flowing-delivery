@@ -32,6 +32,20 @@ export function useFoodById(foodId: number) {
   );
   return query;
 }
+export function useSearchFood(search: string) {
+  const query = useQuery(
+    ["food-by-search", search],
+    async (): Promise<{ data: { foods: IFood[] } }> =>
+      api.get(`/food/search/${search}`),
+    {
+      retry: false,
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
+    }
+  );
+  return query;
+}
 export function useCreateFood() {
   const queryClient = useQueryClient();
   const {

@@ -1,3 +1,4 @@
+import { ProtectedRoute } from "@/helpers/ProtectedRoute";
 import { CategoriesPage } from "@/pages/Categories/Categories";
 import { CategoriesFoodsById } from "@/pages/Categories/CategoriesFoodsById";
 import { FoodPage } from "@/pages/Foods/Food.page";
@@ -10,7 +11,7 @@ import { RequireAuth } from "../../helpers/RequireAuth";
 import { AuthLayout } from "../../layout/Auth/AuthLayout";
 import { Login } from "../../pages/Auth/Login/Login";
 import { Register } from "../../pages/Auth/Register/Register";
-import { Profile } from "../../pages/profile/Profile";
+import { Profile, USER_ROLES } from "../../pages/profile/Profile";
 import { NotFoundErrorPage } from "../Error/NotFoundPage";
 import { default as NavigationBar } from "../components/navigation/NavigationBar";
 
@@ -57,7 +58,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "admin",
-            element: <AdminPanel />,
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+                <AdminPanel />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "shopping-cart",

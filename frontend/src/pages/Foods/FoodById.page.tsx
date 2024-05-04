@@ -8,7 +8,7 @@ export const FoodById = () => {
   const { id } = useParams();
   const { data, isError, isLoading } = useFoodById(Number(id));
   if (isError || !data) {
-    return <div>Ошибка</div>;
+    return null;
   }
   return (
     <div>

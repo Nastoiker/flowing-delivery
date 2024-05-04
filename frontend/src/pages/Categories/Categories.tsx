@@ -64,7 +64,7 @@ const CategoryBalls = ({ categories }) => {
 export const CategoriesPage = () => {
   const { data, isError } = useCategories();
   if (isError || !data) {
-    return <div>Ошибка</div>;
+    return null;
   }
 
   return (

@@ -8,7 +8,7 @@ export const ShoppingCardPage = () => {
   const { data: shoppingCarts, isError } = useShoppingCart();
 
   if (isError || !shoppingCarts) {
-    return <div>Ошибка</div>;
+    return null;
   }
   const sumPrice = shoppingCarts.data.shoppingCart.reduce(
     (accumulator, value) => accumulator + value.totalPrice,

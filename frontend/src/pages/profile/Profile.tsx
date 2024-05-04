@@ -9,6 +9,8 @@ export const USER_ROLES_STR = {
   [USER_ROLES.ADMIN]: "Админ",
   [USER_ROLES.USER]: "Пользователь",
 };
+export const EMPLOYEES_ROLES_ARRAY = [USER_ROLES.ADMIN, USER_ROLES.USER];
+
 export const Profile = () => {
   const profile = useCurrentUser();
 

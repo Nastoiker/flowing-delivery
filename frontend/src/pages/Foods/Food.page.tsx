@@ -13,7 +13,7 @@ const GridEL = styled.div`
 export const FoodPage = () => {
   const { data, isError } = useFoods();
   if (isError || !data) {
-    return <div>Ошибка</div>;
+    return null;
   }
 
   return (

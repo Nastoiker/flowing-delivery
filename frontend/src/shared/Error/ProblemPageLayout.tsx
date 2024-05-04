@@ -65,7 +65,7 @@ export const ProblemPageLayout = ({ title }: Props) => {
             <GoToMainButton onClick={() => window.location.reload()}>
               Обновить страницу
             </GoToMainButton>
-            <GoToMainButton onClick={() => window.location.assign("/home")}>
+            <GoToMainButton onClick={() => window.location.assign("/menu")}>
               На главную
             </GoToMainButton>
           </ButtonsWrapper>

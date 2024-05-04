@@ -49,12 +49,12 @@ export class FoodRepository {
         [Op.or]: [
           {
             title: {
-              [Op.like]: `%${search}%`,
+              [Op.iLike]: `%${search}%`,
             },
           },
           {
             description: {
-              [Op.like]: `%${search}%`,
+              [Op.iLike]: `%${search}%`,
             },
           },
         ],

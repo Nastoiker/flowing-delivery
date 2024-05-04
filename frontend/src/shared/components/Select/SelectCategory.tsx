@@ -9,7 +9,7 @@ export const SelectCategoryController = () => {
     formState: { errors },
   } = useFormContext();
   if (isError || !data) {
-    return <div>Ошибка</div>;
+    return null;
   }
 
   return (

@@ -2,9 +2,9 @@ import { useUsers } from "@/entities/user/hooks/useUsers";
 import { Table } from "@radix-ui/themes";
 
 export const TableUsers = () => {
-  const { data, isError, isLoading } = useUsers();
+  const { data, isError } = useUsers();
   if (isError || !data) {
-    return <div>Ошибка</div>;
+    return null;
   }
   return (
     <Table.Root variant="surface">

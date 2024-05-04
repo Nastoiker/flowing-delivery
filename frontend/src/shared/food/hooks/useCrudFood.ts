@@ -5,19 +5,13 @@ import { AxiosError } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export function useFoods() {
-  const {
-    data = [],
-    isError,
-    isFetched,
-    isLoading,
-  } = useQuery(["foods"], async () => getFoods(), {
+  return useQuery(["foods"], getFoods, {
     retry: false,
     staleTime: 3000,
     onError: (err: AxiosError<{ message?: string }>) => {
       console.error(err);
     },
   });
-  return { data, isError, isFetched, isLoading };
 }
 export function useFoodById(foodId: number) {
   const query = useQuery(

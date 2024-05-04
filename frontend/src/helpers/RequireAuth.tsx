@@ -19,7 +19,7 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
       fetch();
       console.log("fetchMe");
     } catch (e: any) {
-      toast.error(e?.response?.data?.message)
+      toast.error(e?.response?.data?.message);
 
       console.log(e);
     }

@@ -1,18 +1,11 @@
 import { useFoods } from "@/shared/food/hooks/useCrudFood";
 import { Table } from "@radix-ui/themes";
-import styled from "styled-components";
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-`;
-const GridEL = styled.div`
-  margin: 0 auto;
-`;
+import { Link } from "react-router-dom";
+
 export const TableFoods = () => {
   const { data, isError, isLoading } = useFoods();
   if (isError || !data) {
-    return <div>Ошибка</div>;
+    return null;
   }
   return (
     <Table.Root variant="surface">
@@ -30,7 +23,9 @@ export const TableFoods = () => {
         {data.data.foods.map((u) => (
           <Table.Row>
             {Object.values(u).map((v) => (
-              <Table.Cell>{v}</Table.Cell>
+              <Table.Cell>
+                <Link to={`/menu/${u.id}`}>{v} </Link>
+              </Table.Cell>
             ))}
           </Table.Row>
         ))}

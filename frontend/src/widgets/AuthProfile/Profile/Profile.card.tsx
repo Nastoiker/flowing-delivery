@@ -49,6 +49,13 @@ export const UserDetails = ({ user }: { user: IUser }) => {
     <>
       <h1>Ваши данные</h1>
       {isEdit ? (
+        <Wrapper onSubmit={handleSubmit(submit)}>
+          {Object.entries(listParamsToEdit).map(([key, value]) => (
+            <TextField label={value} {...register(key)} />
+          ))}
+          <Button type="submit">Сохранить</Button>
+        </Wrapper>
+      ) : (
         <DataList.Root orientation={{ initial: "vertical", sm: "horizontal" }}>
           {Object.entries(listParams).map(([key, value]) => {
             return (
@@ -68,13 +75,6 @@ export const UserDetails = ({ user }: { user: IUser }) => {
             Редактировать
           </Button>
         </DataList.Root>
-      ) : (
-        <Wrapper onSubmit={handleSubmit(submit)}>
-          {Object.entries(listParamsToEdit).map(([key, value]) => (
-            <TextField label={value} {...register(key)} />
-          ))}
-          <Button type="submit">Сохранить</Button>
-        </Wrapper>
       )}
     </>
   );

@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
 import { QueryClientProvider } from "react-query";
 import "./App.css";
+import { GlobalLoader } from "./app/Loader/GlobalLoader";
 import { queryClient } from "./libs/react-query";
 import { ErrorPage } from "./shared/Error/Error.page";
 import { ErrorBoundary } from "./shared/ErrorBoundary";
@@ -37,10 +38,11 @@ function App() {
         <CssBaseline />
         <ThemeProvider theme={AppTheme}>
           <Toaster />
-
           <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools />
             <RouterProvider router={router} />
+            <GlobalLoader />
+
+            <ReactQueryDevtools />
           </QueryClientProvider>
         </ThemeProvider>
       </ErrorBoundary>

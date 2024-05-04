@@ -2,10 +2,12 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Category } from '../../category/model/category.model';
+import { Comment } from '../../comments/comment.model';
 
 @Table({ timestamps: true })
 export class Food extends Model {
@@ -35,6 +37,8 @@ export class Food extends Model {
   description: string;
   @Column
   pictures: string;
+  @HasMany(() => Comment)
+  comments?: Comment[];
   //   @HasMany(() => User)
   //   purchased_users?: User[];
 }

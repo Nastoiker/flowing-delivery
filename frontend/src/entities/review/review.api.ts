@@ -1,13 +1,21 @@
 import { api } from "@/helpers/api";
-import { IFood } from "@/shared/interfaces/foods.interface";
-
-export async function getReviewByFoodId(foodId: number): Promise<{
-  data: { foods: IFood[] };
+import { IComment, IRating, IReview } from "@/shared/interfaces/review.interface";
+const rootPath = 'review'
+export async function getReviewsByFoodId(foodId: number): Promise<{
+  data: { foods: IReview[] };
 }> {
-  return api.get(`review/${foodId}`);
+  return api.get(`${rootPath}/food/${foodId}`);
 }
-export async function deleteReview(id: number): Promise<void> {
-  return api.delete(`review/${id}`);
+export async function getReviewsByUserId(userId: number): Promise<{
+  data: { foods: IReview[] };
+}> {
+  return api.get(`${rootPath}/food/${userId}`);
 }
-export const updateFood = (food: Partial<IFood>) => api.put("review", food);
-export const createReview = (food: FormData) => api.post("review/create", food);
+export const updateComment = (comment: Partial<IComment>) => api.put(`${rootPath}/comment`, comment);
+export const updateRating = (rating: Partial<IRating>) => api.put(`${rootPath}/rating`, rating);
+
+export const createComment = (comment: Partial<IComment>) => api.post(`${rootPath}/comment`, comment);
+export const createRating = (rating: Partial<IComment>) => api.post(`${rootPath}/comment`, rating);
+
+export const removeComment = (id: number) => api.delete(`${rootPath}/comment/${id}`);
+

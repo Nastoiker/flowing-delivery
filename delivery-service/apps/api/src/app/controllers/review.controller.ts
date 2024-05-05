@@ -85,7 +85,7 @@ export class ReviewController {
       }
     }
   }
-  @Delete(':id')
+  @Delete('comment/:id')
   async removeReviewComment(@Param('id') id: number) {
     try {
       return await this.rmqService.send<

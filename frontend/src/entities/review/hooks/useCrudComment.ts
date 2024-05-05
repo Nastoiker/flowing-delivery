@@ -1,18 +1,12 @@
-import { createFoodFetch, getFoods } from "@/entities/product/food/food.api";
 import { api } from "@/helpers/api";
 import { IFood } from "@/shared/interfaces/foods.interface";
+import { IComment } from "@/shared/interfaces/review.interface";
 import { AxiosError } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { createComment, removeComment, updateComment } from "../review.api";
 
-export function useComments() {
-  return useQuery(["comment"], getFoods, {
-    retry: false,
-    staleTime: 3000,
-    onError: (err: AxiosError<{ message?: string }>) => {
-      console.error(err);
-    },
-  });
-}
+
+
 
 export function useSearchComment(search: string) {
   const query = useQuery(
@@ -36,10 +30,10 @@ export function useCreateComment() {
     error,
   } = useMutation(
     "createComment",
-    async (food: FormData) => createFoodFetch(food),
+    async ( comment: Partial<IComment>) => createComment(comment),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("foods");
+        queryClient.invalidateQueries("comments");
       },
     }
   );
@@ -53,39 +47,38 @@ export function useCreateComment() {
 export function useUpdateComment() {
   const queryClient = useQueryClient();
   const {
-    mutate: updateFood,
+    mutate: updateCommentFood,
     isLoading,
     error,
   } = useMutation(
-    "updateFood",
-    ({ id, ...food }: IFood) => api.patch(`/foods/${id}`, food),
+    "updateComment",
+    updateComment,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("foods");
+        queryClient.invalidateQueries("comments");
       },
     }
   );
   return {
-    updateFood,
+    updateCommentFood,
     isLoading,
     error,
   };
 }
 
-const handleDelete = async (id: number) => api.delete(`/foods/${id}`);
 export function useDeleteComment() {
   const queryClient = useQueryClient();
   const {
-    mutateAsync: deleteFood,
+    mutateAsync: deleteComment,
     isLoading,
     error,
-  } = useMutation("deleteFood", handleDelete, {
+  } = useMutation("deleteComment", removeComment, {
     onSuccess: () => {
       queryClient.invalidateQueries("foods");
     },
   });
   return {
-    deleteFood,
+    deleteComment,
     isLoading,
     error,
   };

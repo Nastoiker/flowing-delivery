@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Comment } from '../comment.model';
+import { LikeComment } from '../likeComment.model';
 
 @Injectable()
 export class CommentRepository {
   constructor(
-    @InjectModel(Comment) private readonly commentModel: typeof Comment
+    @InjectModel(Comment) private readonly commentModel: typeof Comment,
+    @InjectModel(LikeComment)
+    private readonly likeCommentModel: typeof LikeComment
   ) {}
   async createComment(comment: any) {
     const commentCreated = await this.commentModel.create({

@@ -1,3 +1,4 @@
+import { ReviewForm } from "@/features/review/ReviewForm";
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoodById } from "@/shared/food/hooks/useCrudFood";
@@ -10,6 +11,7 @@ export const FoodById = () => {
   if (isError || !data) {
     return null;
   }
+  const submitComment = () => {};
   return (
     <div>
       <h1>{data?.data.food.title}</h1>
@@ -24,6 +26,7 @@ export const FoodById = () => {
       <Typography>{data?.data.food.price}р</Typography>
       <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
       <Typography>Вес: {data?.data.food.grams}</Typography>
+      <ReviewForm onReviewSave={submitComment} />
     </div>
   );
 };

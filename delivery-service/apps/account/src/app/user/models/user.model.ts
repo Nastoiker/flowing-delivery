@@ -1,5 +1,7 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { Comment } from '../../comments/comment.model';
+import { LikeComment } from '../../comments/likeComment.model';
+import { Rating } from '../../rating/rating.model';
 import { ShoppingCart } from '../../shopping-cart/model/shopping-cart.model';
 @Table({ timestamps: true })
 export class User extends Model {
@@ -30,6 +32,10 @@ export class User extends Model {
   roles: number;
   // @HasMany(() => Food)
   // purchased?: Food[];
+  @HasMany(() => Rating)
+  ratings?: Rating[];
+  @HasMany(() => LikeComment)
+  likeComments?: LikeComment[];
   @HasMany(() => Comment)
   comments?: Comment[];
   @HasMany(() => ShoppingCart)

@@ -3,11 +3,13 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Food } from '../food/models/food.model';
 import { User } from '../user/models/user.model';
+import { LikeComment } from './likeComment.model';
 
 @Table({ timestamps: true })
 export class Comment extends Model {
@@ -22,11 +24,17 @@ export class Comment extends Model {
   @ForeignKey(() => Food)
   productId: number;
 
-  @ForeignKey(() => Food)
+  @ForeignKey(() => User)
   userId: number;
   @Column
   title: string;
   @Column
+  status: number;
+  @Column
+  anonymously: boolean;
+  @Column({
+    type: DataType.TEXT,
+  })
   description: string;
   @Column
   pictures: string;
@@ -34,4 +42,6 @@ export class Comment extends Model {
   product: Food;
   @BelongsTo(() => User)
   user: User;
+  @HasMany(() => LikeComment)
+  likes: LikeComment[];
 }

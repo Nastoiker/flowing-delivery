@@ -16,17 +16,25 @@ export * from './lib/food/food.findById';
 export * from './lib/food/food.search';
 
 export * from './lib/contracts.module';
-
 export * from './lib/shopping-cart/shopping-cart.create';
-
+export * from './lib/shopping-cart/shopping-cart.get-user';
 export * from './lib/shopping-cart/shopping-cart.remove';
-
 export * from './lib/shopping-cart/shopping-cart.update';
 
-export * from './lib/shopping-cart/shopping-cart.get-user';
+export * from './lib/review/review.comment-remove';
+export * from './lib/review/review.comment-update';
+export * from './lib/review/review.create-comment';
+export * from './lib/review/review.find-comment-by-userId';
+export * from './lib/review/reviews.find-comments-by-foodId';
 
 export * from './lib/file/file.create';
 export * from './lib/file/file.delete';
 export * from './lib/file/file.get';
 export * from './lib/file/file.update';
 export * from './lib/file/file.upload';
+
+export * from './lib/review/review.create-rating';
+export * from './lib/review/review.find-rating-by-userId';
+export * from './lib/review/review.rating-remove';
+export * from './lib/review/review.rating-update';
+export * from './lib/review/reviews.find-rating-by-foodId';

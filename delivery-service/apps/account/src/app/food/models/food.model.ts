@@ -8,6 +8,7 @@ import {
 } from 'sequelize-typescript';
 import { Category } from '../../category/model/category.model';
 import { Comment } from '../../comments/comment.model';
+import { Rating } from '../../rating/rating.model';
 
 @Table({ timestamps: true })
 export class Food extends Model {
@@ -39,6 +40,8 @@ export class Food extends Model {
   pictures: string;
   @HasMany(() => Comment)
   comments?: Comment[];
+  @HasMany(() => Rating)
+  ratings?: Rating[];
   //   @HasMany(() => User)
   //   purchased_users?: User[];
 }

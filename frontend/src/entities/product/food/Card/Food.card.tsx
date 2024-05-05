@@ -74,7 +74,7 @@ export function FoodCard(props: { food: IFood }) {
         >
           {shoppingCartUser?.find((p) => p?.productId === food.id)
             ? "удалить"
-            : "Добавить в корзину"}
+            : "Добавить"}
         </Button>
       </CardActions>
     </Card>

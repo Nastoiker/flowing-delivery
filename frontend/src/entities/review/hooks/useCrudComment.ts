@@ -5,9 +5,6 @@ import { AxiosError } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createComment, removeComment, updateComment } from "../review.api";
 
-
-
-
 export function useSearchComment(search: string) {
   const query = useQuery(
     ["food-by-search", search],
@@ -25,12 +22,12 @@ export function useSearchComment(search: string) {
 export function useCreateComment() {
   const queryClient = useQueryClient();
   const {
-    mutate: createFood,
+    mutate: createCommentFood,
     isLoading,
     error,
   } = useMutation(
     "createComment",
-    async ( comment: Partial<IComment>) => createComment(comment),
+    async (comment: Partial<IComment>) => createComment(comment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comments");
@@ -38,7 +35,7 @@ export function useCreateComment() {
     }
   );
   return {
-    createFood,
+    createCommentFood,
     isLoading,
     error,
   };
@@ -50,15 +47,11 @@ export function useUpdateComment() {
     mutate: updateCommentFood,
     isLoading,
     error,
-  } = useMutation(
-    "updateComment",
-    updateComment,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("comments");
-      },
-    }
-  );
+  } = useMutation("updateComment", updateComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("comments");
+    },
+  });
   return {
     updateCommentFood,
     isLoading,
@@ -81,5 +74,18 @@ export function useDeleteComment() {
     deleteComment,
     isLoading,
     error,
+  };
+}
+
+export function useCrudComment() {
+  const { updateCommentFood, isLoading: isUpdating } = useUpdateComment();
+  const { deleteComment } = useDeleteComment();
+  const { createComment, isLoading: isCreating } = useCreateComment();
+  return {
+    updateCommentFood,
+    createComment,
+    deleteComment,
+    isUpdating,
+    isCreating,
   };
 }

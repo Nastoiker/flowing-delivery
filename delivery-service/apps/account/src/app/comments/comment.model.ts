@@ -30,7 +30,7 @@ export class Comment extends Model {
   title: string;
   @Column
   status: number;
-  @Column
+  @Column({ defaultValue: false })
   anonymously: boolean;
   @Column({
     type: DataType.TEXT,

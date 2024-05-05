@@ -10,14 +10,14 @@ import { Controller, useForm } from "react-hook-form";
 
 const REVIEW_MAX_LENGTH = 1000;
 type Props = {
-  onReviewSave: (review: NewReviewType) => void;
+  onReviewSave: (review: NewReviewType) => Promise<void>;
   loading: boolean;
 };
 
 export type NewReviewType = {
   title: string;
   description: string;
-  rating: null | number;
+  rating: number;
 };
 
 export const ReviewForm = ({ onReviewSave, loading }: Props) => {
@@ -25,7 +25,6 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
     defaultValues: {
       title: "",
       description: "",
-      rating: null,
     },
     // стоит тут тк до v7 так было по дефолту, возможно не нужно
     shouldUnregister: true,

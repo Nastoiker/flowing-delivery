@@ -4,7 +4,7 @@ export class CommentCreateDto {
   @IsString()
   title: string;
   @IsNumber()
-  foodId: number;
+  productId: number;
   @IsString()
   description: string;
 }

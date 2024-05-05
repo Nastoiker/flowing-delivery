@@ -6,6 +6,8 @@ export namespace ReviewRatingCreate {
     @IsNumber()
     rating: number | undefined;
     @IsNumber()
+    userId: number | undefined;
+    @IsNumber()
     foodId: number | undefined;
   }
   export class Response {

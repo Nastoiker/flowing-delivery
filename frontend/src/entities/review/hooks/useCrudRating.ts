@@ -1,10 +1,8 @@
-import { IComment } from "@/shared/interfaces/review.interface";
+import { IRating } from "@/shared/interfaces/review.interface";
 import { useMutation, useQueryClient } from "react-query";
 import { createRating, updateRating } from "../review.api";
 
-
-
-export function useCreateComment() {
+export function useCreateRating() {
   const queryClient = useQueryClient();
   const {
     mutate: createRatingFood,
@@ -12,7 +10,7 @@ export function useCreateComment() {
     error,
   } = useMutation(
     "createRating",
-    async ( comment: Partial<IComment>) => createRating(comment),
+    async (comment: Partial<IRating>) => createRating(comment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comments");
@@ -26,21 +24,17 @@ export function useCreateComment() {
   };
 }
 
-export function useUpdateComment() {
+export function useUpdateRating() {
   const queryClient = useQueryClient();
   const {
     mutate: updateRatingFood,
     isLoading,
     error,
-  } = useMutation(
-    "updateRating",
-    updateRating,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("comments");
-      },
-    }
-  );
+  } = useMutation("updateRating", updateRating, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("comments");
+    },
+  });
   return {
     updateRatingFood,
     isLoading,
@@ -48,4 +42,13 @@ export function useUpdateComment() {
   };
 }
 
-
+export function useCrudComment() {
+  const { updateRatingFood, isLoading: isUpdating } = useUpdateRating();
+  const { createRatingFood, isLoading: isCreating } = useCreateRating();
+  return {
+    updateRatingFood,
+    createRatingFood,
+    isUpdating,
+    isCreating,
+  };
+}

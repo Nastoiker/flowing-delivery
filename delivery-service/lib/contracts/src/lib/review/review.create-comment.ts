@@ -6,7 +6,9 @@ export namespace ReviewCommentCreate {
     @IsString()
     title: string | undefined;
     @IsNumber()
-    foodId: number | undefined;
+    userId: number | undefined;
+    @IsNumber()
+    productId: number | undefined;
     @IsString()
     description: string | undefined;
   }

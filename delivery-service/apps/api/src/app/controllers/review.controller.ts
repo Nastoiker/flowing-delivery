@@ -17,6 +17,7 @@ import {
   Post,
   Put,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
 import { CommentCreateDto } from '../dtos/review/comment.create-dto';
@@ -24,6 +25,8 @@ import { CommentUpdateDto } from '../dtos/review/comment.update-dto';
 import { RatingCreateDto } from '../dtos/review/rating.create-dto';
 import { RatingUpdateDto } from '../dtos/review/rating.update-dto';
 import { FilesService } from '../file.service';
+import { JWTAuthGuard } from '../guards/jwt.guard';
+import { UserId } from '../guards/user.decorator';
 
 @Controller('review')
 export class ReviewController {
@@ -85,6 +88,7 @@ export class ReviewController {
       }
     }
   }
+  @UseGuards(JWTAuthGuard)
   @Delete('comment/:id')
   async removeReviewComment(@Param('id') id: number) {
     try {
@@ -113,45 +117,69 @@ export class ReviewController {
       }
     }
   }
+  @UseGuards(JWTAuthGuard)
   @Put('rating')
-  async reviewRatingUpdate(@Body() ratingDto: RatingUpdateDto) {
+  async reviewRatingUpdate(
+    @UserId() userId: number,
+    @Body() ratingDto: RatingUpdateDto
+  ) {
     try {
       return await this.rmqService.send<
         ReviewRatingUpdate.Request,
         ReviewRatingUpdate.Response
-      >(ReviewRatingUpdate.topic, ratingDto, {
-        headers: { requestId: 'adad' },
-      });
+      >(
+        ReviewRatingUpdate.topic,
+        { userId, ...ratingDto },
+        {
+          headers: { requestId: 'adad' },
+        }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);
       }
     }
   }
+  @UseGuards(JWTAuthGuard)
   @Post('comment')
-  async createComment(@Body() reviewDto: CommentCreateDto) {
+  async createComment(
+    @UserId() userId: number,
+    @Body() reviewDto: CommentCreateDto
+  ) {
     try {
       return await this.rmqService.send<
         ReviewCommentCreate.Request,
         ReviewCommentCreate.Response
-      >(ReviewCommentCreate.topic, reviewDto, {
-        headers: { requestId: 'adad' },
-      });
+      >(
+        ReviewCommentCreate.topic,
+        { userId, ...reviewDto },
+        {
+          headers: { requestId: 'adad' },
+        }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);
       }
     }
   }
+  @UseGuards(JWTAuthGuard)
   @Post('rating')
-  async createRating(@Body() reviewDto: RatingCreateDto) {
+  async createRating(
+    @UserId() userId: number,
+    @Body() reviewDto: RatingCreateDto
+  ) {
     try {
       return await this.rmqService.send<
         ReviewRatingCreate.Request,
         ReviewRatingCreate.Response
-      >(ReviewRatingCreate.topic, reviewDto, {
-        headers: { requestId: 'adad' },
-      });
+      >(
+        ReviewRatingCreate.topic,
+        { userId, ...reviewDto },
+        {
+          headers: { requestId: 'adad' },
+        }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

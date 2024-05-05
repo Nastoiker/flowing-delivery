@@ -1,17 +1,25 @@
+import { useCreateReview } from "@/entities/review/hooks/useReview";
 import { ReviewForm } from "@/features/review/ReviewForm";
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoodById } from "@/shared/food/hooks/useCrudFood";
+import { IReview } from "@/shared/interfaces/review.interface";
 import { Skeleton, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 export const FoodById = () => {
   const { id } = useParams();
   const { data, isError, isLoading } = useFoodById(Number(id));
+  const { createReview, isCreatingComment } = useCreateReview();
+
   if (isError || !data) {
     return null;
   }
-  const submitComment = () => {};
+  const submitComment = async (
+    review: Omit<IReview, "id" | "userId" | "foodId">
+  ) => {
+    await createReview({ foodId: Number(id), ...review });
+  };
   return (
     <div>
       <h1>{data?.data.food.title}</h1>
@@ -26,7 +34,7 @@ export const FoodById = () => {
       <Typography>{data?.data.food.price}р</Typography>
       <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
       <Typography>Вес: {data?.data.food.grams}</Typography>
-      <ReviewForm onReviewSave={submitComment} />
+      <ReviewForm loading={isCreatingComment} onReviewSave={submitComment} />
     </div>
   );
 };

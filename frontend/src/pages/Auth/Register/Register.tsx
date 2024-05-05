@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
@@ -25,7 +25,7 @@ export function Register() {
   const currentUser = useCurrentUser();
   const [error, setError] = useState<boolean>();
   useEffect(() => {
-    if (currentUser.name) {
+    if (currentUser?.name) {
       navigate("/");
     }
   }, [currentUser, navigate]);
@@ -61,7 +61,7 @@ export function Register() {
       });
       navigate("/auth/login");
     } catch (e: any) {
-      toast.error(e?.response?.data?.message)
+      toast.error(e?.response?.data?.message);
 
       setError(true);
     }
@@ -76,11 +76,12 @@ export function Register() {
           <Input
             id="email"
             {...register("email", {
-              required: { value: true, message: "Заполните email" }, pattern: {
+              required: { value: true, message: "Заполните email" },
+              pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: "Нужен email",
-              },} 
-            )}
+              },
+            })}
             error={Boolean(errors.email)}
             name="email"
             placeholder="Email"
@@ -138,5 +139,3 @@ export function Register() {
     </div>
   );
 }
-
-

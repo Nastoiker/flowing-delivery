@@ -12,7 +12,7 @@ export namespace ReviewCommentUpdate {
     title: string | undefined;
     @IsNumber()
     @IsOptional()
-    foodId: number | undefined;
+    productId: number | undefined;
     @IsString()
     @IsOptional()
     description: string | undefined;

@@ -1,5 +1,9 @@
-import { useCreateReview } from "@/entities/review/hooks/useReview";
+import {
+  useCreateReview,
+  useReviewByFoodId,
+} from "@/entities/review/hooks/useReview";
 import { ReviewForm } from "@/features/review/ReviewForm";
+import { ReviewWrapper } from "@/features/review/ReviewWrapper";
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoodById } from "@/shared/food/hooks/useCrudFood";
@@ -11,8 +15,8 @@ export const FoodById = () => {
   const { id } = useParams();
   const { data, isError, isLoading } = useFoodById(Number(id));
   const { createReview, isCreatingComment } = useCreateReview();
-
-  if (isError || !data) {
+  const { data: reviews } = useReviewByFoodId(Number(id));
+  if (isError || !data || !reviews) {
     return null;
   }
   const submitComment = async (
@@ -35,6 +39,7 @@ export const FoodById = () => {
       <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
       <Typography>Вес: {data?.data.food.grams}</Typography>
       <ReviewForm loading={isCreatingComment} onReviewSave={submitComment} />
+      <ReviewWrapper reviews={reviews.data.reviews} />
     </div>
   );
 };

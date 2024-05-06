@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { User } from '../../user/models/user.model';
 import { Comment } from '../comment.model';
 import { LikeComment } from '../likeComment.model';
 
@@ -23,8 +24,11 @@ export class CommentRepository {
     return this.commentModel.findAll({ where: { userId } });
   }
 
-  async findCommentByFoodId(foodId: number) {
-    return this.commentModel.findAll({ where: { foodId } });
+  async findCommentByFoodId(productId: number) {
+    return this.commentModel.findAll({
+      where: { productId },
+      include: [{ model: User }],
+    });
   }
   async update(commentId: number, commentDto) {
     const comment = this.commentModel.findByPk(commentId);

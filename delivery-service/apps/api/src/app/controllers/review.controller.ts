@@ -5,6 +5,7 @@ import {
   ReviewRatingCreate,
   ReviewRatingUpdate,
   ReviewsCommentsFindByFoodId,
+  ReviewsCommentsFindByUserId,
   ReviewsRatingFindByUserId,
   ReviewsRatingsFindByFoodId,
 } from '@delivery-service/contracts';
@@ -43,7 +44,7 @@ export class ReviewController {
           ReviewsCommentsFindByFoodId.Response
         >(
           ReviewsCommentsFindByFoodId.topic,
-          { foodId: id },
+          { productId: id },
           { headers: { requestId: 'adad' } }
         ),
         this.rmqService.send<
@@ -55,6 +56,13 @@ export class ReviewController {
           { headers: { requestId: 'adad' } }
         ),
       ]);
+      const data = comments.comments.map((c) => ({
+        ...ratings.ratings.find(
+          (r) => r.userId === c.userId && r.foodId === c.productId
+        ),
+        ...c,
+      }));
+      return { reviews: data };
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);
@@ -74,14 +82,21 @@ export class ReviewController {
           { headers: { requestId: 'adad' } }
         ),
         this.rmqService.send<
-          ReviewsRatingFindByUserId.Request,
-          ReviewsRatingFindByUserId.Response
+          ReviewsCommentsFindByUserId.Request,
+          ReviewsCommentsFindByUserId.Response
         >(
           ReviewsRatingFindByUserId.topic,
           { userId: id },
           { headers: { requestId: 'adad' } }
         ),
       ]);
+      const data = comments.comments.map((c) => ({
+        ...ratings.ratings.find(
+          (r) => r.userId === c.userId && r.foodId === c.productId
+        ),
+        ...c,
+      }));
+      return { reviews: data };
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

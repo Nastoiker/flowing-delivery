@@ -3,6 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { IFood } from '@delivery-service/interfaces';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { Comment } from '../../comments/comment.model';
+import { Rating } from '../../rating/rating.model';
+import { User } from '../../user/models/user.model';
 import { Food } from '../models/food.model';
 @Injectable()
 export class FoodRepository {
@@ -34,14 +37,39 @@ export class FoodRepository {
   }
 
   async findFood(id: number) {
-    return this.foodModel.findOne({ where: { id } });
-  }
-
-  async findUserById(id: number) {
-    return this.foodModel.findByPk(id);
+    return this.foodModel.findOne({
+      where: { id },
+      include: [
+        {
+          model: Rating,
+          include: [
+            {
+              model: User,
+            },
+          ],
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+            },
+          ],
+        },
+      ],
+    });
   }
   async findAllFood() {
-    return this.foodModel.findAll();
+    return this.foodModel.findAll({
+      include: [
+        {
+          model: Rating,
+        },
+        {
+          model: Comment,
+        },
+      ],
+    });
   }
   async findBySearch(search: string) {
     return this.foodModel.findAll({
@@ -59,6 +87,24 @@ export class FoodRepository {
           },
         ],
       },
+      include: [
+        {
+          model: Rating,
+          include: [
+            {
+              model: User,
+            },
+          ],
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+            },
+          ],
+        },
+      ],
     });
   }
   async deleteFood(id: number) {

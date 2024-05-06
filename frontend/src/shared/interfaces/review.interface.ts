@@ -1,3 +1,5 @@
+import { IUser } from "./user.interface";
+
 export interface IComment {
   id: number;
   title: string;
@@ -10,6 +12,7 @@ export interface IRating {
   rating: number;
   foodId: number;
   userId: number;
+  user?: IUser;
 }
 export interface IReview {
   id: number;
@@ -18,4 +21,5 @@ export interface IReview {
   rating: number;
   foodId: number;
   userId: number;
+  user?: IUser;
 }

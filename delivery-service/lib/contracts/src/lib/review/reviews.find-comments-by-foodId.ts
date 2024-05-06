@@ -4,7 +4,7 @@ import { IComment } from '@delivery-service/interfaces';
 export namespace ReviewsCommentsFindByFoodId {
   export const topic = 'review.find-comment-food-id.command';
   export class Request {
-    foodId: number | undefined;
+    productId: number | undefined;
   }
   export class Response {
     comments: IComment[] | undefined;

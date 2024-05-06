@@ -9,16 +9,23 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
+  Rating,
   Skeleton,
   Typography,
 } from "@mui/material";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 export function FoodCard(props: { food: IFood }) {
   const { food } = props;
   const shoppingCartUser = useShoppingCartUser();
   const { createShoppingCart } = useCreateShoppingCart();
   const navigate = useNavigate();
-
+  const ratingProduct = useMemo(
+    () =>
+      food.ratings.reduce((acc, r) => acc + r.rating, 0) /
+        food.ratings.length || 0,
+    [food]
+  );
   const handleRedirect = (url: string) => {
     navigate(url);
   };
@@ -62,6 +69,14 @@ export function FoodCard(props: { food: IFood }) {
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Калорий: {food.calories}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <Rating
+              name="half-rating-read"
+              defaultValue={ratingProduct}
+              precision={0.5}
+              readOnly
+            />
           </Typography>
         </CardContent>
       </CardActionArea>

@@ -1,3 +1,6 @@
+import { IComment } from './comment.interface';
+import { IRating } from './rating.interface';
+
 export interface IFood {
   id: number;
   categoryId: number;
@@ -9,4 +12,6 @@ export interface IFood {
   calories: number;
   description: string;
   pictures: string;
+  rating?: IRating[];
+  comments?: IComment[];
 }

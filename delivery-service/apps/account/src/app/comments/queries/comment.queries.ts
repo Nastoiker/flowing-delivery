@@ -34,9 +34,11 @@ export class CommentQueries {
   @RMQValidate()
   @RMQRoute(ReviewsCommentsFindByFoodId.topic)
   async commentsByFoodId(
-    @Body() { foodId }: ReviewsCommentsFindByFoodId.Request
+    @Body() { productId }: ReviewsCommentsFindByFoodId.Request
   ): Promise<ReviewsCommentsFindByFoodId.Response> {
-    const comments = await this.commentRepository.findCommentByFoodId(foodId);
+    const comments = await this.commentRepository.findCommentByFoodId(
+      productId
+    );
     return {
       comments,
     };

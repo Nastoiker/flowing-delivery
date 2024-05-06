@@ -1,3 +1,5 @@
+import { IComment, IRating } from "./review.interface";
+
 export interface IFood {
   id: number;
   categoryId: number;
@@ -9,4 +11,6 @@ export interface IFood {
   in_stock: number;
   description: string;
   pictures: string;
+  ratings: IRating[];
+  commnets: IComment[];
 }

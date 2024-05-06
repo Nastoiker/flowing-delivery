@@ -14,7 +14,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3444;
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5174',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

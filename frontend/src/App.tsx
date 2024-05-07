@@ -19,7 +19,6 @@ import { AppTheme } from "./shared/theme";
 function App() {
   useScaleViewPort(374);
   const dispatch = useAppThunkDispatch();
-
   useEffect(() => {
     try {
       const fetch = async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -23,7 +23,6 @@ export type RegisterForm = {
 export function Register() {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
-  const [error, setError] = useState<boolean>();
   useEffect(() => {
     if (currentUser?.name) {
       navigate("/");
@@ -50,7 +49,6 @@ export function Register() {
     surname: string;
   }) => {
     try {
-      setError(true);
       const { name, email, password, username, surname } = data;
       await api.post("auth/register", {
         email,
@@ -59,11 +57,10 @@ export function Register() {
         username,
         surname,
       });
+      toast.success("Успешная регистрация");
       navigate("/auth/login");
     } catch (e: any) {
       toast.error(e?.response?.data?.message);
-
-      setError(true);
     }
   };
 
@@ -130,7 +127,6 @@ export function Register() {
           />
         </div>
         <Button type="submit">Зарегистрироваться</Button>
-        {error && "Ошибка"}
       </form>
       <div className={styles["links"]}>
         <div>Есть акканут?</div>

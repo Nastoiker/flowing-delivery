@@ -42,8 +42,9 @@ export function Login() {
       });
       localStorage.setItem("token", token.data.access_token);
       navigate("/menu");
+      toast.success("Успешный вход");
     } catch (e: any) {
-      toast.error(e?.response?.data?.message)
+      toast.error(e?.response?.data?.message);
       setError(false);
     }
   };
@@ -55,11 +56,13 @@ export function Login() {
           <InputLabel>Ваш email</InputLabel>
           <Input
             {...register("email", {
-              required: { value: true, message: "Заполните email" }, pattern: {
+              required: { value: true, message: "Заполните email" },
+              pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: "Нужен email",
-              },} 
-            )}
+              },
+            })}
+            error={Boolean(errors.email)}
             id="email"
             name="email"
             placeholder="Email"
@@ -71,6 +74,7 @@ export function Login() {
             {...register("password", {
               required: { value: true, message: "Заполните password" },
             })}
+            error={Boolean(errors.password)}
             id="password"
             name="password"
             type="password"

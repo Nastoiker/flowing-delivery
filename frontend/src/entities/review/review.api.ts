@@ -6,7 +6,7 @@ import {
 } from "@/shared/interfaces/review.interface";
 const rootPath = "review";
 export async function getReviewsByFoodId(foodId: number): Promise<{
-  data: { foods: IReview[] };
+  data: { reviews: IReview[] };
 }> {
   return api.get(`${rootPath}/food/${foodId}`);
 }

@@ -44,8 +44,9 @@ export function useCreateShoppingCart() {
     (shoppingCard: Partial<IShoppingCart>) =>
       api.post(`/shopping-cart/`, shoppingCard),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("shopping-carts");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("shopping-carts");
+        await queryClient.invalidateQueries("foods");
       },
     }
   );

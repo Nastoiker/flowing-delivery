@@ -20,9 +20,8 @@ export default function BasicMenuAuth({ user }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = (url: string) => {
+  const handleLogout = async (url: string) => {
     removeItem("token");
-
     handleRedirect(url);
   };
   return (

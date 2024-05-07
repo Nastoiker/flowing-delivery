@@ -1,8 +1,16 @@
-import { useShoppingCartUser } from "@/entities/user/hooks/useCurrentUser";
-import { useCreateShoppingCart } from "@/features/shopping-card/hooks/useCrudShoppingCard";
+import {
+  useCurrentUser,
+  useShoppingCartUser,
+} from "@/entities/user/hooks/useCurrentUser";
+import {
+  useCreateShoppingCart,
+  useDeleteShoppingCart,
+} from "@/features/shopping-card/hooks/useCrudShoppingCard";
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { IFood } from "@/shared/interfaces/foods.interface";
+import { useAppDispatch } from "@/shared/store/hooks";
+import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import {
   Button,
   Card,
@@ -13,12 +21,19 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { isNumber } from "lodash";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 export function FoodCard(props: { food: IFood }) {
   const { food } = props;
   const shoppingCartUser = useShoppingCartUser();
+  const dispatch = useAppDispatch();
+  const currentUser = useCurrentUser();
   const { createShoppingCart } = useCreateShoppingCart();
+  const [isAdded, setIsAdded] = useState<number | undefined | boolean>(
+    shoppingCartUser?.find((p) => p?.productId === food.id)?.id
+  );
+  const { deleteShoppingCart } = useDeleteShoppingCart();
   const navigate = useNavigate();
   const ratingProduct = useMemo(
     () =>
@@ -30,12 +45,20 @@ export function FoodCard(props: { food: IFood }) {
     navigate(url);
   };
   const handleAddToCart = async () => {
-    await createShoppingCart({
-      purchaseState: "",
-      productId: food.id,
-      totalPrice: food.price,
-      count: 1,
-    });
+    if (isNumber(isAdded)) {
+      await deleteShoppingCart(isAdded);
+      setIsAdded(false);
+    } else {
+      await createShoppingCart({
+        purchaseState: "",
+        productId: food.id,
+        totalPrice: food.price,
+        count: 1,
+      });
+      setIsAdded(true);
+    }
+
+    await dispatch(fetchCurrentUser);
   };
   return (
     <Card sx={{ width: 300 }}>
@@ -82,14 +105,12 @@ export function FoodCard(props: { food: IFood }) {
       </CardActionArea>
       <CardActions>
         <Button
-          disabled={food.count === 0}
+          disabled={food.count === 0 || !currentUser.email}
           onClick={() => handleAddToCart()}
           size="small"
           color="primary"
         >
-          {shoppingCartUser?.find((p) => p?.productId === food.id)
-            ? "удалить"
-            : "Добавить"}
+          {isAdded ? "Удалить" : "Добавить"}
         </Button>
       </CardActions>
     </Card>

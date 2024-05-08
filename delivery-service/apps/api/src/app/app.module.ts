@@ -21,7 +21,11 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: 'envs/.api.env', isGlobal: true }),
+    ConfigModule.forRoot({
+      // load: [configuration],
+      envFilePath: 'envs/.api.env',
+      isGlobal: true,
+    }),
     RMQModule.forRootAsync(getRMQConfig()),
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule,

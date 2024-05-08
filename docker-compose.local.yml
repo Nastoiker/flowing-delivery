@@ -1,12 +1,27 @@
 version: "3.8"
-
+networks:
+  delivery-service:
+    driver: bridge
 services:
-  frontend:
+  rmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - delivery-service
+  postgres:
+    image: postgres:delivery-users
+    restart: always
+    build:
+      context: ./dbs/postgresql
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./dbs/postgresql/.env
+    ports:
+      - "5432:5432"
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-
-  backend:
-    volumes:
-      - ./delivery-service:/app
-      - /app/node_modules
+      - ./dbdata:/var/lib/postgresql/data
+    networks:
+      - delivery-service

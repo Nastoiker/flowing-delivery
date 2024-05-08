@@ -80,10 +80,10 @@ export function useDeleteComment() {
 export function useCrudComment() {
   const { updateCommentFood, isLoading: isUpdating } = useUpdateComment();
   const { deleteComment } = useDeleteComment();
-  const { createComment, isLoading: isCreating } = useCreateComment();
+  const { createCommentFood, isLoading: isCreating } = useCreateComment();
   return {
     updateCommentFood,
-    createComment,
+    createCommentFood,
     deleteComment,
     isUpdating,
     isCreating,

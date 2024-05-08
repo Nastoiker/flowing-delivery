@@ -1,13 +1,12 @@
 import type { Dispatch } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./slices/currentUser";
-import { cartSlice } from "./slices/shoppingCard";
 
 // When you want add middlewares see https://redux-toolkit.js.org/api/getDefaultMiddleware
 export const store = configureStore({
   reducer: {
     currentUser: userSlice,
-    cart: cartSlice,
+    // cart: cartSlice,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>

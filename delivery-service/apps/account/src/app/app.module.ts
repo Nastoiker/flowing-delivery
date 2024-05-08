@@ -16,12 +16,12 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     AuthModule,
-    DatabaseModule,
     ConfigModule.forRoot({
       load: [configuration],
       envFilePath: 'envs/.account.env',
       isGlobal: true,
     }),
+    DatabaseModule,
     UserModule,
     RMQModule.forRootAsync(getRMQConfig()),
     FoodModule,

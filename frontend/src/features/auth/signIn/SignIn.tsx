@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { ILogin } from "./types";
 
 export const SignIn = () => {
-  const { register, error } = useForm<ILogin>();
+  const { register } = useForm<ILogin>();
   return (
     <Box>
       <Input placeholder="Имя" {...register("name")} />

@@ -2,7 +2,9 @@
   "name": "@delivery-service/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "nx build"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/cli": "^10.3.2",

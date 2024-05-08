@@ -50,7 +50,7 @@ export const getItem: GetItemType = (key, ids) => {
   const itemKey = `${key}${joinIds(ids)}`;
 
   try {
-    return JSON.parse(localStorage.getItem(itemKey));
+    return JSON.parse(localStorage.getItem(itemKey) || "");
   } catch {
     // случай для старых записей, которые были записаны без JSON.stringify
     setItem(itemKey, localStorage.getItem(itemKey));

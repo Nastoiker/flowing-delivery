@@ -7,18 +7,18 @@ import { SequelizeModule } from '@nestjs/sequelize';
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        username: configService.get('database.username', 'Delivery-user'),
-        password: configService.get('database.password', '12345'),
-        database: configService.get('database.database', 'Delivery-users'),
-        host: configService.get('database.host', 'localhost'),
-        dialect: configService.get('database.dialect', 'postgres'),
-        logging: configService.get('database.logging'),
-        port: configService.get('database.port'),
         logQueryParameters: configService.get('database.logQueryParameters'),
+        username: configService.get('database.username'),
+        password: configService.get('database.password'),
+        database: configService.get('database.database'),
+        host: configService.get('database.host'),
+        dialect: configService.get('database.dialect'),
+        logging: configService.get('database.logging'),
+        port: configService.get('database.port', 5432),
         synchronize: true,
-        // dialectOptions: {
-        //   decimalNumbers: true,
-        // },
+        dialectOptions: {
+          decimalNumbers: true,
+        },
         seederStorage: 'sequelize',
         autoLoadModels: true,
       }),

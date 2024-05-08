@@ -26,6 +26,7 @@ const Wrapper = styled.form`
   gap: 20px;
   width: fit-content;
 `;
+type UserEditKeys = "name" | "surname" | "username";
 export const UserDetails = ({ user }: { user: IUser }) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const { updateMe } = useUpdateUsers();
@@ -51,7 +52,7 @@ export const UserDetails = ({ user }: { user: IUser }) => {
       {isEdit ? (
         <Wrapper onSubmit={handleSubmit(submit)}>
           {Object.entries(listParamsToEdit).map(([key, value]) => (
-            <TextField label={value} {...register(key)} />
+            <TextField label={value} {...register(key as UserEditKeys)} />
           ))}
           <Button type="submit">Сохранить</Button>
         </Wrapper>

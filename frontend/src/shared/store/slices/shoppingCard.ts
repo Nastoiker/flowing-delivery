@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { fetchCurrentUser } from "./currentUser";
 
 export const CART_PERSISTENT_STATE = "cartData";
 

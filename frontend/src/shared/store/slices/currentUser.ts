@@ -4,13 +4,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 enum USER_ROLES {}
 interface UserAttributes {
-  id: number;
-  email: string;
-  password: string;
+  id?: number;
+  email?: string;
+  password?: string;
   roles: USER_ROLES;
-  username: string;
-  name: string;
-  surname: string;
+  username?: string;
+  name?: string;
+  surname?: string;
   shoppingCart?: Array<IShoppingCart>;
 }
 
@@ -20,6 +20,13 @@ export type CurrentUserState = UserAttributes & {
 
 const initialState: CurrentUserState = {
   profile: {},
+  id: undefined,
+  email: undefined,
+  password: undefined,
+  roles: 2,
+  username: undefined,
+  name: undefined,
+  surname: undefined,
 };
 
 export const fetchCurrentUser = createAsyncThunk(
@@ -29,7 +36,7 @@ export const fetchCurrentUser = createAsyncThunk(
       const data = await getCurrentUser();
       console.log(data.profile);
       return data.profile;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       throw new Error(error?.response?.data?.message);
     }

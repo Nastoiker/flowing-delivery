@@ -10,7 +10,7 @@ export const getRMQConfig = (): IRMQServiceAsyncOptions => ({
       {
         login: configService.get('AMQP_USER') ?? '',
         password: configService.get('AMQP_PASSWORD') ?? '',
-        host: configService.get('AMQP_HOSTNAME') ?? '',
+        host: configService.get('AMQP_HOSTNAME') ?? 'rmq',
       },
     ],
     prefetchCount: 32,

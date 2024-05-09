@@ -18,11 +18,12 @@ import { ShoppingCartController } from './controllers/shopping-cart.controller';
 import { UserController } from './controllers/user.controller';
 import { FilesService } from './file.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import configuration from './configs/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      // load: [configuration],
+      load: [configuration],
       envFilePath: 'envs/.api.env',
       isGlobal: true,
     }),

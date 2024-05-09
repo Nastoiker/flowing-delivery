@@ -1,0 +1,91 @@
+version: "3.8"
+networks:
+  delivery-service:
+    driver: bridge
+services:
+  rmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - delivery-service
+  db:
+    image: postgres:delivery-users
+    restart: always
+    build:
+      context: ./dbs/postgresql
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./dbs/postgresql/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+    networks:
+      - delivery-service
+  account:
+    restart: unless-stopped
+    build:
+      context: ./delivery-service
+      dockerfile: ./apps/account/Dockerfile
+    depends_on:
+      - db
+      - rmq
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=db
+      - DB_USER=Delivery-user
+      - DB_PASSWORD=12345
+      - DB_NAME=Delivery-users
+      - DB_PORT=5432
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
+    networks:
+      - delivery-service
+    ports:
+      - "3445:3445"
+  api:
+    restart: unless-stopped
+    build:
+      context: ./delivery-service
+      dockerfile: ./apps/api/Dockerfile
+    env_file:
+      - ./.env
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=db
+      - DB_USER=Delivery-user
+      - DB_PASSWORD=12345
+      - DB_NAME=Delivery-users
+      - DB_PORT=5432
+    depends_on:
+      - db
+      - rmq
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
+    ports:
+      - "3444:3444"
+    networks:
+      - delivery-service
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_module
+    environment:
+      PORT: ${FRONTEND_HOST_PORT}
+    ports:
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_HOST_PORT}"
+    networks:
+      - delivery-service
+volumes:
+  dbdata:

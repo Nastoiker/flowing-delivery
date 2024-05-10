@@ -1,5 +1,6 @@
 import { SearchContext } from "@/app/Context/SearchContext";
 import { getMenuListByUserRole } from "@/app/Menu/menu.constants";
+import { useWindowSize } from "@/app/hooks/useWindowSize";
 import Logo from "@/assets/logo.svg";
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { SearchField } from "@/shared/search/SearchField";
@@ -21,7 +22,7 @@ const ScrollToHide = ({ children, window = false, threshold }) => {
     disableHysteresis: true,
     threshold: threshold,
     // @ts-ignore
-    target: window ? window()  : false,
+    target: window ? window() : false,
   });
 
   return (
@@ -36,6 +37,8 @@ export default function AccountMenu() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const { matches960 } = useWindowSize();
+
   const navigate = useNavigate();
   const profile = useCurrentUser();
   const { setSearch, search } = useContext(SearchContext);
@@ -55,27 +58,35 @@ export default function AccountMenu() {
             justifyContent: "space-between",
           }}
         >
-          <IconButton
-            onClick={() => navigate("/menu")}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <img src={Logo} alt="logo" width="80px" height="80px" />
-          </IconButton>
-          <Button sx={{ minWidth: 100 }} onClick={() => navigate("/menu")}>
-            Меню
-          </Button>
+          {!matches960 && (
+            <IconButton
+              onClick={() => navigate("/menu")}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <img src={Logo} alt="logo" width="80px" height="80px" />
+            </IconButton>
+          )}
 
-          <Button
-            sx={{ minWidth: 100 }}
-            onClick={() => navigate("/categories")}
-          >
-            Категории
-          </Button>
-          <NavigationDrawer menuItems={menuItems} />
+          {!matches960 ? (
+            <>
+              <Button sx={{ minWidth: 100 }} onClick={() => navigate("/menu")}>
+                Меню
+              </Button>
+              <Button
+                sx={{ minWidth: 100 }}
+                onClick={() => navigate("/categories")}
+              >
+                Категории
+              </Button>
+            </>
+          ) : (
+            <NavigationDrawer menuItems={menuItems} />
+          )}
+
           <div style={{ maxWidth: "300px" }}>
             <SearchField
               onEnter={() => navigate("/menu/search")}

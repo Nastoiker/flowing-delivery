@@ -27,7 +27,9 @@ export const FoodById = () => {
   };
   return (
     <div>
-      <h1>{data?.data.food.title}</h1>
+      <Typography margin={"50px 0"} variant="h4">
+        {data?.data.food.title}
+      </Typography>
       <AppImage
         fallback={<Skeleton variant="rectangular" height={800} width={300} />}
         src={`${HOST + data?.data.food.pictures}`}

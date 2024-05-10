@@ -4,7 +4,9 @@ import { ICategory } from '@delivery-service/interfaces';
 export namespace CategoryCreate {
   export const topic = 'category.create.command';
   export class Request {
-    category: Partial<ICategory> | undefined;
+    name: string | undefined;
+    slug: string | undefined;
+    pictures: string | undefined;
   }
   export class Response {
     category: ICategory | undefined;

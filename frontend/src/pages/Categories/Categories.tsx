@@ -1,4 +1,5 @@
 import { useCategories } from "@/shared/category/hooks/useCategories";
+import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -69,7 +70,9 @@ export const CategoriesPage = () => {
 
   return (
     <>
-      <h1>Категории</h1>
+      <Typography margin={"50px"} variant="h4">
+        Популярное
+      </Typography>
       <CategoryBalls categories={data.data.categories} />
     </>
   );

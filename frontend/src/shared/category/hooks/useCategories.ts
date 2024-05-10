@@ -40,8 +40,7 @@ export function useCreateCategory() {
     error,
   } = useMutation(
     "createCategory",
-    async (category: Partial<ICategory>) =>
-      api.post(`/categories/create`, category),
+    async (category: FormData) => api.post(`/categories/create`, category),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("categories");

@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
 import { QueryClientProvider } from "react-query";
 import "./App.css";
+import BreakpointsProvider from "./app/Context/Breakpoints/BreakpointsProvider";
 import { PhosphorProvider } from "./app/Context/IconContext";
 import { GlobalLoader } from "./app/Loader/GlobalLoader";
 import { queryClient } from "./libs/react-query";
@@ -35,18 +36,20 @@ function App() {
   return (
     <>
       <ErrorBoundary fallback={<ErrorPage />}>
-        <CssBaseline />
-        <ThemeProvider theme={AppTheme}>
-          <Toaster />
-          <QueryClientProvider client={queryClient}>
-            <PhosphorProvider>
-              <RouterProvider router={router} />
-              <GlobalLoader />
+        <BreakpointsProvider>
+          <CssBaseline />
+          <ThemeProvider theme={AppTheme}>
+            <Toaster />
+            <QueryClientProvider client={queryClient}>
+              <PhosphorProvider>
+                <RouterProvider router={router} />
+                <GlobalLoader />
 
-              <ReactQueryDevtools />
-            </PhosphorProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
+                <ReactQueryDevtools />
+              </PhosphorProvider>
+            </QueryClientProvider>
+          </ThemeProvider>
+        </BreakpointsProvider>
       </ErrorBoundary>
     </>
   );

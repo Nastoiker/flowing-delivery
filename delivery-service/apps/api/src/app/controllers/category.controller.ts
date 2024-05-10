@@ -3,20 +3,29 @@ import {
   CategoryFoodsInfo,
   CategoryGetAll,
 } from '@delivery-service/contracts';
+import { MFile } from '@delivery-service/interfaces';
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
   Post,
   UnauthorizedException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { RMQService } from 'nestjs-rmq';
 import { CreateCategoryDto } from '../dtos/category/category.dto';
+import { FilesService } from '../file.service';
 
 @Controller('categories')
 export class CategoryController {
-  constructor(private readonly rmqService: RMQService) {}
+  constructor(
+    private readonly rmqService: RMQService,
+    private readonly filesService: FilesService
+  ) {}
 
   @Get()
   async getCategories() {
@@ -49,12 +58,34 @@ export class CategoryController {
     }
   }
   @Post('create')
-  async createCategory(@Body() category: CreateCategoryDto) {
+  @UseInterceptors(FileInterceptor('pictures'))
+  async createCategory(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() category: CreateCategoryDto
+  ) {
     try {
+      const saveFile: MFile = new MFile(file);
+      if (!file.mimetype.includes('image')) {
+        throw new BadRequestException('Неверный формат файла');
+      }
+      const extension = file.originalname.split('.');
+      const img = await this.filesService.saveFile(
+        new MFile({
+          originalname:
+            file.originalname.split('.')[0] +
+            '.' +
+            extension[extension.length - 1],
+          buffer: Buffer.from(file.buffer),
+        })
+      );
       return await this.rmqService.send<
         CategoryCreate.Request,
         CategoryCreate.Response
-      >(CategoryCreate.topic, { category }, { headers: { requestId: 'adad' } });
+      >(
+        CategoryCreate.topic,
+        { name: category.title, slug: category.slug, pictures: img.url },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

@@ -4,6 +4,7 @@ export interface ICategory {
   id?: number;
   name: string;
   slug: string;
+  pictures: string;
   parentId?: number;
   parent?: ICategory;
   subcategories?: ICategory[];

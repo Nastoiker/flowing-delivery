@@ -7,6 +7,7 @@ import styled from "styled-components";
 interface ICreateCategory {
   name: string;
   slug: string;
+  pictures: Array<File>;
 }
 const Wrapper = styled.form`
   display: flex;
@@ -21,7 +22,13 @@ export const CreateCategory = () => {
   const { register, handleSubmit, reset } = useForm<ICreateCategory>();
   const submit = async (category: ICreateCategory) => {
     try {
-      await createCategory(category);
+      const data = new FormData();
+      for (let i = 0; i < category?.pictures.length; i++) {
+        data.append("pictures", category.pictures[i]);
+      }
+      data.append("name", category.name?.toString());
+      data.append("slug", category.slug?.toString());
+      await createCategory(data);
       reset();
     } catch (e: any) {
       toast.error(e?.response?.data?.message);
@@ -31,6 +38,12 @@ export const CreateCategory = () => {
     <Wrapper onSubmit={handleSubmit(submit)}>
       <Input placeholder="Имя категории" {...register("name")} />
       <Input placeholder="Уникальный индефикатор" {...register("slug")} />
+      <Input
+        required
+        inputProps={{ accept: "image/jpeg" }}
+        type="file"
+        {...register("pictures")}
+      />
       <Button type="submit">Создать</Button>
     </Wrapper>
   );

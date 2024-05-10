@@ -16,7 +16,9 @@ export const CategoriesFoodsById = () => {
   const { data, isError, isLoading } = useFoodsByCategory(Number(id));
   return (
     <div>
-      <h1>{data?.data.category.name}</h1>
+      <Typography margin={"50px"} variant="h4">
+        {data?.data.category.name}
+      </Typography>
       <Wrapper>
         {data?.data?.foods?.length > 0 ? (
           data?.data?.foods.map((f) => (

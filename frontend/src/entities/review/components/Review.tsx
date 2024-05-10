@@ -20,9 +20,15 @@ export const Review = ({ review }: Props) => {
           marginBottom: 2,
         }}
       >
-        <Typography sx={{ fontWeight: "medium" }}>
-          {review?.user?.name} {review?.user?.surname}
-        </Typography>
+        <Box>
+          <Typography sx={{ fontWeight: "bold" }}>
+            {review?.user?.name}
+          </Typography>
+          <Typography sx={{ fontWeight: "bold" }}>
+            {review?.user?.surname}
+          </Typography>
+        </Box>
+
         <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
           Оценка: {review.rating}
         </Typography>

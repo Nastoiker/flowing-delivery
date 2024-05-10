@@ -16,12 +16,12 @@ export const FoodPage = () => {
   if (isError || !data) {
     return null;
   }
-
   return (
     <>
       <Banners />
-      <Typography>Популярное</Typography>
-
+      <Typography margin={"50px"} variant="h4">
+        Популярное
+      </Typography>
       <Wrapper>
         {data?.data?.foods?.map((f) => (
           <GridEL>

@@ -1,5 +1,5 @@
 import { USER_ROLES } from "@/pages/profile/Profile";
-import { Bag, House, Table, User, Wrench } from "@phosphor-icons/react";
+import { Bag, House, IconProps, Table, User, Wrench } from "@phosphor-icons/react";
 
 export type MenuItemType = {
   title: string;

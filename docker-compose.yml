@@ -31,6 +31,9 @@ services:
     build:
       context: ./delivery-service
       dockerfile: ./apps/account/Dockerfile
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
     depends_on:
       - rmq
       - db
@@ -42,6 +45,9 @@ services:
     build:
       context: ./delivery-service
       dockerfile: ./apps/api/Dockerfile
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
     ports:
       - 3001:3000
       - 3444:3444

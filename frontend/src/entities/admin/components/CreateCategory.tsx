@@ -1,7 +1,7 @@
 import { useCreateCategory } from "@/shared/category/hooks/useCategories";
 import { Button, Input } from "@mui/material";
 import { useForm } from "react-hook-form";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import styled from "styled-components";
 
 interface ICreateCategory {
@@ -18,13 +18,13 @@ const Wrapper = styled.form`
 `;
 export const CreateCategory = () => {
   const { createCategory, error, isLoading } = useCreateCategory();
-  const { register, handleSubmit } = useForm<ICreateCategory>();
+  const { register, handleSubmit, reset } = useForm<ICreateCategory>();
   const submit = async (category: ICreateCategory) => {
     try {
       await createCategory(category);
+      reset();
     } catch (e: any) {
-      toast.error(e?.response?.data?.message)
-
+      toast.error(e?.response?.data?.message);
     }
   };
   return (

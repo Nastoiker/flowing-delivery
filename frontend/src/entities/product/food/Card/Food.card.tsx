@@ -12,6 +12,7 @@ import { IFood } from "@/shared/interfaces/foods.interface";
 import { useAppDispatch } from "@/shared/store/hooks";
 import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import {
+  Box,
   Button,
   Card,
   CardActionArea,
@@ -93,14 +94,15 @@ export function FoodCard(props: { food: IFood }) {
           <Typography variant="body2" color="text.secondary">
             Калорий: {food.calories}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Box display="flex" alignContent={"center"}>
             <Rating
               name="half-rating-read"
               defaultValue={ratingProduct}
               precision={0.5}
               readOnly
             />
-          </Typography>
+            <Typography>{food.ratings.length}</Typography>
+          </Box>
         </CardContent>
       </CardActionArea>
       <CardActions>

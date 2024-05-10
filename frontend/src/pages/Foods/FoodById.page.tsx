@@ -8,8 +8,9 @@ import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoodById } from "@/shared/food/hooks/useCrudFood";
 import { IReview } from "@/shared/interfaces/review.interface";
-import { Skeleton, Typography } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { RatingQuantity } from "../Review/ui/RatingQuantity";
 
 export const FoodById = () => {
   const { id } = useParams();
@@ -38,7 +39,11 @@ export const FoodById = () => {
       <Typography>{data?.data.food.price}р</Typography>
       <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
       <Typography>Вес: {data?.data.food.grams}</Typography>
-      <ReviewForm loading={isCreatingComment} onReviewSave={submitComment} />
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <ReviewForm loading={isCreatingComment} onReviewSave={submitComment} />
+        <RatingQuantity ratings={data?.data?.food?.ratings} />
+      </Box>
+
       <ReviewWrapper reviews={reviews.data.reviews} />
     </div>
   );

@@ -29,6 +29,10 @@ export class Comment extends Model {
   @Column
   title: string;
   @Column
+  advantage: string;
+  @Column
+  flaws: string;
+  @Column
   status: number;
   @Column({ defaultValue: false })
   anonymously: boolean;

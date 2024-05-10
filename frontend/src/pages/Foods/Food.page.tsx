@@ -1,6 +1,7 @@
 import { FoodCard } from "@/entities/product/food/Card/Food.card";
 import { Banners } from "@/features/banners/Banners";
 import { useFoods } from "@/shared/food/hooks/useCrudFood";
+import { Typography } from "@mui/material";
 import styled from "styled-components";
 const Wrapper = styled.div`
   display: grid;
@@ -19,6 +20,8 @@ export const FoodPage = () => {
   return (
     <>
       <Banners />
+      <Typography>Популярное</Typography>
+
       <Wrapper>
         {data?.data?.foods?.map((f) => (
           <GridEL>

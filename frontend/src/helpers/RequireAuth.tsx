@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { useAppThunkDispatch } from "@/shared/store/hooks";
 import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import { ReactNode, useEffect } from "react";
@@ -5,9 +6,8 @@ import toast from "react-hot-toast";
 import { Navigate } from "react-router-dom";
 
 export const RequireAuth = ({ children }: { children: ReactNode }) => {
-  const jwt = localStorage.getItem("token");
+  const user = useCurrentUser();
   const dispatch = useAppThunkDispatch();
-
   useEffect(() => {
     try {
       const fetch = async () => {
@@ -24,7 +24,8 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
       console.log(e);
     }
   }, [dispatch]);
-  if (!jwt) {
+  if (!user.name) {
+    toast.success("Нужно авторизировать");
     return <Navigate to="/auth/login" replace />;
   }
   // eslint-disable-next-line react-hooks/rules-of-hooks

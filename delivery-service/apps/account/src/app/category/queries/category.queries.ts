@@ -35,7 +35,7 @@ export class CategoryQueries {
   ): Promise<CategoryFoodsInfo.Response> {
     const category = await this.categoryRepository.findCategoryById(categoryId);
     return {
-      category,
+      category: category,
       foods: category.products,
     };
   }

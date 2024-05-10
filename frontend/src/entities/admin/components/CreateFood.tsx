@@ -53,15 +53,15 @@ export const CreateFood = () => {
       data.append("price", food.price?.toString());
       data.append("grams", food.grams?.toString());
       await createFood(data);
+      reset();
     } catch (e: any) {
-      toast.error(e?.response?.data?.message)
-
+      toast.error(e?.response?.data?.message);
     }
   };
   return (
     <FormProvider {...methods}>
       <Wrapper onSubmit={handleSubmit(submit)}>
-        <Input placeholder="Имя категории" required {...register("title")} />
+        <Input placeholder="Название" required {...register("title")} />
         <Input
           placeholder="Количество"
           type="number"

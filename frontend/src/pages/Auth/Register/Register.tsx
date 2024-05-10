@@ -101,7 +101,11 @@ export function Register() {
 
           <Input
             {...register("name", {
-              required: { value: true, message: "Заполните login" },
+              required: { value: true, message: "Заполните имя" },
+              pattern: {
+                value: /^[А-ЯЁё]+$/i,
+                message: "В имени только русские буквы",
+              },
             })}
           />
         </div>
@@ -110,7 +114,11 @@ export function Register() {
           <Input
             id="surname"
             {...register("surname", {
-              required: { value: true, message: "Заполните login" },
+              required: { value: true, message: "Заполните Фамилию" },
+              pattern: {
+                value: /^[А-ЯЁё]+$/i,
+                message: "В имени только русские буквы",
+              },
             })}
             placeholder="Имя"
           />

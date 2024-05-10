@@ -18,7 +18,7 @@ export const CategoriesFoodsById = () => {
     <div>
       <h1>{data?.data.category.name}</h1>
       <Wrapper>
-        {data?.data?.food?.length > 0 ? (
+        {data?.data?.foods?.length > 0 ? (
           data?.data?.foods.map((f) => (
             <GridEL>
               <FoodCard key={f.id} food={f} />

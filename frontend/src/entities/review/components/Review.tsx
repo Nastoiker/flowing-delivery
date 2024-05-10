@@ -7,7 +7,6 @@ export const Review = ({ review }: Props) => {
   return (
     <Paper
       sx={{
-        maxWidth: { xs: "100%", sm: 345 },
         margin: "auto",
         padding: { xs: 2, sm: 3 },
         boxShadow: "0 2px 5px rgba(0,0,0,0.1)",

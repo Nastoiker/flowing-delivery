@@ -22,6 +22,8 @@ const router = createBrowserRouter([
       <>
         <NavigationBar />
         <Outlet />
+        {/* TODO */}
+        {/* <Up /> */}
         {/* <Footer /> */}
       </>
     ),

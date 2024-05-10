@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
 import { QueryClientProvider } from "react-query";
 import "./App.css";
+import { PhosphorProvider } from "./app/Context/IconContext";
 import { GlobalLoader } from "./app/Loader/GlobalLoader";
 import { queryClient } from "./libs/react-query";
 import { ErrorPage } from "./shared/Error/Error.page";
@@ -38,10 +39,12 @@ function App() {
         <ThemeProvider theme={AppTheme}>
           <Toaster />
           <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <GlobalLoader />
+            <PhosphorProvider>
+              <RouterProvider router={router} />
+              <GlobalLoader />
 
-            <ReactQueryDevtools />
+              <ReactQueryDevtools />
+            </PhosphorProvider>
           </QueryClientProvider>
         </ThemeProvider>
       </ErrorBoundary>

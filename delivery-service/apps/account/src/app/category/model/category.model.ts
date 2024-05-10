@@ -21,7 +21,8 @@ export class Category extends Model {
   @ForeignKey(() => Category)
   @Column
   parentId: number;
-
+  @Column
+  pictures: string;
   @BelongsTo(() => Category, { foreignKey: 'parentId', onDelete: 'SET NULL' })
   parent: Category;
 

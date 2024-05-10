@@ -6,6 +6,7 @@ RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 RUN npm install --only=development --silent
 COPY . .
 RUN npx nx build account --prod
+
 FROM node:alpine
 WORKDIR /usr/src/app
 COPY package*.json ./

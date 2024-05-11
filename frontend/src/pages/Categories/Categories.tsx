@@ -1,5 +1,7 @@
+import { HOST } from "@/helpers/api";
 import { useCategories } from "@/shared/category/hooks/useCategories";
-import { Typography } from "@mui/material";
+import { AppImage } from "@/shared/components/image/AppImage";
+import { Box, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -28,7 +30,9 @@ const CategoryList = styled.div`
   justify-content: center;
   flex-wrap: wrap;
 `;
-
+const StyledImgBox = styled(Box)`
+  border-radius: 50%;
+`;
 const getRandomColor = () => {
   const colors = [
     "#FF5733",
@@ -53,7 +57,18 @@ const CategoryBalls = ({ categories }) => {
         <>
           <Link to={`/categories/${category.id}`}>
             <CategoryBall key={category.id} color={getRandomColor()}>
-              <InnerElement>{category.name}</InnerElement>
+              <InnerElement>
+                <StyledImgBox>
+                  <AppImage
+                    fallback={<Skeleton variant="rectangular" height={140} />}
+                    src={`${HOST + category.pictures}`}
+                    alt={category.name}
+                    height="140px"
+                    width="100%"
+                  />
+                </StyledImgBox>
+                <Typography>{category.name}</Typography>
+              </InnerElement>
             </CategoryBall>
           </Link>
         </>

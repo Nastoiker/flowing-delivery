@@ -12,8 +12,9 @@ export function useCreateRating() {
     "createRating",
     async (comment: Partial<IRating>) => createRating(comment),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("comments");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("comments");
+        await queryClient.invalidateQueries("foods");
       },
     }
   );

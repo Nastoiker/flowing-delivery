@@ -54,28 +54,7 @@ export function useCreateCategory() {
   };
 }
 
-export function useUpdateFood() {
-  const queryClient = useQueryClient();
-  const {
-    mutate: updateFood,
-    isLoading,
-    error,
-  } = useMutation(
-    "updateFood",
-    ({ id, ...category }: ICategory) =>
-      api.patch(`/categories/${id}`, category),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("foods");
-      },
-    }
-  );
-  return {
-    updateFood,
-    isLoading,
-    error,
-  };
-}
+
 
 const handleDelete = async (id: number) => api.delete(`/category/${id}`);
 export function useDeleteFood() {

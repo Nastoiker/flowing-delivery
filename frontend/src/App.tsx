@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router-dom";
 
 import { useEffect } from "react";
 import { QueryClientProvider } from "react-query";
+import "react-quill/dist/quill.snow.css";
 import "./App.css";
 import BreakpointsProvider from "./app/Context/Breakpoints/BreakpointsProvider";
 import { PhosphorProvider } from "./app/Context/IconContext";

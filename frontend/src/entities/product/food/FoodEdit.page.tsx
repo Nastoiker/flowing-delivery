@@ -1,8 +1,11 @@
 import { IFoodDto } from "@/entities/admin/components/CreateFood";
-import { useUpdateFood } from "@/shared/category/hooks/useCategories";
-import { useFoodById } from "@/shared/food/hooks/useCrudFood";
-import { Button, Input } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { HOST } from "@/helpers/api";
+import { RichTextFieldController } from "@/shared/components/RichTextField/RichTextFieldController";
+import { SelectCategoryController } from "@/shared/components/Select/SelectCategory";
+import { AppImage } from "@/shared/components/image/AppImage";
+import { useFoodById, useUpdateFood } from "@/shared/food/hooks/useCrudFood";
+import { Box, Button, Input, Skeleton } from "@mui/material";
+import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -21,9 +24,19 @@ export const FoodEditPage = () => {
     isError: isErrorFood,
     isLoading: isLoadingFood,
   } = useFoodById(Number(id));
-
-  const { createFood, error, isLoading } = useUpdateFood();
-  const methods = useForm<IFoodDto>();
+  const { updateFood, error, isLoading } = useUpdateFood(Number(id));
+  const methods = useForm<IFoodDto>({
+    defaultValues: {
+      title: data?.data?.food?.title,
+      calories: data?.data?.food?.calories,
+      description: data?.data?.food?.description,
+      count: data?.data?.food?.count,
+      in_stock: data?.data?.food?.in_stock,
+      price: data?.data?.food?.price,
+      grams: data?.data?.food?.grams,
+      categoryId: data?.data?.food?.categoryId,
+    },
+  });
   const {
     handleSubmit,
     formState,
@@ -33,68 +46,104 @@ export const FoodEditPage = () => {
     register,
     setValue,
   } = methods;
+
   const submit = async (food: IFoodDto) => {
     try {
-      const data = new FormData();
+      const dataDto = new FormData();
       for (let i = 0; i < food?.pictures.length; i++) {
-        data.append("pictures", food.pictures[i]);
+        dataDto.append("pictures", food.pictures[i]);
       }
-      data.append("title", food.title);
-      data.append("calories", food.calories?.toString());
-      data.append("categoryId", food.categoryId?.toString());
-      data.append("count", food.count?.toString());
-      data.append("description", food.description);
-      data.append("in_stock", food.in_stock?.toString());
-      data.append("price", food.price?.toString());
-      data.append("grams", food.grams?.toString());
-      await createFood(data);
+      dataDto.append("title", food.title);
+      dataDto.append("calories", food.calories?.toString());
+      dataDto.append(
+        "categoryId",
+        food.categoryId?.toString() ?? data?.data?.food?.categoryId.toString()
+      );
+
+      dataDto.append("count", food.count?.toString());
+      dataDto.append("description", food.description);
+      dataDto.append("in_stock", food.in_stock?.toString());
+      dataDto.append("price", food.price?.toString());
+      dataDto.append("grams", food.grams?.toString());
+      await updateFood(dataDto);
       reset();
     } catch (e: any) {
       toast.error(e?.response?.data?.message);
     }
   };
-  return (
-    <Wrapper onSubmit={handleSubmit(submit)}>
-      <Input
-        placeholder="Название"
-        defaultValue={}
-        required
-        {...register("title")}
-      />
-      <Input
-        placeholder="Количество"
-        type="number"
-        required
-        {...register("count")}
-      />
-      <Input placeholder="Описание" required {...register("description")} />
-      <Input
-        placeholder="В наличие"
-        type="number"
-        required
-        {...register("in_stock")}
-      />
-      <Input
-        placeholder="Грамов"
-        type="number"
-        required
-        {...register("grams")}
-      />
+  if (!data) {
+    return null;
+  }
 
-      <Input
-        placeholder="Энерг. ценность          "
-        type="number"
-        required
-        {...register("calories")}
+  return (
+    <Box display={"flex"} alignItems={"center"} gap="50px" margin="50px">
+      <AppImage
+        fallback={<Skeleton variant="rectangular" height={800} width={300} />}
+        src={`${HOST + data?.data?.food?.pictures}`}
+        alt={data?.data?.food?.title}
+        height="100%"
+        width="500px"
       />
-      <Input placeholder="Цена" type="number" required {...register("price")} />
-      <Input
-        required
-        inputProps={{ accept: "image/jpeg" }}
-        type="file"
-        {...register("pictures")}
-      />
-      <Button type="submit">Создать</Button>
-    </Wrapper>
+      <FormProvider {...methods}>
+        <Wrapper onSubmit={handleSubmit(submit)}>
+          <Input
+            defaultValue={data?.data?.food?.title}
+            placeholder="Название"
+            required
+            {...register("title")}
+          />
+          <Input
+            defaultValue={data?.data?.food?.count}
+            placeholder="Количество"
+            type="number"
+            required
+            {...register("count")}
+          />
+          <RichTextFieldController
+            defaultValue={data?.data?.food?.description}
+          />
+
+          <Input
+            defaultValue={data?.data?.food?.in_stock}
+            placeholder="В наличие"
+            type="number"
+            required
+            {...register("in_stock")}
+          />
+          <Input
+            defaultValue={data?.data?.food?.grams}
+            placeholder="Грамов"
+            type="number"
+            required
+            {...register("grams")}
+          />
+
+          <Input
+            defaultValue={data?.data?.food?.calories}
+            placeholder="Энерг. ценность          "
+            type="number"
+            required
+            {...register("calories")}
+          />
+          <Input
+            defaultValue={data?.data?.food?.price}
+            placeholder="Цена"
+            type="number"
+            required
+            {...register("price")}
+          />
+          <SelectCategoryController
+            defaultValue={data?.data?.food?.categoryId}
+          />
+
+          <Input
+            inputProps={{ accept: "image/jpeg" }}
+            type="file"
+            {...register("pictures")}
+          />
+          <Button type="submit">Редактировать</Button>
+        </Wrapper>
+      </FormProvider>
+    </Box>
   );
 };

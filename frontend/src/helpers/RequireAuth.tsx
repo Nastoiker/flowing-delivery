@@ -1,12 +1,14 @@
-import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { useAppThunkDispatch } from "@/shared/store/hooks";
 import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import { ReactNode, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Navigate } from "react-router-dom";
+import { getItem } from "./localStorage";
 
 export const RequireAuth = ({ children }: { children: ReactNode }) => {
-  const user = useCurrentUser();
+  //TODO
+  // const user = useCurrentUser();
+  const user = getItem("token");
   const dispatch = useAppThunkDispatch();
   useEffect(() => {
     try {
@@ -24,7 +26,7 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
       console.log(e);
     }
   }, [dispatch]);
-  if (!user.name) {
+  if (!user) {
     toast.success("Нужно авторизировать");
     return <Navigate to="/auth/login" replace />;
   }

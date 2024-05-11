@@ -48,7 +48,9 @@ export const UserDetails = ({ user }: { user: IUser }) => {
   };
   return (
     <>
-      <h1>Ваши данные</h1>
+      <Typography margin={"50px 0"} variant="h4">
+        Профиль
+      </Typography>
       {isEdit ? (
         <Wrapper onSubmit={handleSubmit(submit)}>
           {Object.entries(listParamsToEdit).map(([key, value]) => (

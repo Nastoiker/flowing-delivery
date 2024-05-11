@@ -16,13 +16,17 @@ export const ShoppingCardPage = () => {
   );
   return (
     <Wrapper>
-      <h1>Корзина</h1>
+      <Typography margin="20px 0" variant="h3">
+        Корзина
+      </Typography>
       {shoppingCarts.data.shoppingCart?.length > 0 ? (
         shoppingCarts.data.shoppingCart?.map((s) => (
           <ShoppintCartItem key={s.id} shoppingCart={s} />
         ))
       ) : (
-        <Typography variant="h4">В вашей корзине пока пусто</Typography>
+        <Typography margin="20px 0" variant="h5">
+          В вашей корзине пока пусто
+        </Typography>
       )}
       <Divider />
       <div>

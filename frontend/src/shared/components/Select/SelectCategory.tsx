@@ -2,7 +2,11 @@ import { useCategories } from "@/shared/category/hooks/useCategories";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
-export const SelectCategoryController = () => {
+export const SelectCategoryController = ({
+  defaultValue,
+}: {
+  defaultValue?: number;
+}) => {
   const { data, isError } = useCategories();
   const {
     control,
@@ -21,6 +25,7 @@ export const SelectCategoryController = () => {
           <FormControl fullWidth>
             <InputLabel id="categories-label">Категории</InputLabel>
             <Select
+              defaultValue={defaultValue}
               onChange={onChange}
               value={value}
               labelId="categories-label"

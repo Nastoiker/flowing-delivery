@@ -24,7 +24,9 @@ export const AdminPanel = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <h1>Админ панель</h1>
+      <Typography margin={"50px 0"} variant="h4">
+        Админка
+      </Typography>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}

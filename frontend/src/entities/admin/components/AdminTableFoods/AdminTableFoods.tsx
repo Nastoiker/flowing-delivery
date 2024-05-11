@@ -24,7 +24,7 @@ export const TableFoods = () => {
           <Table.Row>
             {Object.values(u).map((v) => (
               <Table.Cell>
-                <Link to={`/menu/${u.id}`}>{v} </Link>
+                <Link to={`/admin/menu/${u.id}`}>{JSON.stringify(v)} </Link>
               </Table.Cell>
             ))}
           </Table.Row>

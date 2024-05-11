@@ -1,3 +1,4 @@
+import { FoodEditPage } from "@/entities/product/food/FoodEdit.page";
 import { ProtectedRoute } from "@/helpers/ProtectedRoute";
 import { CategoriesPage } from "@/pages/Categories/Categories";
 import { CategoriesFoodsById } from "@/pages/Categories/CategoriesFoodsById";
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
                 <AdminPanel />
               </ProtectedRoute>
             ),
+          },
+          {
+            path: "admin/menu/:id",
+            element: <FoodEditPage />,
           },
           {
             path: "shopping-cart",

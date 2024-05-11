@@ -17,7 +17,7 @@ body {
   color: var(--black);
   background: #f2eeea !important;
 
-  font-family: "Montserrat", serif;
+  font-family: "Montserrat", serif, "Roboto" !important;
 }
 h2 {
   font-size: 40px;

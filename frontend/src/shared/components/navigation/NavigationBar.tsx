@@ -21,8 +21,9 @@ const ScrollToHide = ({ children, window = false, threshold }) => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: threshold,
-    // @ts-ignore
-    target: window ? window() : false,
+    //TODO
+    //@ts-ignore
+    target: window ? window() : undefined,
   });
 
   return (

@@ -62,7 +62,7 @@ export function useCreateFood() {
   };
 }
 
-export function useUpdateFood() {
+export function useUpdateFood(id) {
   const queryClient = useQueryClient();
   const {
     mutate: updateFood,
@@ -70,10 +70,11 @@ export function useUpdateFood() {
     error,
   } = useMutation(
     "updateFood",
-    ({ id, ...food }: IFood) => api.patch(`/foods/${id}`, food),
+    (food: FormData) => api.put(`/food/${id}`, food),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("foods");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("foods");
+        await queryClient.invalidateQueries([]);
       },
     }
   );

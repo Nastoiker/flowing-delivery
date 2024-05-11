@@ -79,10 +79,7 @@ export function FoodCard(props: { food: IFood }) {
           <Typography gutterBottom variant="h5" component="div">
             {food.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {food.description}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography paragraph variant="body2" color="text.secondary">
             Цена: {food.price}₽
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -107,7 +104,7 @@ export function FoodCard(props: { food: IFood }) {
       </CardActionArea>
       <CardActions>
         <Button
-          disabled={food.count === 0 || !currentUser.email}
+          disabled={food.count === 0 || !currentUser?.email}
           onClick={() => handleAddToCart()}
           size="small"
           color="primary"

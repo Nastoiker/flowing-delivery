@@ -3,6 +3,7 @@ import {
   FoodFindById,
   FoodFindBySearch,
   FoodGetAll,
+  FoodUpdate,
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
@@ -38,6 +39,16 @@ export class FoodQueries {
     const foods = await this.foodRepository.findBySearch(search);
     return {
       foods,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(FoodUpdate.topic)
+  async foodUpdate(
+    @Body() foodDtos: FoodUpdate.Request
+  ): Promise<FoodUpdate.Response> {
+    const food = await this.foodRepository.updateFood(foodDtos);
+    return {
+      food,
     };
   }
   @RMQValidate()

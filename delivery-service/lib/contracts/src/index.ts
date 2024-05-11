@@ -14,6 +14,7 @@ export * from './lib/food/food.all';
 export * from './lib/food/food.create';
 export * from './lib/food/food.findById';
 export * from './lib/food/food.search';
+export * from './lib/food/food.update';
 
 export * from './lib/contracts.module';
 export * from './lib/shopping-cart/shopping-cart.create';

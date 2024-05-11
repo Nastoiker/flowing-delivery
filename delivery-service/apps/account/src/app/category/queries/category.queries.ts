@@ -21,9 +21,13 @@ export class CategoryQueries {
   @RMQValidate()
   @RMQRoute(CategoryCreate.topic)
   async categoryCreate(
-    @Body() { category: categoryDto }: CategoryCreate.Request
+    @Body() { name, slug, pictures }: CategoryCreate.Request
   ): Promise<CategoryCreate.Response> {
-    const category = await this.categoryRepository.createCategory(categoryDto);
+    const category = await this.categoryRepository.createCategory({
+      name,
+      slug,
+      pictures,
+    });
     return {
       category,
     };

@@ -3,6 +3,7 @@ import {
   FoodFindById,
   FoodFindBySearch,
   FoodGetAll,
+  FoodUpdate,
 } from '@delivery-service/contracts';
 import { MFile } from '@delivery-service/interfaces';
 import {
@@ -13,6 +14,7 @@ import {
   Logger,
   Param,
   Post,
+  Put,
   UnauthorizedException,
   UploadedFile,
   UseGuards,
@@ -85,7 +87,58 @@ export class FoodController {
       }
     }
   }
-  // @UseGuards(JWTAuthGuard)
+  @UseGuards(JWTAuthGuard)
+  @Put(':id')
+  @UseInterceptors(FileInterceptor('pictures'))
+  async update(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') id: number,
+    @Body() foodDto: FoodDto
+  ) {
+    try {
+      let img;
+      if (file) {
+        const saveFile: MFile = new MFile(file);
+        if (!file.mimetype.includes('image')) {
+          throw new BadRequestException('Неверный формат файла');
+        }
+        const extension = file.originalname.split('.');
+        img = await this.filesService.saveFile(
+          new MFile({
+            originalname:
+              file.originalname.split('.')[0] +
+              '.' +
+              extension[extension.length - 1],
+            buffer: Buffer.from(file.buffer),
+          })
+        );
+      }
+
+      return await this.rmqService.send<
+        FoodUpdate.Request,
+        FoodUpdate.Response
+      >(
+        FoodUpdate.topic,
+        {
+          id: Number(id),
+          pictures: file && img.url,
+          categoryId: parseInt(foodDto.categoryId),
+          count: parseInt(foodDto.count),
+          description: foodDto.description,
+          calories: parseInt(foodDto.calories),
+          grams: parseInt(foodDto.grams),
+          in_stock: parseInt(foodDto.in_stock),
+          title: foodDto.title,
+          price: parseInt(foodDto.price),
+        },
+        { headers: { requestId: 'adad' } }
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
   @Post('create')
   @UseInterceptors(FileInterceptor('pictures'))
   async create(

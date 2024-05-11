@@ -21,17 +21,14 @@ export class FoodRepository {
     return foodCreated;
   }
 
-  async updateFOod({ id, ...rest }: IFood) {
-    const food = await this.foodModel.update(
-      {
-        ...rest,
-      },
-      {
-        where: {
-          id,
-        },
-      }
-    );
+  async updateFood({ id, ...rest }: IFood) {
+    const food = await this.foodModel.findByPk(id);
+    if (!food) {
+      throw new Error('Еда не найдена');
+    }
+    await food.update({
+      ...rest,
+    });
 
     return food;
   }

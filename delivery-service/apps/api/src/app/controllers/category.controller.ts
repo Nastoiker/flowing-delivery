@@ -83,7 +83,7 @@ export class CategoryController {
         CategoryCreate.Response
       >(
         CategoryCreate.topic,
-        { name: category.title, slug: category.slug, pictures: img.url },
+        { name: category.name, slug: category.slug, pictures: img.url },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {

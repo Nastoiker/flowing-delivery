@@ -11,7 +11,7 @@ export const GlobalLoader = () => {
 
   return isFetching ? (
     <Wrapper>
-      <Loader size={"8rem"} />
+      <Loader size={"5rem"} />
     </Wrapper>
   ) : null;
 };

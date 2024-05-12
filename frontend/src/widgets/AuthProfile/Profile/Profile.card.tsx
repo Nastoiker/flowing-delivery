@@ -1,6 +1,6 @@
 import { useUpdateUsers } from "@/entities/user/hooks/useUsers";
 import { IUser } from "@/shared/interfaces/user.interface";
-import { Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { DataList } from "@radix-ui/themes";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -56,28 +56,37 @@ export const UserDetails = ({ user }: { user: IUser }) => {
           {Object.entries(listParamsToEdit).map(([key, value]) => (
             <TextField label={value} {...register(key as UserEditKeys)} />
           ))}
-          <Button type="submit">Сохранить</Button>
+          <Button type="submit" variant="outlined">
+            Сохранить
+          </Button>
         </Wrapper>
       ) : (
-        <DataList.Root orientation={{ initial: "vertical", sm: "horizontal" }}>
-          {Object.entries(listParams).map(([key, value]) => {
-            return (
-              <DataList.Item
-                align="center"
-                style={{ display: "flex" }}
-                key={key}
-              >
-                <DataList.Label minWidth="288px">{value}:</DataList.Label>
-                <DataList.Value>
-                  <Typography>{user[key]}</Typography>
-                </DataList.Value>
-              </DataList.Item>
-            );
-          })}
-          <Button onClick={() => setIsEdit((prev) => !prev)}>
+        <Box>
+          <DataList.Root
+            orientation={{ initial: "vertical", sm: "horizontal" }}
+          >
+            {Object.entries(listParams).map(([key, value]) => {
+              return (
+                <DataList.Item
+                  align="center"
+                  style={{ display: "flex" }}
+                  key={key}
+                >
+                  <DataList.Label minWidth="288px">{value}:</DataList.Label>
+                  <DataList.Value>
+                    <Typography color="primary">{user[key]}</Typography>
+                  </DataList.Value>
+                </DataList.Item>
+              );
+            })}
+          </DataList.Root>
+          <Button
+            variant="contained"
+            onClick={() => setIsEdit((prev) => !prev)}
+          >
             Редактировать
           </Button>
-        </DataList.Root>
+        </Box>
       )}
     </>
   );

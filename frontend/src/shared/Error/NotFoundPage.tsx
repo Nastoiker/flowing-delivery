@@ -1,6 +1,7 @@
+import NotFoundImg from "@/assets/not-found.png";
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
 const Container = styled.div`
   text-align: center;
   margin: auto;
@@ -9,7 +10,11 @@ const Container = styled.div`
 const Heading = styled.h1`
   font-size: 9rem;
 `;
-
+const WrapperText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const Text = styled.p`
   font-size: 2rem;
   margin: 2.5rem 0;
@@ -17,10 +22,17 @@ const Text = styled.p`
 export const NotFoundErrorPage = () => {
   return (
     <Container>
-      <Heading>404</Heading>
+      <WrapperText>
+        <Heading>4</Heading>
+        <img
+          style={{ maxWidth: "150px", maxHeight: "150px" }}
+          src={NotFoundImg}
+        />
+        <Heading>4</Heading>
+      </WrapperText>
       <Text>К сожалению, ничего не найдено</Text>
       <Link to={`/menu`}>
-        <Text>Вернуться на главную</Text>
+        <Button size="large">Вернуться на главную</Button>
       </Link>
     </Container>
   );

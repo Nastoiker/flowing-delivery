@@ -50,7 +50,9 @@ export function Login() {
   };
   return (
     <div className={styles["login"]}>
-      <Typography>Вход</Typography>
+      <Typography margin={"50px 0"} variant="h4">
+        Вход
+      </Typography>
       <form className={styles["form"]} onSubmit={handleSubmit(submit)}>
         <div className={styles["field"]}>
           <InputLabel>Ваш email</InputLabel>
@@ -81,11 +83,15 @@ export function Login() {
             placeholder="Пароль"
           />
         </div>
-        <Button type="submit">Вход</Button>
+        <Button variant="contained" type="submit">
+          Войти
+        </Button>
       </form>
       <div className={styles["links"]}>
-        <div>Нет акканута?</div>
-        <Link to="/auth/register">Зарегистрироваться</Link>
+        <Typography>Нет акканута?</Typography>
+        <Link to="/auth/register">
+          <Typography color="primary">Зарегистрироваться</Typography>
+        </Link>
       </div>
     </div>
   );

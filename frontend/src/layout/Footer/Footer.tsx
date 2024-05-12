@@ -4,10 +4,7 @@ import styled from "styled-components";
 const StyledFooter = styled.footer`
   width: 100%;
   color: black;
-  z-index: 50;
   padding: 20px;
-  position: absolute;
-  left: 0;
   bottom: 0;
   width: 100%;
   height: 80px;
@@ -15,7 +12,6 @@ const StyledFooter = styled.footer`
 
 const ContentWrapper = styled.div`
   display: flex;
-  border-top: 2px solid green;
   padding-top: 20px;
   flex-direction: column;
   gap: 5px;
@@ -56,7 +52,6 @@ const PhoneLink = styled.a`
 
 const HR = styled.hr`
   margin: 5px 0;
-  border-color: green;
 `;
 
 const BottomWrapper = styled.div`

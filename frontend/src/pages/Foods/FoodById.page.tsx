@@ -16,13 +16,13 @@ import { RatingQuantity } from "../Review/ui/RatingQuantity";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 20px 0;
   gap: 10px;
 `;
 const WrapperMain = styled.div`
   display: flex;
+  margin: 50px 0;
   gap: 50px;
-  align-items: center;
+  flex-wrap: wrap;
 `;
 export const FoodById = () => {
   const { id } = useParams();
@@ -43,12 +43,9 @@ export const FoodById = () => {
     <div>
       <WrapperMain>
         <Box maxWidth={"500px"}>
-          <Typography margin={"50px 0"} variant="h4">
-            {data?.data.food.title}
-          </Typography>
           <AppImage
             fallback={
-              <Skeleton variant="rectangular" height={800} width={300} />
+              <Skeleton variant="rectangular" height={500} width={500} />
             }
             errorFallback={
               <Skeleton variant="rectangular" height={500} width={500} />
@@ -56,12 +53,18 @@ export const FoodById = () => {
             src={`${HOST + data?.data.food.pictures}`}
             alt={data?.data.food.title}
             height="100%"
-            width="500px"
+            width="100%"
           />
         </Box>
 
         <Wrapper>
-          <div dangerouslySetInnerHTML={{ __html: santizeDesc }} />
+          <Typography margin={"50px 0"} variant="h3">
+            {data?.data.food.title}
+          </Typography>
+          <div
+            style={{ fontSize: "20px" }}
+            dangerouslySetInnerHTML={{ __html: santizeDesc }}
+          />
           <Typography>{data?.data.food.price}р</Typography>
           <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
           <Typography>Вес: {data?.data.food.grams}</Typography>
@@ -71,6 +74,7 @@ export const FoodById = () => {
         margin="50px 0"
         display="flex"
         alignItems="center"
+        flexWrap="wrap"
         justifyContent="space-between"
       >
         <ReviewForm loading={isCreatingComment} onReviewSave={submitComment} />

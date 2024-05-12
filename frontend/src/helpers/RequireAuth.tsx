@@ -27,7 +27,7 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
     }
   }, [dispatch]);
   if (!user) {
-    toast.success("Нужно авторизировать");
+    toast.success("Нужно авторизироваться");
     return <Navigate to="/auth/login" replace />;
   }
   // eslint-disable-next-line react-hooks/rules-of-hooks

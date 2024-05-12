@@ -49,7 +49,7 @@ export default function AccountMenu() {
   );
   return (
     <ScrollToHide threshold={0}>
-      <AppBar color="default" position="sticky">
+      <AppBar color="secondary" position="sticky">
         <Toolbar
           sx={{
             display: "flex",

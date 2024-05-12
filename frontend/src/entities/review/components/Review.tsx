@@ -1,5 +1,6 @@
 import { IReview } from "@/shared/interfaces/review.interface";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Rating, Typography } from "@mui/material";
+import { Quotes } from "@phosphor-icons/react";
 
 type Props = { review: IReview };
 
@@ -20,18 +21,19 @@ export const Review = ({ review }: Props) => {
           marginBottom: 2,
         }}
       >
-        <Box>
-          <Typography sx={{ fontWeight: "bold" }}>
-            {review?.user?.name}
-          </Typography>
-          <Typography sx={{ fontWeight: "bold" }}>
-            {review?.user?.surname}
-          </Typography>
+        <Box display={"flex"} gap="20px">
+          <Box>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {review?.user?.name}
+            </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {review?.user?.surname}
+            </Typography>
+          </Box>
+          <Quotes />
         </Box>
 
-        <Typography sx={{ fontWeight: "bold", color: "primary.main" }}>
-          Оценка: {review.rating}
-        </Typography>
+        <Rating value={review.rating} readOnly />
       </Box>
       <Box>
         <Typography

@@ -15,6 +15,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UnauthorizedException,
   UploadedFile,
   UseGuards,
@@ -35,12 +36,22 @@ export class FoodController {
     private readonly filesService: FilesService
   ) {}
   @Get()
-  async getFoods() {
+  async getFoods(@Query() query) {
     try {
+      const {
+        sort: { field = 'createdAt', direction = 'desc' },
+        filter,
+        page = 1,
+        pageSize = 20,
+      } = query;
       return await this.rmqService.send<
         FoodGetAll.Request,
         FoodGetAll.Response
-      >(FoodGetAll.topic, {}, { headers: { requestId: 'adad' } });
+      >(
+        FoodGetAll.topic,
+        { sort: { field, direction }, filter, page, pageSize },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
-import { Button, Input } from "@mui/material";
+import { Button, Checkbox, Input, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { api } from "../../../helpers/api";
 import styles from "../Login/Login.module.css";
@@ -134,11 +134,20 @@ export function Register() {
             placeholder="Имя"
           />
         </div>
-        <Button type="submit">Зарегистрироваться</Button>
+        <Button variant="contained" type="submit">
+          Зарегистрироваться
+        </Button>
+        <Typography>
+          <Checkbox required />Я согласен на обработку моих персональных данных
+          в соответствии с Условиями и Договором оферты
+        </Typography>
       </form>
       <div className={styles["links"]}>
         <div>Есть акканут?</div>
-        <Link to="/auth/login">Войти</Link>
+        <Link to="/auth/login">
+          {" "}
+          <Typography color="primary">Войти</Typography>
+        </Link>
       </div>
     </div>
   );

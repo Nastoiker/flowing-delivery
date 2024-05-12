@@ -56,8 +56,23 @@ export class FoodRepository {
       ],
     });
   }
-  async findAllFood() {
-    return this.foodModel.findAll({
+  async findAllFood({ sort, filter, page, pageSize }) {
+    const { field, direction } = sort;
+    const { minPrice, maxPrice, categoryId, calories, grams } = filter;
+    const offset = (page - 1) * pageSize;
+    const where = {} as any;
+    if (minPrice !== undefined)
+      where.price = { ...where.price, [Op.gte]: minPrice };
+    if (maxPrice !== undefined)
+      where.price = { ...where.price, [Op.lte]: maxPrice };
+    if (categoryId !== undefined) where.categoryId = categoryId;
+    if (calories !== undefined) where.calories = calories;
+    if (grams !== undefined) where.grams = grams;
+    return this.foodModel.findAndCountAll({
+      order: [field, direction],
+      where,
+      offset,
+      limit: pageSize,
       include: [
         {
           model: Rating,

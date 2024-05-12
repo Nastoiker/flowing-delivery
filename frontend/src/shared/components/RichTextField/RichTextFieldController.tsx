@@ -24,7 +24,7 @@ export const RichTextFieldController = ({
         control={control}
         render={({ field: { onChange, value, ref } }) => (
           <>
-            <Label.Root id="description-label">Категории</Label.Root>
+            <Label.Root id="description-label">Описание</Label.Root>
             <ReactQuill
               id="description-label"
               theme="snow"

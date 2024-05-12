@@ -1,5 +1,12 @@
 import { USER_ROLES } from "@/pages/profile/Profile";
-import { Bag, House, IconProps, Table, User, Wrench } from "@phosphor-icons/react";
+import {
+  Bag,
+  DotsNine,
+  House,
+  IconProps,
+  User,
+  Wrench,
+} from "@phosphor-icons/react";
 
 export type MenuItemType = {
   title: string;
@@ -20,7 +27,7 @@ const MENU_ITEMS = [
   {
     title: "Категории",
     link: "/categories",
-    Icon: Table,
+    Icon: DotsNine,
   },
   {
     title: "Админка",
@@ -31,7 +38,7 @@ const MENU_ITEMS = [
   {
     title: "Профиль",
     allowedRoles: [USER_ROLES.ADMIN, USER_ROLES.USER],
-    link: "/shopping-cart",
+    link: "/profile",
     Icon: User,
   },
   {

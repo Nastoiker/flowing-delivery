@@ -31,7 +31,7 @@ export const FoodFindBySearch = () => {
             </GridEL>
           ))
         ) : (
-          <Typography textAlign="center">
+          <Typography variant="h5" textAlign="center">
             К сожалению, ничего не найдено
           </Typography>
         )}

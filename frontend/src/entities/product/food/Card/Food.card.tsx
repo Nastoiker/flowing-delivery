@@ -22,6 +22,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+import { Basket, Minus, Plus } from "@phosphor-icons/react";
 import { isNumber } from "lodash";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -83,13 +84,7 @@ export function FoodCard(props: { food: IFood }) {
             Цена: {food.price}₽
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            В наличии: {food.in_stock}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Граммов: {food.grams}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Калорий: {food.calories}
+            Энерг. ценность: {food.calories}/{food.grams}г.
           </Typography>
           <Box display="flex" alignContent={"center"}>
             <Rating
@@ -106,10 +101,21 @@ export function FoodCard(props: { food: IFood }) {
         <Button
           disabled={food.count === 0 || !currentUser?.email}
           onClick={() => handleAddToCart()}
-          size="small"
+          size="medium"
           color="primary"
+          variant="contained"
         >
-          {isAdded ? "Удалить" : "Добавить"}
+          {isAdded ? (
+            <>
+              <Basket />
+              <Minus />
+            </>
+          ) : (
+            <>
+              <Basket />
+              <Plus />
+            </>
+          )}
         </Button>
       </CardActions>
     </Card>

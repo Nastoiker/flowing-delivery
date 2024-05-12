@@ -12,6 +12,7 @@ import {
   Logger,
   Post,
   Put,
+  Query,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -78,12 +79,22 @@ export class UserController {
     }
   }
   @Get()
-  async users() {
+  async users(@Query() query) {
     try {
+      const {
+        sort: { field = 'createdAt', direction = 'desc' },
+        filter,
+        page = 1,
+        pageSize = 20,
+      } = query;
       return await this.rmqService.send<
         AccountGetAll.Request,
         AccountGetAll.Response
-      >(AccountGetAll.topic, {}, { headers: { requestId: 'adad' } });
+      >(
+        AccountGetAll.topic,
+        { sort: { field, direction }, filter, page, pageSize },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         console.log(e);

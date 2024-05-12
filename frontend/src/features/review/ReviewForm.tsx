@@ -51,7 +51,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              <Rating {...field} />
+              <Rating error={Boolean(errors.rating)} {...field} />
               // <FormControlLabel
               //   labelPlacement="top"
               //   control={}
@@ -86,7 +86,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             disabled={loading}
             onClick={handleSubmit(onReviewSave)}
           >
-            {loading ? "Сохранение..." : "Добавить"}
+            {loading ? "Сохранение..." : "Добавить отзыв"}
           </Button>
         </Grid>
       </Grid>

@@ -29,7 +29,7 @@ declare module "@mui/material/styles" {
 
 const defaultTheme = createTheme({
   typography: {
-    fontFamily: "Montserrat, Roboto",
+    fontFamily: "Gilroy, Roboto",
   },
   palette: {
     basic: {
@@ -39,8 +39,20 @@ const defaultTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 15,
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        containedPrimary: {
+          "&:hover": {
+            backgroundColor: "#383634",
+          },
+        },
+      },
+    },
+  },
+
   breakpoints: {
     values: {
       xs: 0,
@@ -56,16 +68,18 @@ const defaultTheme = createTheme({
 export const AppTheme = createTheme(defaultTheme, {
   palette: {
     primary: {
-      dark: "#413FC0",
-      main: "#6765F2",
+      main: "#4C7C7D",
     },
     basic: {
       white: "#FFFFFF",
       purple: "#F7F7FE",
       gray: "#999999",
     },
+    secondary: {
+      main: "#edeae7",
+    },
     text: {
-      secondary: "#656565",
+      primary: "#383634",
     },
   },
 });

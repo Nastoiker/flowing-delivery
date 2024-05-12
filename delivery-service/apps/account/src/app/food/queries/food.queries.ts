@@ -25,10 +25,20 @@ export class FoodQueries {
   }
   @RMQValidate()
   @RMQRoute(FoodGetAll.topic)
-  async foodAll(_: FoodGetAll.Request): Promise<FoodGetAll.Response> {
-    const foods = await this.foodRepository.findAllFood();
+  async foodAll({
+    sort,
+    filter,
+    page,
+    pageSize,
+  }: FoodGetAll.Request): Promise<FoodGetAll.Response> {
+    const { rows, count } = await this.foodRepository.findAllFood({
+      sort,
+      filter,
+      page,
+      pageSize,
+    });
     return {
-      foods,
+      foods: rows,
     };
   }
   @RMQValidate()

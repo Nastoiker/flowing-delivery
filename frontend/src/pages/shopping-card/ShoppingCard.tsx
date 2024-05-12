@@ -40,7 +40,9 @@ export const ShoppingCardPage = () => {
       <div>
         <h4>Сумма:</h4>
       </div>
-      <Button type="submit">оформить</Button>
+      <Button variant="outlined" size="large" type="submit">
+        оформить
+      </Button>
     </Wrapper>
   );
 };

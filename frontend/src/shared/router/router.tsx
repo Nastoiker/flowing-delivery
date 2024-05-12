@@ -5,6 +5,8 @@ import { CategoriesFoodsById } from "@/pages/Categories/CategoriesFoodsById";
 import { FoodPage } from "@/pages/Foods/Food.page";
 import { FoodById } from "@/pages/Foods/FoodById.page";
 import { FoodFindBySearch } from "@/pages/Foods/FoodFindBySearch";
+import { Offerta } from "@/pages/Oferta/Oferta";
+import { Politics } from "@/pages/Politics/Politics";
 import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
 import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
 import { Outlet, createBrowserRouter } from "react-router-dom";
@@ -37,6 +39,7 @@ const router = createBrowserRouter([
         path: "categories/:id",
         element: <CategoriesFoodsById />,
       },
+
       {
         path: "auth",
         element: <AuthLayout />,
@@ -71,6 +74,7 @@ const router = createBrowserRouter([
             path: "admin/menu/:id",
             element: <FoodEditPage />,
           },
+
           {
             path: "shopping-cart",
             element: <ShoppingCardPage />,
@@ -86,6 +90,7 @@ const router = createBrowserRouter([
         element: <FoodPage />,
         children: [],
       },
+
       {
         path: "menu/:id",
         element: <FoodById />,
@@ -96,7 +101,14 @@ const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "/politics",
+    element: <Politics />,
+  },
+  {
+    path: "oferta",
+    element: <Offerta />,
+  },
   {
     path: "*",
     element: <NotFoundErrorPage />,

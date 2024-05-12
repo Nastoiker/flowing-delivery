@@ -5,7 +5,8 @@ import {
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { IShoppingCart } from "@/shared/interfaces/shopping-cart.interface";
-import { Button, Skeleton } from "@mui/material";
+import { IconButton, Skeleton } from "@mui/material";
+import { Minus, Plus, Trash } from "@phosphor-icons/react";
 import styled from "styled-components";
 
 export const CartItem = styled.div`
@@ -46,40 +47,6 @@ const Price = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-`;
-
-const Minus = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: 1px solid var(--primary-color);
-  border-radius: 50%;
-  width: 29px;
-  height: 29px;
-  cursor: pointer;
-`;
-
-const Plus = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--primary-color);
-  border: 1px solid var(--primary-color);
-  border-radius: 50%;
-  width: 29px;
-  cursor: pointer;
-  height: 29px;
-`;
-
-const Remove = styled(Button)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  width: 29px;
-  height: 29px;
 `;
 
 const Number = styled.div`
@@ -130,14 +97,18 @@ export const ShoppintCartItem = ({
           <Price>Цена: {shoppingCart.product?.price}₽</Price>
         </Description>
         <ActionsButttons>
-          <Minus onClick={() => handleDicrement()}>-</Minus>
+          <IconButton onClick={() => handleDicrement()}>
+            <Minus />
+          </IconButton>
           <Number>{shoppingCart.count}</Number>
 
-          <Plus onClick={() => handleIncrement()}>+</Plus>
+          <IconButton onClick={() => handleIncrement()}>
+            <Plus />
+          </IconButton>
 
-          <Remove onClick={() => deleteShoppingCart(shoppingCart.id)}>
-            Удалить все
-          </Remove>
+          <IconButton onClick={() => deleteShoppingCart(shoppingCart.id)}>
+            <Trash />
+          </IconButton>
         </ActionsButttons>
       </Actions>
       <Price>Итогая сумма: {shoppingCart.totalPrice}₽</Price>

@@ -22,6 +22,7 @@ export const FoodPage = () => {
       <Typography margin={"50px"} variant="h4">
         Популярное
       </Typography>
+      {/* <FilterByPrice onChange={() => {}} /> */}
       <Wrapper>
         {data?.data?.foods?.map((f) => (
           <GridEL>

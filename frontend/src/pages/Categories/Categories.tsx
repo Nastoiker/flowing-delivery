@@ -4,6 +4,7 @@ import { AppImage } from "@/shared/components/image/AppImage";
 import { Box, Skeleton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import styles from "./category.module.css";
 
 const CategoryBall = styled.div`
   display: inline-block;
@@ -60,16 +61,19 @@ const CategoryBalls = ({ categories }) => {
               <InnerElement>
                 <StyledImgBox>
                   <AppImage
+                    className={styles.categoryImg}
                     fallback={<Skeleton variant="rectangular" height={140} />}
                     src={`${HOST + category.pictures}`}
                     alt={category.name}
-                    height="140px"
-                    width="100%"
+                    height="150px"
+                    width="150px"
                   />
                 </StyledImgBox>
-                <Typography>{category.name}</Typography>
               </InnerElement>
             </CategoryBall>
+            <Typography textAlign={"center"} margin="auto">
+              {category.name}
+            </Typography>
           </Link>
         </>
       ))}

@@ -45,10 +45,10 @@ export const FoodById = () => {
         <Box maxWidth={"500px"}>
           <AppImage
             fallback={
-              <Skeleton variant="rectangular" height={500} width={500} />
+              <Skeleton variant="rectangular" height={500} width={330} />
             }
             errorFallback={
-              <Skeleton variant="rectangular" height={500} width={500} />
+              <Skeleton variant="rectangular" height={500} width={330} />
             }
             src={`${HOST + data?.data.food.pictures}`}
             alt={data?.data.food.title}

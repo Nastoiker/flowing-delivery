@@ -9,7 +9,9 @@ import { Offerta } from "@/pages/Oferta/Oferta";
 import { Politics } from "@/pages/Politics/Politics";
 import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
 import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
+import { Box } from "@mui/material";
 import { Outlet, createBrowserRouter } from "react-router-dom";
+import styled from "styled-components";
 import { RequireAuth } from "../../helpers/RequireAuth";
 import { AuthLayout } from "../../layout/Auth/AuthLayout";
 import { Login } from "../../pages/Auth/Login/Login";
@@ -17,14 +19,20 @@ import { Register } from "../../pages/Auth/Register/Register";
 import { Profile, USER_ROLES } from "../../pages/profile/Profile";
 import { NotFoundErrorPage } from "../Error/NotFoundPage";
 import { default as NavigationBar } from "../components/navigation/NavigationBar";
-
+const Wrapper = styled(Box)`
+  @media (max-width: 559px) {
+    margin: auto 20px;
+  }
+`;
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <>
         <NavigationBar />
-        <Outlet />
+        <Wrapper>
+          <Outlet />
+        </Wrapper>
         {/* TODO */}
         {/* <Up /> */}
         {/* <Footer /> */}

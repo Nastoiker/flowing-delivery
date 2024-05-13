@@ -88,7 +88,7 @@ export default function AccountMenu() {
             <NavigationDrawer menuItems={menuItems} />
           )}
 
-          <div style={{ maxWidth: "300px" }}>
+          <div style={{ maxWidth: "300px", width: "100%" }}>
             <SearchField
               onEnter={() => navigate("/menu/search")}
               value={search}
@@ -100,8 +100,7 @@ export default function AccountMenu() {
           </div>
           <IconButton
             onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
+            size="medium"
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}

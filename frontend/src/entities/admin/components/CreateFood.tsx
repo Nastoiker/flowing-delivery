@@ -101,7 +101,9 @@ export const CreateFood = () => {
           type="file"
           {...register("pictures")}
         />
-        <Button type="submit">Создать</Button>
+        <Button variant="outlined" type="submit">
+          Создать
+        </Button>
       </Wrapper>
     </FormProvider>
   );

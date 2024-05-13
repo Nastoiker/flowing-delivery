@@ -23,7 +23,7 @@ export const ShoppingCardPage = () => {
   );
   return (
     <Wrapper>
-      <Typography margin="20px 0" variant="h3">
+      <Typography margin="50px 0" variant="h3">
         Корзина
       </Typography>
       {shoppingCarts.data.shoppingCart?.length > 0 ? (

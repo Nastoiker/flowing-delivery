@@ -5,7 +5,7 @@ import {
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { IShoppingCart } from "@/shared/interfaces/shopping-cart.interface";
-import { IconButton, Skeleton } from "@mui/material";
+import { Box, IconButton, Skeleton } from "@mui/material";
 import { Minus, Plus, Trash } from "@phosphor-icons/react";
 import styled from "styled-components";
 
@@ -21,6 +21,7 @@ const Actions = styled.div`
   gap: 40px;
   align-items: center;
   align-self: flex-start;
+  flex-wrap: wrap;
 `;
 const ActionsButttons = styled.div`
   display: flex;
@@ -85,17 +86,20 @@ export const ShoppintCartItem = ({
   return (
     <Wrapper>
       <Actions>
-        <AppImage
-          fallback={<Skeleton variant="rectangular" height={140} />}
-          src={`${HOST + shoppingCart.product.pictures}`}
-          alt={shoppingCart.product.title}
-          height="100px"
-          width="100px"
-        />
-        <Description>
-          <Name>{shoppingCart.product?.title}</Name>
-          <Price>Цена: {shoppingCart.product?.price}₽</Price>
-        </Description>
+        <Box display={"flex"} alignItems={"center"} gap="40px">
+          <AppImage
+            fallback={<Skeleton variant="rectangular" height={140} />}
+            src={`${HOST + shoppingCart.product.pictures}`}
+            alt={shoppingCart.product.title}
+            height="100px"
+            width="100px"
+          />
+          <Description>
+            <Name>{shoppingCart.product?.title}</Name>
+            <Price>Цена: {shoppingCart.product?.price}₽</Price>
+          </Description>
+        </Box>
+
         <ActionsButttons>
           <IconButton onClick={() => handleDicrement()}>
             <Minus />

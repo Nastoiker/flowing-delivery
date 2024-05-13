@@ -2,7 +2,7 @@ import { removeItem } from "@/helpers/localStorage";
 import { IconButton } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { UserCircle } from "@phosphor-icons/react";
+import { User } from "@phosphor-icons/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +33,7 @@ export default function BasicMenuAuth({ user }) {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <UserCircle />
+        <User />
       </IconButton>
       <Menu
         id="basic-menu"

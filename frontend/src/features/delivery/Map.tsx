@@ -70,7 +70,7 @@ export const MapComponent = ({ valueKm = 0, onChangeKm }) => {
   }
 
   return (
-    <Box height="400px" maxWidth="400px" width="100%">
+    <Box height="500px" maxWidth="500px" width="100%">
       <MapContainer
         maxBounds={[
           [46.3, 48.0], // Юго-западная точка границы
@@ -78,8 +78,8 @@ export const MapComponent = ({ valueKm = 0, onChangeKm }) => {
         ]}
         maxZoom={18}
         style={{
-          maxWidth: "400px",
-          maxHeight: "400px",
+          maxWidth: "500px",
+          maxHeight: "500px",
           width: "100%",
           height: "100%",
           border: "10px solid #4C7C7D",

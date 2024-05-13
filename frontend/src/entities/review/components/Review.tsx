@@ -16,7 +16,7 @@ export const Review = ({ review }: Props) => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
+          flexDirection: { sm: "row" },
           justifyContent: "space-between",
           marginBottom: 2,
         }}

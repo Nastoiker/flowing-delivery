@@ -24,7 +24,7 @@ export const FilterByPrice = ({
     onChange({ valueMax, valueMin });
   };
   return (
-    <div className={className}>
+    <div>
       <Slider
         range
         // reverse={true}

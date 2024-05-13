@@ -57,7 +57,7 @@ export class FoodRepository {
     });
   }
   async findAllFood({ sort, filter, page, pageSize }) {
-    const { field, direction } = sort;
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
     const { minPrice, maxPrice, categoryId, calories, grams } = filter;
     const offset = (page - 1) * pageSize;
     const where = {} as any;
@@ -69,7 +69,7 @@ export class FoodRepository {
     if (calories !== undefined) where.calories = calories;
     if (grams !== undefined) where.grams = grams;
     return this.foodModel.findAndCountAll({
-      order: [field, direction],
+      order: [[field, direction]],
       where,
       offset,
       limit: pageSize,

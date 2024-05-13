@@ -11,8 +11,18 @@ export const getCurrentUser = async () => {
 };
 export const fetchMe = async () => {};
 export const updateMe = async () => {};
-export async function getUsers(): Promise<{
+export async function getUsers({
+  filter = {},
+  page = 1,
+  pageSize = 20,
+  sort = { field: 'createdAt', direction: 'desc'}
+}): Promise<{
   data: { users: IUser[] };
 }> {
-  return api.get("user");
+  return api.get("user", { params: {
+    filter,
+    page,
+    sort,
+    pageSize,
+  }});
 }

@@ -51,7 +51,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              <Rating error={Boolean(errors.rating)} {...field} />
+              <Rating  {...field} />
               // <FormControlLabel
               //   labelPlacement="top"
               //   control={}

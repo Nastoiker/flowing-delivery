@@ -40,16 +40,16 @@ export class FoodController {
     try {
       const {
         sort: { field = 'createdAt', direction = 'desc' },
-        filter,
+        filter = {},
         page = 1,
         pageSize = 20,
-      } = query;
+      } = query || {};
       return await this.rmqService.send<
         FoodGetAll.Request,
         FoodGetAll.Response
       >(
         FoodGetAll.topic,
-        { sort: { field, direction }, filter, page, pageSize },
+        { sort: { field, direction}, filter, page, pageSize },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {

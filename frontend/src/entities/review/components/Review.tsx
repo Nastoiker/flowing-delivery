@@ -42,12 +42,18 @@ export const Review = ({ review }: Props) => {
             fontWeight: "bold",
             color: "text.primary",
             marginBottom: 0.5,
+            wordBreak: "break-all",
           }}
         >
           {review.title}
         </Typography>
         <Typography
-          sx={{ fontSize: "1rem", color: "text.secondary", lineHeight: 1.5 }}
+          sx={{
+            fontSize: "1rem",
+            color: "text.secondary",
+            lineHeight: 1.5,
+            wordBreak: "break-all",
+          }}
         >
           {review.description}
         </Typography>

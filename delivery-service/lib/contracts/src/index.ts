@@ -12,6 +12,7 @@ export * from './lib/category/category.get-all';
 
 export * from './lib/food/food.all';
 export * from './lib/food/food.create';
+export * from './lib/food/food.delete';
 export * from './lib/food/food.findById';
 export * from './lib/food/food.search';
 export * from './lib/food/food.update';

@@ -3,18 +3,20 @@ import { IFood } from "@/shared/interfaces/foods.interface";
 
 export async function getFoods({
   filter = {},
-  page = 1,
-  pageSize = 20,
-  sort = { field: 'createdAt', direction: 'desc'}
+  page = "1",
+  pageSize = "20",
+  sort = { field: "createdAt", direction: "desc" },
 }): Promise<{
   data: { foods: IFood[] };
 }> {
-  return api.get("food", { params: {
-    filter,
-    page,
-    sort,
-    pageSize,
-  },});
+  return api.get("food", {
+    params: {
+      filter,
+      page,
+      sort,
+      pageSize,
+    },
+  });
 }
 export async function getFoodById(id: number): Promise<{
   data: { food: IFood };

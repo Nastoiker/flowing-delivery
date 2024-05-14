@@ -3,11 +3,15 @@ import { HOST } from "@/helpers/api";
 import { RichTextFieldController } from "@/shared/components/RichTextField/RichTextFieldController";
 import { SelectCategoryController } from "@/shared/components/Select/SelectCategory";
 import { AppImage } from "@/shared/components/image/AppImage";
-import { useFoodById, useUpdateFood } from "@/shared/food/hooks/useCrudFood";
+import {
+  useDeleteFood,
+  useFoodById,
+  useUpdateFood,
+} from "@/shared/food/hooks/useCrudFood";
 import { Box, Button, Input, Skeleton } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 const Wrapper = styled.form`
   display: flex;
@@ -24,6 +28,8 @@ export const FoodEditPage = () => {
     isError: isErrorFood,
     isLoading: isLoadingFood,
   } = useFoodById(Number(id));
+  const { deleteFood } = useDeleteFood(Number(id));
+  const navigate = useNavigate();
   const { updateFood, error, isLoading } = useUpdateFood(Number(id));
   const methods = useForm<IFoodDto>({
     defaultValues: {
@@ -46,7 +52,9 @@ export const FoodEditPage = () => {
     register,
     setValue,
   } = methods;
-
+  if (data?.data && !data?.data.food) {
+    navigate("/menu");
+  }
   const submit = async (food: IFoodDto) => {
     try {
       const dataDto = new FormData();
@@ -76,9 +84,18 @@ export const FoodEditPage = () => {
   }
 
   return (
-    <Box display={"flex"} alignItems={"center"} gap="50px" margin="50px">
+    <Box
+      display={"flex"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+      gap="50px"
+      margin="50px"
+    >
       <AppImage
-        fallback={<Skeleton variant="rectangular" height={800} width={300} />}
+        fallback={<Skeleton variant="rectangular" height={500} width={350} />}
+        errorFallback={
+          <Skeleton variant="rectangular" height={500} width={350} />
+        }
         src={`${HOST + data?.data?.food?.pictures}`}
         alt={data?.data?.food?.title}
         height="100%"
@@ -142,6 +159,15 @@ export const FoodEditPage = () => {
             {...register("pictures")}
           />
           <Button type="submit">Редактировать</Button>
+          <Button
+            onClick={() => {
+              if (window.confirm("Вы уверены?")) {
+                deleteFood();
+              }
+            }}
+          >
+            Удалить
+          </Button>
         </Wrapper>
       </FormProvider>
     </Box>

@@ -65,7 +65,7 @@ export const FoodById = () => {
             style={{ fontSize: "20px" }}
             dangerouslySetInnerHTML={{ __html: santizeDesc }}
           />
-          <Typography>{data?.data.food.price}р</Typography>
+          <Typography>{data?.data.food.price}₽</Typography>
           <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
           <Typography>Вес: {data?.data.food.grams}</Typography>
         </Wrapper>

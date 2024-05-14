@@ -88,7 +88,9 @@ export const ShoppintCartItem = ({
       <Actions>
         <Box display={"flex"} alignItems={"center"} gap="40px">
           <AppImage
-            fallback={<Skeleton variant="rectangular" height={140} />}
+            fallback={
+              <Skeleton variant="rectangular" width={140} height={140} />
+            }
             src={`${HOST + shoppingCart.product.pictures}`}
             alt={shoppingCart.product.title}
             height="100px"

@@ -32,8 +32,8 @@ export class ShoppingCart extends Model {
 
   @Column({ defaultValue: 1 })
   count: number;
-  @BelongsTo(() => Food)
+  @BelongsTo(() => Food, { onDelete: 'CASCADE' })
   product: Food;
-  @BelongsTo(() => User)
+  @BelongsTo(() => User, { onDelete: 'CASCADE' })
   user: User;
 }

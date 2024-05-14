@@ -2,6 +2,7 @@ import { getCategories } from "@/entities/category/api/category.api";
 import { api } from "@/helpers/api";
 import { ICategory } from "@/shared/interfaces/categories.interface";
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export function useCategories() {
@@ -44,6 +45,7 @@ export function useCreateCategory() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("categories");
+        toast.success("Успешное создание");
       },
     }
   );
@@ -53,8 +55,6 @@ export function useCreateCategory() {
     error,
   };
 }
-
-
 
 const handleDelete = async (id: number) => api.delete(`/category/${id}`);
 export function useDeleteFood() {

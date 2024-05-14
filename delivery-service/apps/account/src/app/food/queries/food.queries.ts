@@ -1,5 +1,6 @@
 import {
   FoodCreate,
+  FoodDeleteById,
   FoodFindById,
   FoodFindBySearch,
   FoodGetAll,
@@ -59,6 +60,16 @@ export class FoodQueries {
     const food = await this.foodRepository.updateFood(foodDtos);
     return {
       food,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(FoodDeleteById.topic)
+  async foodDelete(
+    @Body() { id }: FoodDeleteById.Request
+  ): Promise<FoodDeleteById.Response> {
+    await this.foodRepository.deleteFood(id);
+    return {
+      message: 'Удалено',
     };
   }
   @RMQValidate()

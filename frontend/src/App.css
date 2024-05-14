@@ -33,6 +33,9 @@ body {
 .leaflet-control-attribution {
   display: none;
 }
+.rc-slider-track.rc-slider-track-1 {
+  background-color: #4c7c7d;
+}
 h2 {
   font-size: 40px;
 }

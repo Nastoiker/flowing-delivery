@@ -63,7 +63,7 @@ export function FoodCard(props: { food: IFood }) {
     await dispatch(fetchCurrentUser);
   };
   return (
-    <Card sx={{ width: 300 }}>
+    <Card sx={{ width: 250, boxShadow: 1 }}>
       <CardActionArea
         onClick={() => {
           handleRedirect(`/menu/${food.id}`);
@@ -71,20 +71,25 @@ export function FoodCard(props: { food: IFood }) {
       >
         <AppImage
           fallback={<Skeleton variant="rectangular" height={140} />}
+          errorFallback={<Skeleton variant="rectangular" height={140} />}
           src={`${HOST + food.pictures}`}
           alt={food.title}
           height="140px"
           width="100%"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography variant={"h5"} sx={{ fontWeight: "bold" }}>
+            {food.price}₽
+          </Typography>
+          <Typography gutterBottom sx={{ fontWeight: "bold" }}>
             {food.title}
           </Typography>
-          <Typography paragraph variant="body2" color="text.secondary">
-            Цена: {food.price}₽
+
+          <Typography variant="body2" color="text.secondary">
+            Энерг. ценность: {food.calories}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Энерг. ценность: {food.calories}/{food.grams}г.
+            {food.grams} г
           </Typography>
           <Box display="flex" alignContent={"center"}>
             <Rating
@@ -114,12 +119,12 @@ export function FoodCard(props: { food: IFood }) {
             {isAdded ? (
               <>
                 <Basket />
-                <Minus />
+                <Minus size={13} />
               </>
             ) : (
               <>
                 <Basket />
-                <Plus />
+                <Plus size={13} />
               </>
             )}
           </Button>

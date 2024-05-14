@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -38,6 +39,8 @@ export class Food extends Model {
   description: string;
   @Column
   pictures: string;
+  @BelongsTo(() => Category, { onDelete: 'CASCADE' })
+  category?: Category;
   @HasMany(() => Comment)
   comments?: Comment[];
   @HasMany(() => Rating)

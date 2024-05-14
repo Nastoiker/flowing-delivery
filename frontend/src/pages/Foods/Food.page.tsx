@@ -1,7 +1,9 @@
 import { FoodCard } from "@/entities/product/food/Card/Food.card";
 import { Banners } from "@/features/banners/Banners";
+import { FilterFoodDrawer } from "@/features/food/Filters/FilterFoodDrawer";
 import { useFoods } from "@/shared/food/hooks/useCrudFood";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { useState } from "react";
 import styled from "styled-components";
 const Wrapper = styled.div`
   display: grid;
@@ -12,17 +14,35 @@ const GridEL = styled.div`
   margin: 0 auto;
 `;
 export const FoodPage = () => {
-  const { data, isError } = useFoods();
+  const [filter, setFilter] = useState({});
+  const [sort, setSort] = useState({ field: "createdAt", direction: "desc" });
+  const { data, isError } = useFoods({ filter, sort });
+
+  const handleChangeSort = (field, directon) => {
+    setSort((prev) => ({ ...prev, field, directon }));
+  };
+  const handleChangeFilter = (v) => {
+    setFilter((prev) => ({ ...prev, v }));
+  };
   if (isError || !data) {
     return null;
   }
   return (
     <>
       <Banners />
-      <Typography margin={"50px"} variant="h4">
-        Популярное
-      </Typography>
-      {/* <FilterByPrice onChange={() => {}} /> */}
+      <Box
+        margin={"50px"}
+        justifyContent={"space-between"}
+        display={"flex"}
+        alignItems={"center"}
+      >
+        <Typography variant="h4">Популярное</Typography>
+        <FilterFoodDrawer
+          onChangeFilter={handleChangeFilter}
+          onChangeSort={handleChangeSort}
+        />
+      </Box>
+
       <Wrapper>
         {data?.data?.foods?.map((f) => (
           <GridEL>

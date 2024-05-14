@@ -1,17 +1,22 @@
-import { Button, Input } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useState } from "react";
+import styled from "styled-components";
 
 interface FilterByPriceProps {
   onChange: ({ valueMax, valueMin }) => void;
-  cl;
+  minPrice: number;
+  maxPrice: number;
 }
+const WrapperFilter = styled.div``;
 export const FilterByPrice = ({
+  minPrice = 200,
+  maxPrice = 5000,
   onChange,
 }: FilterByPriceProps): JSX.Element => {
-  const [valueMax, setValueMax] = useState<number>(200000);
-  const [valueMin, setValueMin] = useState<number>(10000);
+  const [valueMax, setValueMax] = useState<number>(maxPrice);
+  const [valueMin, setValueMin] = useState<number>(minPrice);
   console.log(valueMax);
 
   const handleChange = ([low, high]: number[]) => {
@@ -21,7 +26,6 @@ export const FilterByPrice = ({
     if (high < valueMin) return;
     setValueMin(low);
     setValueMax(high);
-    onChange({ valueMax, valueMin });
   };
   return (
     <div>
@@ -30,30 +34,37 @@ export const FilterByPrice = ({
         // reverse={true}
         allowCross={true}
         value={[valueMin, valueMax]}
-        step={1000}
-        min={10000}
-        max={200000}
+        step={1}
+        min={minPrice}
+        max={maxPrice}
         //@ts-ignore
         onChange={handleChange}
       />
 
       {/*<Input type="range" min={'10000'} max={'200000'} step={'500'} value={value} onChange={(e) => setValue(e.target.value)}/>*/}
-      <div className={"space-y-5 py-5"}>
-        <Input
+      <Box gap="20px" margin="20px 0" display={"flex"}>
+        <TextField
           onChange={(e) => {
             setValueMin(Number(e.target.value));
           }}
+          label="Минимум"
           type={"number"}
           value={valueMin}
         />
-        <Input
+        <TextField
+          label="Максимум"
           onChange={(e) => {
             setValueMax(Number(e.target.value));
           }}
           value={valueMax}
         />
-      </div>
-      <Button onClick={() => {}}>Сохранить</Button>
+      </Box>
+      <Button
+        variant="contained"
+        onClick={() => onChange({ valueMax, valueMin })}
+      >
+        Сохранить
+      </Button>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import { api } from "@/helpers/api";
 import { IFood } from "@/shared/interfaces/foods.interface";
 import { IComment } from "@/shared/interfaces/review.interface";
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createComment, removeComment, updateComment } from "../review.api";
 
@@ -31,6 +32,7 @@ export function useCreateComment() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comments");
+        toast.success("Успешное создание");
       },
     }
   );

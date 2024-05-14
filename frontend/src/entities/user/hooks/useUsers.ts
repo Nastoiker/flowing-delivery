@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getUsers } from "../api/user.api";
 
 export function useUsers() {
+  //@ts-ignore TODO
   return useQuery(["users"], getUsers, {
     retry: false,
     staleTime: 3000,

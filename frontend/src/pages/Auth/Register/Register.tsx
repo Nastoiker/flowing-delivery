@@ -100,6 +100,7 @@ export function Register() {
           <label htmlFor="name">Ваше имя</label>
 
           <Input
+            placeholder="Имя"
             {...register("name", {
               required: { value: true, message: "Заполните имя" },
               pattern: {
@@ -120,7 +121,7 @@ export function Register() {
                 message: "В имени только русские буквы",
               },
             })}
-            placeholder="Имя"
+            placeholder="Фамилия"
           />
         </div>
         <div className={styles["field"]}>
@@ -139,7 +140,10 @@ export function Register() {
         </Button>
         <Typography>
           <Checkbox required />Я согласен на обработку моих персональных данных
-          в соответствии с <Link style={{color: "primary"}} to="/politics">  Условиями </Link> и Договором оферты
+          в соответствии с{" "}
+          <Link style={{ color: "primary" }} to="/politics">
+            Условиями
+          </Link>
         </Typography>
       </form>
       <div className={styles["links"]}>

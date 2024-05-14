@@ -2,17 +2,60 @@ import { createFoodFetch, getFoods } from "@/entities/product/food/food.api";
 import { api } from "@/helpers/api";
 import { IFood } from "@/shared/interfaces/foods.interface";
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { FoodListParams, foodQueryKeys } from "./foods.queries";
 
-export function useFoods() {
-  return useQuery(["foods"], getFoods, {
-    retry: false,
-    staleTime: 3000,
-    onError: (err: AxiosError<{ message?: string }>) => {
-      console.error(err);
-    },
-  });
+export function useFoods({
+  page = "1",
+  pageSize = "100",
+  filter = {},
+  sort = { field: "createdAt", direction: "desc" },
+}: FoodListParams) {
+  return useQuery(
+    foodQueryKeys.foodList({ page, pageSize, filter, sort }),
+    () =>
+      getFoods({
+        filter: {
+          ...filter,
+        },
+        sort,
+        page,
+        pageSize,
+      }),
+    {
+      keepPreviousData: true,
+      retry: false,
+      staleTime: 3000,
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
+    }
+  );
 }
+export type FoodsResult<T = any> = {
+  readonly data: T[];
+  readonly count: number;
+  readonly allCount: number;
+};
+type GetNextPageParam = <T = any>(
+  lastPage: FoodsResult<T>,
+  pages: FoodsResult<T>[]
+) => number | undefined;
+const getNextPageParam: GetNextPageParam = (lastPage, pages) => {
+  const pagesCount = pages.reduce((acc, page) => acc + page.count, 0);
+  return lastPage?.allCount > pagesCount ? pages.length + 1 : undefined;
+};
+// TODO
+// export function useFoods({ page, pageSize, filter, sort }: FoodListParams) {
+//   return useInfiniteQuery(
+//     ["projects", filter],
+//     async ({ pageParam = 1 }) => getFoods({ pageParam, filter }),
+//     {
+//       getNextPageParam,
+//     }
+//   );
+// }
 export function useFoodById(foodId: number) {
   const query = useQuery(
     ["food-by-id", foodId],
@@ -52,6 +95,7 @@ export function useCreateFood() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("foods");
+        toast.success("Успешное создание");
       },
     }
   );
@@ -85,16 +129,18 @@ export function useUpdateFood(id) {
   };
 }
 
-const handleDelete = async (id: number) => api.delete(`/foods/${id}`);
-export function useDeleteFood() {
+const handleDelete = async (id: number) => api.delete(`/food/${id}`);
+export function useDeleteFood(id: number) {
   const queryClient = useQueryClient();
   const {
     mutateAsync: deleteFood,
     isLoading,
     error,
-  } = useMutation("deleteFood", handleDelete, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("foods");
+  } = useMutation("deleteFood", async () => handleDelete(id), {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("foods");
+      await queryClient.invalidateQueries(["food-by-id", id]);
+      toast.success("Удалено");
     },
   });
   return {

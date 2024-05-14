@@ -1,5 +1,6 @@
 import {
   FoodCreate,
+  FoodDeleteById,
   FoodFindById,
   FoodFindBySearch,
   FoodGetAll,
@@ -10,6 +11,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -49,7 +51,7 @@ export class FoodController {
         FoodGetAll.Response
       >(
         FoodGetAll.topic,
-        { sort: { field, direction}, filter, page, pageSize },
+        { sort: { field, direction }, filter, page, pageSize },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {
@@ -92,6 +94,20 @@ export class FoodController {
         FoodFindById.Request,
         FoodFindById.Response
       >(FoodFindById.topic, { id }, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @UseGuards(JWTAuthGuard)
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    try {
+      return await this.rmqService.send<
+        FoodDeleteById.Request,
+        FoodDeleteById.Response
+      >(FoodDeleteById.topic, { id }, { headers: { requestId: 'adad' } });
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

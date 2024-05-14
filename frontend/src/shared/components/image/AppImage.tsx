@@ -19,8 +19,8 @@ export const AppImage = memo((props: AppImageProps) => {
     className,
     src,
     alt = "image",
-    errorFallback = <Skeleton variant="rectangular" height={140} />,
-    fallback = <Skeleton variant="rectangular" height={140} />,
+    errorFallback = <Skeleton variant="rectangular" width={140} height={140} />,
+    fallback = <Skeleton variant="rectangular" width={140} height={140} />,
     height,
     width,
     ...otherProps

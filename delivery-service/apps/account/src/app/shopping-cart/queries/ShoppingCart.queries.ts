@@ -50,7 +50,7 @@ export class ShoppingCardQueries {
 
   @RMQValidate()
   @RMQRoute(AccountShoppingCart.topic)
-  async getAllCards(
+  async getMyCards(
     @Body() { userId }: AccountShoppingCart.Request
   ): Promise<AccountShoppingCart.Response> {
     const shoppingCart = await this.cardRepository.getShoppingCardByUserId(

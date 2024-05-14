@@ -64,8 +64,9 @@ export function useDeleteShoppingCart() {
     isLoading,
     error,
   } = useMutation("deleteShoppingCart", handleDelete, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("shopping-carts");
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("shopping-carts");
+      await queryClient.invalidateQueries("foods");
     },
   });
   return {

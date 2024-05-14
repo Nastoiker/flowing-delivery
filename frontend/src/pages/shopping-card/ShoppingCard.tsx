@@ -5,7 +5,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
 import { ShoppintCartItem } from "./ShoppingCart.item";
-const KMPrice = 60;
+const KMPrice = 40;
 export const Wrapper = styled.div``;
 export const ShoppingCardPage = () => {
   const { data: shoppingCarts, isError } = useShoppingCart();
@@ -26,15 +26,14 @@ export const ShoppingCardPage = () => {
       <Typography margin="50px 0" variant="h3">
         Корзина
       </Typography>
-      {shoppingCarts.data.shoppingCart?.length > 0 ? (
-        shoppingCarts.data.shoppingCart?.map((s) => (
+      {shoppingCarts.data.shoppingCart?.length > 0 ? 
+      <>
+      
+        {shoppingCarts.data.shoppingCart?.map((s) => (
           <ShoppintCartItem key={s.id} shoppingCart={s} />
-        ))
-      ) : (
-        <Typography margin="20px 0" variant="h5">
-          В вашей корзине пока пусто
-        </Typography>
-      )}
+        ))}
+       
+      
       <Divider />
       <div>
         <Typography variant="h5" margin="50px 0">
@@ -58,6 +57,11 @@ export const ShoppingCardPage = () => {
         оформить
       </Button>
       <PaymentForm />
+      </>
+      :  <Typography margin="20px 0" variant="h5">
+       В вашей корзине пока пусто
+     </Typography>
+}
     </Wrapper>
   );
 };

@@ -73,7 +73,7 @@ export const FoodById = () => {
       <Box
         margin="50px 0"
         display="flex"
-        alignItems="center"
+        alignItems="start"
         flexWrap="wrap"
         justifyContent="space-between"
       >

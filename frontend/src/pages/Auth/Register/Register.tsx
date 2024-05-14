@@ -139,13 +139,12 @@ export function Register() {
         </Button>
         <Typography>
           <Checkbox required />Я согласен на обработку моих персональных данных
-          в соответствии с Условиями и Договором оферты
+          в соответствии с <Link style={{color: "primary"}} to="/politics">  Условиями </Link> и Договором оферты
         </Typography>
       </form>
       <div className={styles["links"]}>
         <div>Есть акканут?</div>
         <Link to="/auth/login">
-          {" "}
           <Typography color="primary">Войти</Typography>
         </Link>
       </div>

@@ -28,7 +28,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
   });
 
   return (
-    <Box mb={3} display="flex" flexDirection="column">
+    <Box mb={3} maxWidth={500} width={"100%"} display="flex" flexDirection="column">
       <Grid container direction="column" spacing={2}>
         <Grid item xs={8} gap="20px" display={"flex"} alignItems={"center"}>
           <Controller
@@ -41,7 +41,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
                 fullWidth
                 multiline
                 error={Boolean(errors.title)}
-                inputProps={{ maxLength: 200 }}
+                inputProps={{ maxLength: 50 }}
                 {...field}
               />
             )}
@@ -52,7 +52,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             rules={{ required: true }}
             render={({ field }) => (
               <Rating  {...field} />
-              // <FormControlLabel
+              // <FormControlLabel`
               //   labelPlacement="top"
               //   control={}
               //   label="Оценка продукта"

@@ -7,6 +7,7 @@ export async function getFoods({
   pageSize = "20",
   sort = { field: "createdAt", direction: "desc" },
 }): Promise<{
+  
   data: { foods: IFood[] };
 }> {
   return api.get("food", {

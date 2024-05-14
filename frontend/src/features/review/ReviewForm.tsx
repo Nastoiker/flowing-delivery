@@ -17,6 +17,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<NewReviewType>({
     defaultValues: {
@@ -26,9 +27,18 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
     // стоит тут тк до v7 так было по дефолту, возможно не нужно
     shouldUnregister: true,
   });
-
+  const submit = (review) => {
+    onReviewSave(review);
+    reset();
+  };
   return (
-    <Box mb={3} maxWidth={500} width={"100%"} display="flex" flexDirection="column">
+    <Box
+      mb={3}
+      maxWidth={500}
+      width={"100%"}
+      display="flex"
+      flexDirection="column"
+    >
       <Grid container direction="column" spacing={2}>
         <Grid item xs={8} gap="20px" display={"flex"} alignItems={"center"}>
           <Controller
@@ -51,7 +61,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              <Rating  {...field} />
+              <Rating {...field} />
               // <FormControlLabel`
               //   labelPlacement="top"
               //   control={}
@@ -84,7 +94,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             variant="contained"
             type="submit"
             disabled={loading}
-            onClick={handleSubmit(onReviewSave)}
+            onClick={handleSubmit(submit)}
           >
             {loading ? "Сохранение..." : "Добавить отзыв"}
           </Button>

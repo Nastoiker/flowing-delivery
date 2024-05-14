@@ -21,6 +21,22 @@ services:
       - "5432:5432"
     volumes:
       - ./dbdata:/var/lib/postgresql/data
+  banner:
+    container_name: banner
+    restart: always
+    ports:
+      - "8080:4444"
+    env_file:
+      - ./delivery-service/envs/.banner.env
+    build:
+      context: ./delivery-service
+      dockerfile: ./apps/banner/Dockerfile
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
+    depends_on:
+      - rmq
+      - db
   account:
     container_name: account
     restart: always

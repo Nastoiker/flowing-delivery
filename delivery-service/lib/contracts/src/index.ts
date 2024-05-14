@@ -40,3 +40,7 @@ export * from './lib/review/review.find-rating-by-userId';
 export * from './lib/review/review.rating-remove';
 export * from './lib/review/review.rating-update';
 export * from './lib/review/reviews.find-rating-by-foodId';
+
+export * from './lib/banner/banner.create';
+export * from './lib/banner/banner.delete';
+export * from './lib/banner/banner.get';

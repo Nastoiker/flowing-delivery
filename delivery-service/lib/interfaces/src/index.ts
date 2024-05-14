@@ -1,4 +1,5 @@
 export * from './lib/auth.interface';
+export * from './lib/banner.interface';
 export * from './lib/categories.interface';
 export * from './lib/comment.interface';
 export * from './lib/events.interface';

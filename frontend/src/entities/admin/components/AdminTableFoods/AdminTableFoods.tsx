@@ -3,6 +3,7 @@ import { Table } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
 
 export const TableFoods = () => {
+  //@ts-ignore TODO
   const { data, isError, isLoading } = useFoods({});
   if (isError || !data) {
     return null;

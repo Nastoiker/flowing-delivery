@@ -1,4 +1,8 @@
-import { Typography } from "@mui/material";
+import { useBanners } from "@/entities/banner/hooks/useCrudBanners";
+import { HOST } from "@/helpers/api";
+import { AppImage } from "@/shared/components/image/AppImage";
+import { Skeleton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import styled from "styled-components";
 
@@ -10,23 +14,24 @@ const Banner = styled.div`
   padding: 20px;
   font-weight: 500;
   color: white;
-  background: red;
   border-radius: 25px;
   margin: "0 30px";
 `;
 export const Banners = () => {
+  const { data } = useBanners();
+  const navigate = useNavigate();
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 1,
     slidesToScroll: 1,
     style: { marginRight: "20px" },
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 1,
+          slidesToScroll: 1,
           infinite: true,
           dots: true,
         },
@@ -34,8 +39,8 @@ export const Banners = () => {
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToShow: 1,
+          slidesToScroll: 1,
           initialSlide: 2,
         },
       },
@@ -59,42 +64,17 @@ export const Banners = () => {
         `}
       </style>
       <Slider {...settings}>
-        <Banner>
-          <Typography variant="h4" component="h2">
-            Баннер
-          </Typography>
-          <Typography paragraph>Описание</Typography>
-        </Banner>
-        <Banner>
-          <Typography variant="h4" component="h2">
-            Баннер
-          </Typography>
-          <Typography paragraph>Описание</Typography>
-        </Banner>
-        <Banner>
-          <Typography variant="h4" component="h2">
-            Баннер
-          </Typography>
-          <Typography paragraph>Описание</Typography>
-        </Banner>
-        <Banner>
-          <Typography variant="h4" component="h2">
-            Баннер
-          </Typography>
-          <Typography paragraph>Описание</Typography>
-        </Banner>
-        <Banner>
-          <Typography variant="h4" component="h2">
-            Баннер
-          </Typography>
-          <Typography paragraph>Описание</Typography>
-        </Banner>
-        <Banner>
-          <Typography variant="h4" component="h2">
-            Баннер
-          </Typography>
-          <Typography paragraph>Описание</Typography>
-        </Banner>
+        {data?.data.banner.map(({ picture, alt, link }) => (
+          <AppImage
+            onClick={() => navigate(link)}
+            fallback={<Skeleton variant="rectangular" height={140} />}
+            errorFallback={<Skeleton variant="rectangular" height={140} />}
+            src={`${HOST + picture}`}
+            alt={alt}
+            height="200px"
+            width="100%"
+          />
+        ))}
       </Slider>
     </Wrapper>
   );

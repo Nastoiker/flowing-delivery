@@ -1,8 +1,4 @@
-import {
-  BannerCreate,
-  CategoryCreate,
-  CategoryGetAll,
-} from '@delivery-service/contracts';
+import { BannerCreate, BannerGetAll } from '@delivery-service/contracts';
 import { MFile } from '@delivery-service/interfaces';
 import {
   BadRequestException,
@@ -20,7 +16,7 @@ import { CreateBannerDto } from '../dtos/banner/banner.dto';
 import { FilesService } from '../file.service';
 
 @Controller('banners')
-export class CategoryController {
+export class BannerController {
   constructor(
     private readonly rmqService: RMQService,
     private readonly filesService: FilesService
@@ -30,9 +26,9 @@ export class CategoryController {
   async getBanners() {
     try {
       return await this.rmqService.send<
-        CategoryGetAll.Request,
-        CategoryGetAll.Response
-      >(CategoryGetAll.topic, {}, { headers: { requestId: 'adad' } });
+        BannerGetAll.Request,
+        BannerGetAll.Response
+      >(BannerGetAll.topic, {}, { headers: { requestId: 'adad' } });
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);
@@ -41,7 +37,7 @@ export class CategoryController {
   }
   @Post('create')
   @UseInterceptors(FileInterceptor('picture'))
-  async createCategory(
+  async createBanner(
     @UploadedFile() file: Express.Multer.File,
     @Body() banner: CreateBannerDto
   ) {
@@ -58,13 +54,14 @@ export class CategoryController {
             '.' +
             extension[extension.length - 1],
           buffer: Buffer.from(file.buffer),
-        })
+        }),
+        '/banner'
       );
       return await this.rmqService.send<
         BannerCreate.Request,
         BannerCreate.Response
       >(
-        CategoryCreate.topic,
+        BannerCreate.topic,
         {
           alt: banner.alt,
           priority: banner.priority,

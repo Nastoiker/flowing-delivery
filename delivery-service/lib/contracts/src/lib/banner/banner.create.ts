@@ -2,7 +2,7 @@ import { IBanner } from '@delivery-service/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace BannerCreate {
-  export const topic = 'category.create.command';
+  export const topic = 'banner.create.command';
   export class Request {
     link: string | undefined;
     picture: string | undefined;

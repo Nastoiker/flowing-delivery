@@ -3,5 +3,5 @@ export interface IBanner {
   link: string;
   picture: string;
   priority: number;
-  alt: number;
+  alt: string;
 }

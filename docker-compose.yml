@@ -25,7 +25,7 @@ services:
     container_name: banner
     restart: always
     ports:
-      - "8080:4444"
+      - "8081:4444"
     env_file:
       - ./delivery-service/envs/.banner.env
     build:

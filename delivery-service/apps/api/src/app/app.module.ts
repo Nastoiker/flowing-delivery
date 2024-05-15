@@ -7,9 +7,11 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { path } from 'app-root-path';
 import { RMQModule } from 'nestjs-rmq';
+import configuration from './configs/configuration';
 import { getJWTConfig } from './configs/jwt.config';
 import { getRMQConfig } from './configs/rmg.config';
 import { AuthController } from './controllers/auth.controller';
+import { BannerController } from './controllers/banner.controller';
 import { CategoryController } from './controllers/category.controller';
 import { FileController } from './controllers/file.controller';
 import { FoodController } from './controllers/food.controller';
@@ -18,7 +20,6 @@ import { ShoppingCartController } from './controllers/shopping-cart.controller';
 import { UserController } from './controllers/user.controller';
 import { FilesService } from './file.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import configuration from './configs/configuration';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import configuration from './configs/configuration';
     UserController,
     ShoppingCartController,
     FoodController,
+    BannerController,
     ReviewController,
     CategoryController,
     FileController,

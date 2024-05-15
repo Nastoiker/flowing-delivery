@@ -1,5 +1,6 @@
 import { TableFoods } from "@/entities/admin/components/AdminTableFoods/AdminTableFoods";
 import { TableUsers } from "@/entities/admin/components/AdminTableUser/AdminTableUser";
+import { CreateBanner } from "@/entities/admin/components/CreateBanner";
 import { CreateCategory } from "@/entities/admin/components/CreateCategory";
 import { CreateFood } from "@/entities/admin/components/CreateFood";
 import Box from "@mui/material/Box";
@@ -38,8 +39,9 @@ export const AdminPanel = () => {
         >
           <Tab label="Создание категории" {...a11yProps(0)} />
           <Tab label="Создание еды" {...a11yProps(1)} />
-          <Tab label="База пользователей" {...a11yProps(2)} />
-          <Tab label="База еды" {...a11yProps(3)} />
+          <Tab label="Создание баннера" {...a11yProps(2)} />
+          <Tab label="База пользователей" {...a11yProps(3)} />
+          <Tab label="База еды" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -49,9 +51,12 @@ export const AdminPanel = () => {
         <CreateFood />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <TableUsers />
+        <CreateBanner />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
+        <TableUsers />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
         <TableFoods />
       </CustomTabPanel>
     </Box>

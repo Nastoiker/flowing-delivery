@@ -32,7 +32,7 @@ export const SelectCategoryController = ({
               label="categories"
               inputRef={ref}
             >
-              {data.data.categories.map((c) => (
+              {data?.data?.categories?.map((c) => (
                 <MenuItem key={c.id} value={c.id}>
                   {c.name}
                 </MenuItem>

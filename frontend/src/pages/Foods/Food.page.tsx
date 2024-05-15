@@ -16,6 +16,7 @@ const GridEL = styled.div`
 export const FoodPage = () => {
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({ field: "createdAt", direction: "desc" });
+  //@ts-ignore TODO
   const { data, isError } = useFoods({ filter, sort });
 
   const handleChangeSort = (field, directon) => {

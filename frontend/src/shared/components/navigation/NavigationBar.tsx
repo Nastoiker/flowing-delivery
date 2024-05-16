@@ -3,6 +3,7 @@ import { getMenuListByUserRole } from "@/app/Menu/menu.constants";
 import { useWindowSize } from "@/app/hooks/useWindowSize";
 import Logo from "@/assets/logo.svg";
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
+import { ShoppingCardSidebar } from "@/features/shopping-card/Sidebar/SideBarShoppingCard";
 import { SearchField } from "@/shared/search/SearchField";
 import BasicMenuAuth from "@/widgets/AuthProfile/AuthProfile";
 import {
@@ -98,6 +99,7 @@ export default function AccountMenu() {
               }}
             />
           </div>
+          <ShoppingCardSidebar />
           <IconButton
             onClick={handleClick}
             size="medium"

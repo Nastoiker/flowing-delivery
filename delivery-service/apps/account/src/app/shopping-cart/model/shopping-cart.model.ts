@@ -9,7 +9,15 @@ import {
 import { Food } from '../../food/models/food.model';
 import { User } from '../../user/models/user.model';
 
-@Table({ timestamps: true })
+@Table({
+  timestamps: true,
+  indexes: [
+    {
+      unique: true,
+      fields: ['userId', 'productId'],
+    },
+  ],
+})
 export class ShoppingCart extends Model {
   @Column({
     type: DataType.INTEGER,

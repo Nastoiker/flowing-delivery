@@ -23,11 +23,31 @@ export const FoodPage = () => {
     setSort((prev) => ({ ...prev, field, directon }));
   };
   const handleChangeFilter = (v) => {
-    setFilter((prev) => ({ ...prev, v }));
+    setFilter((prev) => ({ ...prev, ...v }));
   };
   if (isError || !data) {
     return null;
   }
+  const filterValues = data.data?.foods.reduce(
+    (acc, curr) => {
+      // if (!isEmpty(filter)) {
+      //   return acc;
+      // } NOT WORK
+      acc.minPrice = Math.min(acc.minPrice, curr.price);
+      acc.maxPrice = Math.max(acc.maxPrice, curr.price);
+
+      // Находим минимальное и максимальное количество калорий
+      acc.minCalories = Math.min(acc.minCalories, curr.calories);
+      acc.maxCalories = Math.max(acc.maxCalories, curr.calories);
+      return acc;
+    },
+    {
+      minCalories: 0,
+      maxCalories: 0,
+      minPrice: 0,
+      maxPrice: 0,
+    }
+  );
   return (
     <>
       <Banners />
@@ -39,6 +59,10 @@ export const FoodPage = () => {
       >
         <Typography variant="h4">Популярное</Typography>
         <FilterFoodDrawer
+          minCalories={filterValues.minCalories}
+          maxCalories={filterValues.maxCalories}
+          minPrice={filterValues.minPrice}
+          maxPrice={filterValues.maxPrice}
           onChangeFilter={handleChangeFilter}
           onChangeSort={handleChangeSort}
         />

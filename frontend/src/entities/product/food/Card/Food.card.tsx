@@ -3,6 +3,7 @@ import {
   useCreateShoppingCart,
   useDeleteShoppingCart,
   useShoppingCart,
+  useUpdateShoppingCart,
 } from "@/features/shopping-card/hooks/useCrudShoppingCard";
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
@@ -16,14 +17,21 @@ import {
   CardActionArea,
   CardActions,
   CardContent,
+  IconButton,
   Rating,
   Skeleton,
   Typography,
 } from "@mui/material";
-import { Basket, Minus, Plus } from "@phosphor-icons/react";
+import { Basket, Minus, Plus, Trash } from "@phosphor-icons/react";
 import { isNumber } from "lodash";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+const ActionsButttons = styled.div`
+  display: flex;
+  gap: 40px;
+  align-items: center;
+`;
 export function FoodCard(props: { food: IFood }) {
   const { food } = props;
   const { data: myCarts, isLoading: isLoadingCarts } = useShoppingCart();
@@ -32,12 +40,13 @@ export function FoodCard(props: { food: IFood }) {
   const { createShoppingCart, isLoading: isLoadingCreate } =
     useCreateShoppingCart();
   const isAdded = useMemo(
-    () =>
-      myCarts?.data?.shoppingCart?.find((p) => p?.productId === food.id)?.id,
+    () => myCarts?.data?.shoppingCart?.find((p) => p?.productId === food.id),
     [myCarts, food]
   );
   const { deleteShoppingCart, isLoading: isLoadingDelete } =
     useDeleteShoppingCart();
+  const { updateShoppingCart } = useUpdateShoppingCart();
+
   const navigate = useNavigate();
   const ratingProduct = useMemo(
     () =>
@@ -49,8 +58,8 @@ export function FoodCard(props: { food: IFood }) {
     navigate(url);
   };
   const handleAddToCart = async () => {
-    if (isNumber(isAdded)) {
-      await deleteShoppingCart(isAdded);
+    if (isNumber(isAdded?.id)) {
+      await deleteShoppingCart(isAdded?.id);
     } else {
       await createShoppingCart({
         purchaseState: "",
@@ -59,7 +68,18 @@ export function FoodCard(props: { food: IFood }) {
         count: 1,
       });
     }
-
+    const handleIncrement = async () => {
+      await updateShoppingCart({
+        ...shoppingCart,
+        count: shoppingCart.count + 1,
+      });
+    };
+    const handleDicrement = async () => {
+      await updateShoppingCart({
+        ...shoppingCart,
+        count: shoppingCart.count - 1,
+      });
+    };
     await dispatch(fetchCurrentUser);
   };
   return (
@@ -118,8 +138,20 @@ export function FoodCard(props: { food: IFood }) {
           >
             {isAdded ? (
               <>
-                <Basket />
-                <Minus size={13} />
+                <ActionsButttons>
+                  <IconButton onClick={() => handleDicrement()}>
+                    <Minus />
+                  </IconButton>
+                  <Number>{isAdded.count}</Number>
+
+                  <IconButton onClick={() => handleIncrement()}>
+                    <Plus />
+                  </IconButton>
+
+                  <IconButton onClick={() => deleteShoppingCart(isAdded?.id)}>
+                    <Trash />
+                  </IconButton>
+                </ActionsButttons>
               </>
             ) : (
               <>

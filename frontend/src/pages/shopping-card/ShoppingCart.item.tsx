@@ -42,7 +42,7 @@ const Name = styled.div`
   line-height: normal;
 `;
 
-const Price = styled.div`
+export const Price = styled.div`
   color: var(--primary-color);
   font-size: 16px;
   font-style: normal;

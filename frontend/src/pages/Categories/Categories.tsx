@@ -1,7 +1,7 @@
 import { HOST } from "@/helpers/api";
 import { useCategories } from "@/shared/category/hooks/useCategories";
 import { AppImage } from "@/shared/components/image/AppImage";
-import { Box, Skeleton, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import styles from "./category.module.css";
@@ -62,7 +62,8 @@ const CategoryBalls = ({ categories }) => {
                 <StyledImgBox>
                   <AppImage
                     className={styles.categoryImg}
-                    fallback={<Skeleton variant="rectangular" height={140} />}
+                    fallback={<></>}
+                    errorFallback={<></>}
                     src={`${HOST + category.pictures}`}
                     alt={category.name}
                     height="150px"

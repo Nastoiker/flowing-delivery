@@ -57,7 +57,7 @@ export class ShoppingCartRepository {
   async deleteShoppingCart(id: number) {
     const shoppingCart = await this.shoppingCartModel.findByPk(id);
     if (!shoppingCart) {
-      throw new Error('Корза не найдена');
+      throw new Error('Корзина не найдена');
     }
     await shoppingCart.destroy();
   }

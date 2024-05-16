@@ -29,9 +29,20 @@ const Container = styled.div<{ $isShowPmBlock: boolean }>`
 type Props = {
   onChangeFilter: (filter) => void;
   onChangeSort: (field, dir) => void;
+  minCalories: number;
+  maxCalories: number;
+  maxPrice: number;
+  minPrice: number;
 };
 
-export const FilterFoodDrawer = ({ onChangeFilter, onChangeSort }: Props) => {
+export const FilterFoodDrawer = ({
+  onChangeFilter,
+  onChangeSort,
+  minCalories,
+  maxCalories,
+  maxPrice,
+  minPrice,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const [availability, setAvailability] = useState(true);
   const [sortByDate, setSortByDate] = useState(false);
@@ -78,10 +89,7 @@ export const FilterFoodDrawer = ({ onChangeFilter, onChangeSort }: Props) => {
       <IconButton onClick={toggleDrawer(true)}>
         <Funnel size={35} />
       </IconButton>
-      <Drawer
-        open={open}
-        ModalProps={{ onBackdropClick: toggleDrawer((v) => !v) }}
-      >
+      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
         <Container $isShowPmBlock={false}>
           <IconButton
             onClick={toggleDrawer(false)}
@@ -163,11 +171,19 @@ export const FilterFoodDrawer = ({ onChangeFilter, onChangeSort }: Props) => {
             /> */}
           </FormGroup>
           <CaloriesSlider
-            minCalories={100}
-            maxCalories={600}
-            onChange={() => {}}
+            minCalories={minCalories}
+            maxCalories={maxCalories}
+            onChange={({ valueMax, valueMin }) => {
+              onChangeFilter({ minCalories: valueMin, maxCalories: valueMax });
+            }}
           />
-          <FilterByPrice minPrice={200} maxPrice={5000} onChange={() => {}} />
+          <FilterByPrice
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            onChange={({ valueMax, valueMin }) => {
+              onChangeFilter({ minPrice: valueMin, maxPrice: valueMax });
+            }}
+          />
           <Button
             variant="outlined"
             onClick={() => {

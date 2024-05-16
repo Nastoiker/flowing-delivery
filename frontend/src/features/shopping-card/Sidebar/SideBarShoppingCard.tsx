@@ -1,0 +1,81 @@
+import { AppBarScroll } from "@/app/Scrollbar/AppScrollbar";
+import {
+  Price,
+  ShoppintCartItem,
+} from "@/pages/shopping-card/ShoppingCart.item";
+import { Button, Divider, Drawer, IconButton, Typography } from "@mui/material";
+import { Basket } from "@phosphor-icons/react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useShoppingCart } from "../hooks/useCrudShoppingCard";
+const Container = styled.div<{ $isShowPmBlock: boolean }>`
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+  gap: 50px;
+  transition: width 0.3s ease-in;
+  height: 100%;
+  padding-bottom: ${({ $isShowPmBlock }) => ($isShowPmBlock ? "172px" : "0px")};
+
+  @media screen and (max-width: 640px) {
+    width: 100%;
+  }
+`;
+const Wrapper = styled.div`
+  width: 100%;
+  overflow-y: auto;
+  height: 100%;
+`;
+export const ShoppingCardSidebar = () => {
+  const [open, setOpen] = useState(false);
+  const { data: shoppingCarts, isError } = useShoppingCart();
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
+  const redirect = useNavigate();
+  const sumPrice = shoppingCarts?.data.shoppingCart.reduce(
+    (accumulator, value) => accumulator + value.totalPrice,
+    0
+  );
+  return (
+    <>
+      <IconButton onClick={toggleDrawer(true)}>
+        <Basket />
+      </IconButton>
+      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
+        <Container $isShowPmBlock={false}>
+          {shoppingCarts && shoppingCarts?.data?.shoppingCart?.length > 0 ? (
+            <>
+              <AppBarScroll
+                style={{ height: "65vh", width: "300px", maxWidth: "280px" }}
+              >
+                <Wrapper>
+                  {shoppingCarts?.data.shoppingCart?.map((s) => (
+                    <ShoppintCartItem key={s.id} shoppingCart={s} />
+                  ))}
+                </Wrapper>
+              </AppBarScroll>
+
+              <Divider />
+              <Price>Тотал: {sumPrice}₽</Price>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  toggleDrawer(false);
+                  redirect("shopping-cart");
+                }}
+              >
+                Перейти в корзину
+              </Button>
+            </>
+          ) : (
+            <Typography margin="20px 0" variant="h5">
+              В вашей корзине пока пусто
+            </Typography>
+          )}
+        </Container>
+      </Drawer>
+    </>
+  );
+};

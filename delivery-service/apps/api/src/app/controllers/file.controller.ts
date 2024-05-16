@@ -96,17 +96,17 @@ export class FileController {
     return await this.rmqService.send<
       FileGetInfo.Request,
       FileGetInfo.Response
-    >(FileGetInfo.topic, { id });
+    >(FileGetInfo.topic, { id: +id });
   }
 
   @Put(':id')
   async updateFile(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() fileData: Partial<FileDto>
   ) {
     return await this.rmqService.send<FileUpdate.Request, FileUpdate.Response>(
       FileUpdate.topic,
-      { id, ...fileData }
+      { id: Number(id), ...fileData }
     );
   }
 

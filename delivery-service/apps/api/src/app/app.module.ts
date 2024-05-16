@@ -15,6 +15,7 @@ import { BannerController } from './controllers/banner.controller';
 import { CategoryController } from './controllers/category.controller';
 import { FileController } from './controllers/file.controller';
 import { FoodController } from './controllers/food.controller';
+import { OrderController } from './controllers/order.controller';
 import { ReviewController } from './controllers/review.controller';
 import { ShoppingCartController } from './controllers/shopping-cart.controller';
 import { UserController } from './controllers/user.controller';
@@ -40,6 +41,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   controllers: [
     AuthController,
     UserController,
+    OrderController,
     ShoppingCartController,
     FoodController,
     BannerController,

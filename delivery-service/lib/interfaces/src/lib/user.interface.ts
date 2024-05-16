@@ -1,3 +1,4 @@
+import { IOrder } from './order.interface';
 import { IShoppingCart } from './shopping-cart.interface';
 
 export interface IUser {
@@ -10,7 +11,7 @@ export interface IUser {
   surname: string;
   username: string;
   shoppingCart?: IShoppingCart[];
-  orders?: IUserOrdersFood[];
+  orders?: IOrder[];
 }
 export enum UserRole {
   seller = 1,

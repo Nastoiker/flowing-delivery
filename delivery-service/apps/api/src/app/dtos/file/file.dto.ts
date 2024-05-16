@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class FileDto {
   @IsNumber()
-  id: string;
+  id: number;
   @IsString()
   name: string;
   @IsString()

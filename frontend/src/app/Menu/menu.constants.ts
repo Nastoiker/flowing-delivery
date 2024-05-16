@@ -4,6 +4,7 @@ import {
   DotsNine,
   House,
   IconProps,
+  Kanban,
   User,
   Wrench,
 } from "@phosphor-icons/react";
@@ -34,6 +35,12 @@ const MENU_ITEMS = [
     allowedRoles: [USER_ROLES.ADMIN],
     link: "/admin",
     Icon: Wrench,
+  },
+  {
+    title: "Заказы",
+    allowedRoles: [USER_ROLES.ADMIN],
+    link: "/orders",
+    Icon: Kanban,
   },
   {
     title: "Профиль",

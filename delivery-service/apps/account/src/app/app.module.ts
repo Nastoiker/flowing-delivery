@@ -9,6 +9,8 @@ import { CommentModule } from './comments/comment.module';
 import configuration from './configs/configuration';
 import { getRMQConfig } from './configs/rmq.config';
 import { FoodModule } from './food/food.module';
+import { OrderModule } from './order/order.module';
+import { PurchaseModel } from './purchase/purchase.module';
 import { RatingModule } from './rating/rating.module';
 import { ShoppingCartModule } from './shopping-cart/shopping-cart.module';
 import { UserModule } from './user/user.module';
@@ -21,8 +23,10 @@ import { UserModule } from './user/user.module';
       envFilePath: 'envs/.account.env',
       isGlobal: true,
     }),
+    PurchaseModel,
     DatabaseModule,
     UserModule,
+    OrderModule,
     RMQModule.forRootAsync(getRMQConfig()),
     FoodModule,
     CommentModule,

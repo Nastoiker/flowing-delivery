@@ -1,0 +1,14 @@
+import { IFood } from "./foods.interface";
+import { IUser } from "./user.interface";
+
+export interface IOrder {
+  id: number;
+  status: string;
+  deliveryAddress: string;
+  deliveryPrice: number;
+  priceFood: number;
+  totalPrice: number;
+  userId: number;
+  products?: IFood[];
+  user?: IUser;
+}

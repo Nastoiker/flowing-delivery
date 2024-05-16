@@ -20,6 +20,9 @@ const Banner = styled.div`
 export const Banners = () => {
   const { data } = useBanners();
   const navigate = useNavigate();
+  if (!data?.data?.banner?.length) {
+    return null;
+  }
   const settings = {
     infinite: true,
     speed: 500,

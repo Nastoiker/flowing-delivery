@@ -8,6 +8,7 @@ import { FoodFindBySearch } from "@/pages/Foods/FoodFindBySearch";
 import { Offerta } from "@/pages/Oferta/Oferta";
 import { Politics } from "@/pages/Politics/Politics";
 import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
+import { OrdersPage } from "@/pages/orders/Orders.page";
 import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
 import { Box } from "@mui/material";
 import { Outlet, createBrowserRouter } from "react-router-dom";
@@ -75,6 +76,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
                 <AdminPanel />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "orders",
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+                <OrdersPage />
               </ProtectedRoute>
             ),
           },

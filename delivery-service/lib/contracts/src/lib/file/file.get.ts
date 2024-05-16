@@ -4,7 +4,7 @@ import { IFile } from '@nestjs/common/pipes/file/interfaces';
 export namespace FileGetInfo {
   export const topic = 'file.get-info.command';
   export class Request {
-    id: string | undefined;
+    id: number | undefined;
   }
   export class Response {
     file: IFile | undefined;

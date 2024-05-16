@@ -44,3 +44,8 @@ export * from './lib/review/reviews.find-rating-by-foodId';
 export * from './lib/banner/banner.create';
 export * from './lib/banner/banner.delete';
 export * from './lib/banner/banner.get';
+
+export * from './lib/order/order.create';
+export * from './lib/order/order.delete';
+export * from './lib/order/order.get-all';
+export * from './lib/order/order.update';

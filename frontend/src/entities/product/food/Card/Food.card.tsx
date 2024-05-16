@@ -9,7 +9,6 @@ import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { IFood } from "@/shared/interfaces/foods.interface";
 import { useAppDispatch } from "@/shared/store/hooks";
-import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import {
   Box,
   Button,
@@ -43,6 +42,9 @@ export function FoodCard(props: { food: IFood }) {
     () => myCarts?.data?.shoppingCart?.find((p) => p?.productId === food.id),
     [myCarts, food]
   );
+  // if (isAdded) {
+  //   alert(JSON.stringify(isAdded, null, 2));
+  // }
   const { deleteShoppingCart, isLoading: isLoadingDelete } =
     useDeleteShoppingCart();
   const { updateShoppingCart } = useUpdateShoppingCart();
@@ -68,19 +70,24 @@ export function FoodCard(props: { food: IFood }) {
         count: 1,
       });
     }
-    const handleIncrement = async () => {
-      await updateShoppingCart({
-        ...shoppingCart,
-        count: shoppingCart.count + 1,
-      });
-    };
-    const handleDicrement = async () => {
-      await updateShoppingCart({
-        ...shoppingCart,
-        count: shoppingCart.count - 1,
-      });
-    };
-    await dispatch(fetchCurrentUser);
+  };
+  const handleIncrement = async () => {
+    if (!isAdded) {
+      return;
+    }
+    await updateShoppingCart({
+      ...isAdded,
+      count: isAdded?.count + 1,
+    });
+  };
+  const handleDicrement = async () => {
+    if (!isAdded) {
+      return;
+    }
+    await updateShoppingCart({
+      ...isAdded,
+      count: isAdded.count - 1,
+    });
   };
   return (
     <Card sx={{ width: 250, boxShadow: 1 }}>
@@ -124,42 +131,42 @@ export function FoodCard(props: { food: IFood }) {
       </CardActionArea>
       <CardActions>
         {!isLoadingCarts && (
-          <Button
-            disabled={
-              isLoadingDelete ||
-              isLoadingCreate ||
-              food.count === 0 ||
-              !currentUser?.email
-            }
-            onClick={() => handleAddToCart()}
-            size="medium"
-            color="primary"
-            variant="contained"
-          >
-            {isAdded ? (
-              <>
-                <ActionsButttons>
-                  <IconButton onClick={() => handleDicrement()}>
-                    <Minus />
-                  </IconButton>
-                  <Number>{isAdded.count}</Number>
+          <>
+            {isAdded && !isNaN(isAdded?.count) ? (
+              <ActionsButttons>
+                <IconButton onClick={() => handleDicrement()}>
+                  <Minus />
+                </IconButton>
+                <div>{isAdded?.count ?? 0}</div>
 
-                  <IconButton onClick={() => handleIncrement()}>
-                    <Plus />
-                  </IconButton>
+                <IconButton onClick={() => handleIncrement()}>
+                  <Plus />
+                </IconButton>
 
-                  <IconButton onClick={() => deleteShoppingCart(isAdded?.id)}>
-                    <Trash />
-                  </IconButton>
-                </ActionsButttons>
-              </>
+                <IconButton onClick={() => deleteShoppingCart(isAdded?.id)}>
+                  <Trash />
+                </IconButton>
+              </ActionsButttons>
             ) : (
-              <>
-                <Basket />
-                <Plus size={13} />
-              </>
+              <Button
+                disabled={
+                  isLoadingDelete ||
+                  isLoadingCreate ||
+                  food.count === 0 ||
+                  !currentUser?.email
+                }
+                onClick={() => handleAddToCart()}
+                size="medium"
+                color="primary"
+                variant="contained"
+              >
+                <>
+                  <Basket />
+                  <Plus size={13} />
+                </>
+              </Button>
             )}
-          </Button>
+          </>
         )}
       </CardActions>
     </Card>

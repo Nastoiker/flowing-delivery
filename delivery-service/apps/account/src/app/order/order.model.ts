@@ -1,5 +1,15 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  BelongsToMany,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { Food } from '../food/models/food.model';
+import { User } from '../user/models/user.model';
+import { OrderFood } from './order-food.model';
 
 @Table({ timestamps: true })
 export class Order extends Model {
@@ -11,18 +21,22 @@ export class Order extends Model {
   })
   id: number;
 
-  @Column({ type: DataType.DATE })
-  orderDate: Date;
-
   @Column({ type: DataType.STRING })
   status: string;
-
-  @Column({ type: DataType.DOUBLE })
-  total: number;
-
-  @HasMany(() => Food)
-  items?: Food[]; // Предположим, что заказ может включать элементы Food
-
-  @Column({ type: DataType.INTEGER })
-  userId: number; // Внешний ключ для связи с User
+  @Column({ type: DataType.STRING })
+  deliveryAddress: string;
+  @Column({ type: DataType.DOUBLE.UNSIGNED })
+  priceFood: number;
+  @Column({ type: DataType.DOUBLE.UNSIGNED, allowNull: true })
+  deliveryPrice: number;
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  isPickUp: boolean;
+  @ForeignKey(() => User)
+  userId: number;
+  @Column({ type: DataType.DOUBLE.UNSIGNED })
+  totalPrice: number;
+  @BelongsTo(() => User)
+  user: User;
+  @BelongsToMany(() => Food, () => OrderFood)
+  products?: Food[];
 }

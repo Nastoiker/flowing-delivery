@@ -4,7 +4,7 @@ import { IFile } from '@nestjs/common/pipes/file/interfaces';
 export namespace FileUpdate {
   export const topic = 'file.update.command';
   export class Request {
-    id: string | undefined;
+    id: number | undefined;
     name?: string;
     contentType?: string;
     size?: number;

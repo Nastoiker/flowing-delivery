@@ -7,6 +7,7 @@ export * from './lib/file-element.response';
 export * from './lib/foods.interface';
 export * from './lib/interfaces.module';
 export * from './lib/mfile.class';
+export * from './lib/order.interface';
 export * from './lib/rating.interface';
 export * from './lib/review.interface';
 export * from './lib/shopping-cart.interface';

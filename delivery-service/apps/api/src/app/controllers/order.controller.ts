@@ -12,6 +12,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -95,12 +96,22 @@ export class OrderController {
   //   }
   @UseGuards(JWTAuthGuard)
   @Get()
-  async getOrders() {
+  async getOrders(@Query() query) {
     try {
+      const {
+        sort: { field = 'createdAt', direction = 'desc' },
+        filter = {},
+        page = 1,
+        pageSize = 20,
+      } = query || {};
       return await this.rmqService.send<
         OrderGetAll.Request,
         OrderGetAll.Response
-      >(OrderGetAll.topic, {}, { headers: { requestId: 'adad' } });
+      >(
+        OrderGetAll.topic,
+        { sort: { field, direction }, filter, page, pageSize },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

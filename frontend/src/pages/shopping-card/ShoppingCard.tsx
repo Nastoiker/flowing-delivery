@@ -1,4 +1,5 @@
 import { useCreateOrder } from "@/entities/orders/hooks/useCrudOrders";
+import { DaDataAddressLookup } from "@/features/delivery/Address/AddressAutoComplete";
 import { MapComponent } from "@/features/delivery/Map";
 import { PaymentForm } from "@/features/payment/PaymentForm";
 import { useShoppingCart } from "@/features/shopping-card/hooks/useCrudShoppingCard";
@@ -85,6 +86,7 @@ export const ShoppingCardPage = () => {
               <Box margin="20px 0">
                 <MapComponent valueKm={0} onChangeKm={onChangeKm} />
               </Box>
+              <DaDataAddressLookup />
             </div>
           )}
           <Typography variant="h5" margin="50px 0">

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
+import { Op } from 'sequelize';
 import { Food } from '../food/models/food.model';
 import { User } from '../user/models/user.model';
 import { Order } from './order.model';
@@ -37,8 +38,17 @@ export class OrderRepository {
     return order;
   }
 
-  async findAllOrders() {
-    return this.orderModel.findAll({
+  async findAllOrders({ sort, filter, page, pageSize }) {
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
+    const { minPrice, maxPrice, categoryId, status } = filter;
+    const offset = (page - 1) * pageSize;
+    const where = {} as any;
+    if (minPrice !== undefined)
+      where.totalPrice = { ...where.totalPrice, [Op.gte]: minPrice };
+    if (maxPrice !== undefined)
+      where.totalPrice = { ...where.totalPrice, [Op.lte]: maxPrice };
+    const allCount = await this.orderModel.count({
+      where,
       include: [
         {
           model: User,
@@ -48,6 +58,21 @@ export class OrderRepository {
         },
       ],
     });
+    const data = await this.orderModel.findAll({
+      order: [[field, direction]],
+      where,
+      offset,
+      limit: pageSize,
+      include: [
+        {
+          model: User,
+        },
+        {
+          model: Food,
+        },
+      ],
+    });
+    return { data, allCount };
   }
 
   async deleteOrder(id: number) {

@@ -1,5 +1,7 @@
 import { useOrders } from "@/entities/orders/hooks/useCrudOrders";
 import { OrderCard } from "@/entities/orders/ui/OrderCard";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import styled from "styled-components";
 const Wrapper = styled.div`
   display: grid;
@@ -10,14 +12,31 @@ const GridEL = styled.div`
   margin: 0 auto;
 `;
 export const OrdersPage = () => {
-  const { data } = useOrders();
+  const [filter, setFilter] = useState({});
+  const [sort, setSort] = useState({ field: "createdAt", direction: "desc" });
+  //@ts-ignore
+  const { data, fetchNextPage } = useOrders({
+    filter,
+    sort,
+  });
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
   return (
     <Wrapper>
-      {data?.data?.orders?.map((o) => (
-        <GridEL>
-          <OrderCard key={o.id} order={o} />
-        </GridEL>
-      ))}
+      {data?.pages.map((p) => {
+        return p?.data?.orders?.map((o) => (
+          <GridEL key={o.id}>
+            <OrderCard order={o} />
+          </GridEL>
+        ));
+      })}
+      <div ref={ref}>
+        https://www.npmjs.com/package/react-intersection-observer
+      </div>
     </Wrapper>
   );
 };

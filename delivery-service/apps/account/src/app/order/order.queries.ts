@@ -1,5 +1,9 @@
-import { OrderCreate, OrderGetAll } from '@delivery-service/contracts';
-import { Body, Controller, Query } from '@nestjs/common';
+import {
+  FoodGetAll,
+  OrderCreate,
+  OrderGetAll,
+} from '@delivery-service/contracts';
+import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { OrderRepository } from './order.repository';
 
@@ -9,10 +13,21 @@ export class OrderQueries {
 
   @RMQValidate()
   @RMQRoute(OrderGetAll.topic)
-  async getOrders(@Query() query: any): Promise<OrderGetAll.Response> {
-    const orders = await this.orderRepository.findAllOrders();
+  async getOrders({
+    sort,
+    filter,
+    page,
+    pageSize,
+  }: FoodGetAll.Request): Promise<OrderGetAll.Response> {
+    const { data, allCount } = await this.orderRepository.findAllOrders({
+      sort,
+      filter,
+      page,
+      pageSize,
+    });
     return {
-      orders,
+      orders: data,
+      allCount,
     };
   }
 

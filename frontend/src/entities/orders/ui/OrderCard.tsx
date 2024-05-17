@@ -1,5 +1,6 @@
 import { IOrder } from "@/shared/interfaces/order.interface";
 import {
+  Box,
   Card,
   CardContent,
   Divider,
@@ -23,9 +24,24 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
   return (
     <StyledCard>
       <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Заказ №{order.id}
-        </Typography>
+        <Box
+          sx={{
+            marginBottom: "10px",
+            borderBottomStyle: "dotted",
+            borderBottomWidth: "2px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            №{order.id}
+          </Typography>
+          <Typography variant="h5" gutterBottom>
+            {order.totalPrice}₽
+          </Typography>
+        </Box>
+
         <Typography variant="body1">Статус: {order.status}</Typography>
         <Typography variant="body1">
           Стоимость доставки: {order.deliveryPrice}₽
@@ -33,9 +49,7 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
         <Typography variant="body1">
           Стоимость еды: {order.priceFood}₽
         </Typography>
-        <Typography variant="body1" style={{ marginBottom: "16px" }}>
-          Итого: {order.totalPrice}₽
-        </Typography>
+
         {order.user && (
           <>
             <Divider />

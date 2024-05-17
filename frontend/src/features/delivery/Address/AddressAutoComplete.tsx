@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 
-export const DaDataAddressLookup = () => {
+const DaDataAddressLookup = ({ onChangeAddress }) => {
   const [address, setAddress] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -11,13 +11,12 @@ export const DaDataAddressLookup = () => {
   const DADATA_API_KEY = "650ad1dcbe314ff7fdce95e130fa7d9d8c17b954";
   const DADATA_URL =
     "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+  const DADATA_GEOCODE_URL =
+    "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
 
   const fetchSuggestions = useCallback(async () => {
     if (address.trim() === "") {
       setSuggestions([]);
-      return;
-    }
-    if (isLoading) {
       return;
     }
     setIsLoading(true);
@@ -29,11 +28,7 @@ export const DaDataAddressLookup = () => {
         Accept: "application/json",
         Authorization: `Token ${DADATA_API_KEY}`,
       },
-      body: JSON.stringify({
-        query: address,
-        locations: [{ city: "Астрахань" }],
-        count: 10,
-      }),
+      body: JSON.stringify({ query: address, count: 10 }),
     };
 
     try {
@@ -54,10 +49,37 @@ export const DaDataAddressLookup = () => {
     }
   }, [address]);
 
-  useEffect(() => {
-    if (searchTimeout) {
-      clearTimeout(searchTimeout);
+  const fetchAddressByCoordinates = useCallback(async () => {
+    if (!coordinates) return;
+
+    setIsLoading(true);
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${DADATA_API_KEY}`,
+      },
+      body: JSON.stringify({ lat: coordinates.lat, lon: coordinates.lon }),
+    };
+
+    try {
+      const response = await fetch(DADATA_GEOCODE_URL, requestOptions);
+      const data = await response.json();
+      if (data.suggestions.length > 0) {
+        setAddress(data.suggestions[0].value);
+        onChangeAddress(data.suggestions[0].value);
+      }
+    } catch (error) {
+      console.error("Error fetching address by coordinates:", error);
+    } finally {
+      setIsLoading(false);
     }
+  }, [coordinates]);
+
+  useEffect(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
     setSearchTimeout(
       setTimeout(() => {
         fetchSuggestions();
@@ -65,9 +87,18 @@ export const DaDataAddressLookup = () => {
     );
   }, [address, fetchSuggestions]);
 
+  useEffect(() => {
+    fetchAddressByCoordinates();
+  }, [coordinates]);
+
   const handleAddressChange = (event, value) => {
     setAddress(value?.label || "");
+    onChangeAddress(value?.label);
     setCoordinates(value ? { lat: value.lat, lon: value.lon } : null);
+  };
+
+  const handleCoordinatesChange = (newCoordinates) => {
+    setCoordinates(newCoordinates);
   };
 
   return (
@@ -89,9 +120,15 @@ export const DaDataAddressLookup = () => {
           />
         )}
       />
-      <Button variant="contained" disabled={!coordinates}>
+      <Button
+        variant="contained"
+        onClick={() => handleCoordinatesChange({ lat: 55.76, lon: 37.64 })}
+        disabled={!coordinates}
+      >
         Lookup Coordinates
       </Button>
     </Box>
   );
 };
+
+export default DaDataAddressLookup;

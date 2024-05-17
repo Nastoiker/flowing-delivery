@@ -1,5 +1,5 @@
 import { useCreateOrder } from "@/entities/orders/hooks/useCrudOrders";
-import { DaDataAddressLookup } from "@/features/delivery/Address/AddressAutoComplete";
+import DaDataAddressLookup from "@/features/delivery/Address/AddressAutoComplete";
 import { MapComponent } from "@/features/delivery/Map";
 import { PaymentForm } from "@/features/payment/PaymentForm";
 import { useShoppingCart } from "@/features/shopping-card/hooks/useCrudShoppingCard";
@@ -21,6 +21,8 @@ export const ShoppingCardPage = () => {
   const { createOrderFetch, isLoading, error } = useCreateOrder();
   const [deliveryPrice, setDeliveryPrice] = useState<number>(0);
   const [isPickup, setIsPickUp] = useState(false);
+  const [address, setAddress] = useState();
+  const [coordinates, setCoordinates] = useState();
   // const { register, handleSubmit, reset } = useForm<ICreateOrder>(); TODO
   //orderCreate: ICreateOrder
   const submit = async () => {
@@ -86,7 +88,11 @@ export const ShoppingCardPage = () => {
               <Box margin="20px 0">
                 <MapComponent valueKm={0} onChangeKm={onChangeKm} />
               </Box>
-              <DaDataAddressLookup />
+              <DaDataAddressLookup
+                setCoordinates={setCoordinates}
+                coordinates={coordinates}
+                onChangeAddress={(address) => setAddress(address)}
+              />
             </div>
           )}
           <Typography variant="h5" margin="50px 0">

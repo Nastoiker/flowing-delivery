@@ -6,5 +6,4 @@ export const AppBarScroll = styled(SimpleBar)`
     background-color: rgba(146, 156, 166, 0.4);
     opacity: 0.5;
   }
-  width: 100%;
 `;

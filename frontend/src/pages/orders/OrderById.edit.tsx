@@ -31,26 +31,26 @@ const WrapperMain = styled.div`
   gap: 50px;
   flex-wrap: wrap;
 `;
+export const getStatusLabel = (status) => {
+  switch (status) {
+    case "created":
+      return "В ожидании";
+    case "confirmed":
+      return "Подтвержден";
+    case "delivery":
+      return "На доставке";
+    case "received":
+      return "Получен";
+    default:
+      return "Неизвестно";
+  }
+};
 export const OrderById = () => {
   const { id } = useParams();
   const { data: order } = useOrderById(Number(id));
   if (!order) {
     return null;
   }
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "created":
-        return "В ожидании";
-      case "confirmed":
-        return "Подтвержден";
-      case "delivery":
-        return "На доставке";
-      case "received":
-        return "Получен";
-      default:
-        return "Неизвестно";
-    }
-  };
 
   return (
     <Wrapper>
@@ -76,7 +76,7 @@ export const OrderById = () => {
             <ListItem>
               <ListItemText
                 primary="Статус:"
-                secondary={`${order.data.order.totalPrice} руб.`}
+                secondary={getStatusLabel(order.data.order.status)}
               />
             </ListItem>
             <ListItem>

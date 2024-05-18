@@ -1,3 +1,4 @@
+import { getStatusLabel } from "@/pages/orders/OrderById.edit";
 import { IOrder } from "@/shared/interfaces/order.interface";
 import {
   Box,
@@ -51,7 +52,9 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
           </Typography>
         </Box>
 
-        <Typography variant="body1">Статус: {order.status}</Typography>
+        <Typography variant="body1">
+          Статус: {getStatusLabel(order.status)}
+        </Typography>
         <Typography variant="body1">
           Стоимость доставки: {order.deliveryPrice}₽
         </Typography>

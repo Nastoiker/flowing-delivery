@@ -95,23 +95,19 @@ export class OrderController {
   //       }
   //     }
   //   }
-    @Get('food/:id')
-    async getOrderByFoodId(@Param('id') id: number) {
-      try {
-        return await this.rmqService.send<
+  @Get(':id')
+  async getOrderByFoodId(@Param('id') id: number) {
+    try {
+      return await this.rmqService.send<
         OrderFindById.Request,
         OrderFindById.Response
-      >(
-        OrderGetAll.topic,
-        { id },
-        { headers: { requestId: 'adad' } }
-      );
-      } catch (e) {
-        if (e instanceof Error) {
-          throw new UnauthorizedException(e.message);
-        }
+      >(OrderFindById.topic, { id }, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
       }
     }
+  }
   @UseGuards(JWTAuthGuard)
   @Get()
   async getOrders(@Query() query) {

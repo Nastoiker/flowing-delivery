@@ -8,6 +8,7 @@ import { FoodFindBySearch } from "@/pages/Foods/FoodFindBySearch";
 import { Offerta } from "@/pages/Oferta/Oferta";
 import { Politics } from "@/pages/Politics/Politics";
 import { AdminPanel } from "@/pages/admin-panel/AdminPanel";
+import { OrderById } from "@/pages/orders/OrderById.edit";
 import { OrdersPage } from "@/pages/orders/Orders.page";
 import { ShoppingCardPage } from "@/pages/shopping-card/ShoppingCard";
 import { Box } from "@mui/material";
@@ -85,6 +86,14 @@ const router = createBrowserRouter([
               <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
                 <OrdersPage />
               </ProtectedRoute>
+            ),
+          },
+          {
+            path: "orders/:id",
+            element: (
+              // <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <OrderById />
+              // </ProtectedRoute>
             ),
           },
           {

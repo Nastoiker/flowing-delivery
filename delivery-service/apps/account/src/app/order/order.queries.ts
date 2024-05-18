@@ -6,11 +6,15 @@ import {
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
+import { ShoppingCartRepository } from '../shopping-cart/repositories/Shopping-cart.repositories';
 import { OrderRepository } from './order.repository';
 
 @Controller()
 export class OrderQueries {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(
+    private readonly orderRepository: OrderRepository,
+    private readonly shoppingCarTRep: ShoppingCartRepository
+  ) {}
   @RMQValidate()
   @RMQRoute(OrderFindById.topic)
   async foodByIdInfo(
@@ -46,7 +50,15 @@ export class OrderQueries {
   async orderCreate(
     @Body() dto: OrderCreate.Request
   ): Promise<OrderCreate.Response> {
+    const cartItems = await this.shoppingCarTRep.getShoppingCardByUserId(
+      dto.userId
+    );
+    if (!cartItems.length) {
+      throw new Error('Корзина пуста');
+    }
     const order = await this.orderRepository.createOrder({ ...dto });
+    await this.orderRepository.createFoodForOrder(cartItems, order.id);
+    await this.shoppingCarTRep.clearedShoppingCart(dto.userId);
     return {
       order,
     };

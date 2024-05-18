@@ -8,6 +8,7 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledCard = styled(Card)`
@@ -21,9 +22,17 @@ const StyledListItem = styled(ListItem)`
 `;
 
 export const OrderCard = ({ order }: { order: IOrder }) => {
+  const redirect = useNavigate();
+  const handleRedirect = (url: string) => {
+    redirect(url);
+  };
   return (
     <StyledCard>
-      <CardContent>
+      <CardContent
+        onClick={() => {
+          handleRedirect(`/orders/${order.id}`);
+        }}
+      >
         <Box
           sx={{
             marginBottom: "10px",
@@ -67,11 +76,12 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
               Продукты
             </Typography>
             <List>
-              {order.products.map((product, index, arr) => (
+              {order.products.map((product, index) => (
                 <StyledListItem key={index}>
                   <Typography variant="body2">{product.title}</Typography>
                   <Typography variant="body2">
-                    {arr.length} шт. - {product.price}₽ за шт.
+                    {product["OrderFood"]["quantity"]} шт. - {product.price}₽ за
+                    шт.
                   </Typography>
                 </StyledListItem>
               ))}

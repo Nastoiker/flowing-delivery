@@ -1,6 +1,13 @@
+import { api } from "@/helpers/api";
 import { PaginationType } from "@/shared/food/hooks/foods.queries";
 import { IOrder } from "@/shared/interfaces/order.interface";
-import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
+import { AxiosError } from "axios";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { createOrder, getOrders } from "../api/orders.api";
 import { ordersQueryKeys } from "./ordersQueryKeys";
 // export function useOrders() {
@@ -44,6 +51,20 @@ export function useOrders({ pageSize, filter, sort, page }: FoodListParams) {
       getNextPageParam,
     }
   );
+}
+export function useOrderById(orderId: number) {
+  const query = useQuery(
+    ["order-by-id", orderId],
+    async (): Promise<{ data: { order: IOrder } }> =>
+      api.get(`/order/${orderId}`),
+    {
+      retry: false,
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
+    }
+  );
+  return query;
 }
 export function useCreateOrder() {
   const queryClient = useQueryClient();

@@ -3,14 +3,18 @@ import { InjectModel } from '@nestjs/sequelize';
 
 import { Op } from 'sequelize';
 import { Food } from '../food/models/food.model';
+import { ShoppingCart } from '../shopping-cart/model/shopping-cart.model';
 import { User } from '../user/models/user.model';
+import { OrderFood } from './order-food.model';
 import { Order } from './order.model';
 
 @Injectable()
 export class OrderRepository {
   constructor(
     @InjectModel(Order)
-    private readonly orderModel: typeof Order
+    private readonly orderModel: typeof Order,
+    @InjectModel(OrderFood)
+    private readonly orderFoodModel: typeof OrderFood
   ) {}
 
   async createOrder(order: any) {
@@ -22,7 +26,15 @@ export class OrderRepository {
     }
     return orderCreated;
   }
-
+  async createFoodForOrder(shoppingCarts: ShoppingCart[], orderId: number) {
+    for (const item of shoppingCarts) {
+      await this.orderFoodModel.create({
+        orderId,
+        foodId: item.productId,
+        quantity: item.count, // Передаем количество из корзины
+      });
+    }
+  }
   async updateOrder({ id, ...rest }: Order) {
     const order = await this.orderModel.update(
       {
@@ -61,6 +73,9 @@ export class OrderRepository {
         },
         {
           model: Food,
+          through: {
+            attributes: ['quantity'],
+          },
         },
       ],
     });
@@ -86,17 +101,21 @@ export class OrderRepository {
     await order.destroy();
   }
   async findOrder(id: number) {
-    const order = await this.orderModel.findOne({ where: { id } , include: [
-      {
-        model: User,
-      },
-      {
-        model: Food,
-      },
-    ],});
-    if(
-      !order
-    ) {
+    const order = await this.orderModel.findOne({
+      where: { id },
+      include: [
+        {
+          model: User,
+        },
+        {
+          model: Food,
+          through: {
+            attributes: ['quantity'],
+          },
+        },
+      ],
+    });
+    if (!order) {
       throw new Error('Заказ не найден');
     }
     return order;

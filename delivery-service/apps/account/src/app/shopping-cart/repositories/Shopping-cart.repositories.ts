@@ -51,6 +51,11 @@ export class ShoppingCartRepository {
       include: [{ model: User }, { model: Food }],
     });
   }
+  async clearedShoppingCart(userId: number) {
+    return this.shoppingCartModel.destroy({
+      where: { userId },
+    });
+  }
   async findShoppingCartById(id: number) {
     return this.shoppingCartModel.findByPk(id);
   }

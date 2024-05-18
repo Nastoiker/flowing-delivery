@@ -11,6 +11,7 @@ import {
   Button,
   Slide,
   Toolbar,
+  Typography,
   useScrollTrigger,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -76,13 +77,13 @@ export default function AccountMenu() {
           {!matches960 ? (
             <>
               <Button sx={{ minWidth: 100 }} onClick={() => navigate("/menu")}>
-                Меню
+                <Typography sx={{ fontWeight: "bold" }}>Меню</Typography>
               </Button>
               <Button
                 sx={{ minWidth: 100 }}
                 onClick={() => navigate("/categories")}
               >
-                Категории
+                <Typography sx={{ fontWeight: "bold" }}>Категории</Typography>
               </Button>
             </>
           ) : (

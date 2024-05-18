@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { LatLng, LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -22,15 +22,60 @@ const calculateDistance = (point1, point2) => {
   return distanceInKm;
 };
 
-export const MapComponent = ({ valueKm = 0, onChangeKm }) => {
+export const MapComponent = ({
+  valueKm = 0,
+  onChangeKm,
+  coordinates,
+  setCoordinates,
+}) => {
   const zoom = 13;
-  const [markerPosition, setMarkerPosition] = useState<any>(null);
   const [km, setKm] = useState<number>(valueKm);
   const [routePoints, setRoutePoints] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const center: LatLngExpression = [46.359844, 48.055491];
+  useEffect(() => {
+    async function fetch() {
+      if (isLoading) {
+        return;
+      }
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          `https://router.project-osrm.org/route/v1/driving/${coordinates[1]},${coordinates[0]};${center[1]},${center[0]}?steps=true&geometries=geojson`
+        );
+        const { data } = response;
+        const points = data.routes[0].geometry.coordinates.map((arr) => [
+          arr[1],
+          arr[0],
+        ]);
+        setRoutePoints(points);
+        setKm(
+          Number(
+            calculateDistance(
+              { lng: coordinates[0], lat: coordinates[1] },
+              { lng: center[1], lat: center[0] }
+            )
+          )
+        );
+        onChangeKm(
+          Number(
+            calculateDistance(
+              { lng: coordinates[0], lat: coordinates[1] },
+              { lng: center[1], lat: center[0] }
+            )
+          )
+        );
+      } catch (error) {
+        console.error("Ошибка при получении маршрута:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetch();
+  }, [coordinates]);
   const handleMapClick = async (e) => {
-    setMarkerPosition(e.latlng);
+    setCoordinates([e.latlng.lat, e.latlng.lng]);
     if (isLoading || !e.latlng) {
       return;
     }
@@ -62,8 +107,8 @@ export const MapComponent = ({ valueKm = 0, onChangeKm }) => {
       click: handleMapClick,
     });
 
-    return markerPosition === null ? null : (
-      <Marker position={markerPosition}>
+    return !coordinates?.length ? null : (
+      <Marker position={{ lat: coordinates[0], lng: coordinates[1] }}>
         <Popup>Выбранная точка</Popup>
       </Marker>
     );
@@ -93,7 +138,7 @@ export const MapComponent = ({ valueKm = 0, onChangeKm }) => {
           <Popup>Магазин</Popup>
         </Marker>
         <LocationMarker />
-        {routePoints.length > 0 && (
+        {routePoints?.length > 0 && (
           <Polyline weight={5} positions={routePoints} color="#4C7C7D" />
         )}
       </MapContainer>

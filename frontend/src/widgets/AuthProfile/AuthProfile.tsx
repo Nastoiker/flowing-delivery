@@ -50,6 +50,7 @@ export default function BasicMenuAuth({ user }) {
               Профиль
             </MenuItem>
             <MenuItem onClick={() => handleRedirect("admin")}>Админка</MenuItem>
+            <MenuItem onClick={() => handleRedirect("orders")}>Заказы</MenuItem>
             <MenuItem onClick={() => handleRedirect("shopping-cart")}>
               Корзина
             </MenuItem>

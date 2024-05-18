@@ -1,13 +1,15 @@
-import { Autocomplete, Box, Button, TextField } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 
-const DaDataAddressLookup = ({ onChangeAddress }) => {
+const DaDataAddressLookup = ({
+  onChangeAddress,
+  coordinates,
+  setCoordinates,
+}) => {
   const [address, setAddress] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [coordinates, setCoordinates] = useState(null);
   const [searchTimeout, setSearchTimeout] = useState(null);
-
   const DADATA_API_KEY = "650ad1dcbe314ff7fdce95e130fa7d9d8c17b954";
   const DADATA_URL =
     "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
@@ -28,7 +30,11 @@ const DaDataAddressLookup = ({ onChangeAddress }) => {
         Accept: "application/json",
         Authorization: `Token ${DADATA_API_KEY}`,
       },
-      body: JSON.stringify({ query: address, count: 10 }),
+      body: JSON.stringify({
+        query: address,
+        locations: [{ city: "Астрахань" }],
+        count: 10,
+      }),
     };
 
     try {
@@ -61,13 +67,14 @@ const DaDataAddressLookup = ({ onChangeAddress }) => {
         Accept: "application/json",
         Authorization: `Token ${DADATA_API_KEY}`,
       },
-      body: JSON.stringify({ lat: coordinates.lat, lon: coordinates.lon }),
+      body: JSON.stringify({ lat: coordinates[0], lon: coordinates[1] }),
     };
 
     try {
       const response = await fetch(DADATA_GEOCODE_URL, requestOptions);
       const data = await response.json();
       if (data.suggestions.length > 0) {
+        alert(data.suggestions[0].value);
         setAddress(data.suggestions[0].value);
         onChangeAddress(data.suggestions[0].value);
       }
@@ -81,6 +88,7 @@ const DaDataAddressLookup = ({ onChangeAddress }) => {
   useEffect(() => {
     if (searchTimeout) clearTimeout(searchTimeout);
     setSearchTimeout(
+      // @ts-ignore
       setTimeout(() => {
         fetchSuggestions();
       }, 500)
@@ -94,7 +102,7 @@ const DaDataAddressLookup = ({ onChangeAddress }) => {
   const handleAddressChange = (event, value) => {
     setAddress(value?.label || "");
     onChangeAddress(value?.label);
-    setCoordinates(value ? { lat: value.lat, lon: value.lon } : null);
+    setCoordinates(value ? [value.lat, value.lon] : null);
   };
 
   const handleCoordinatesChange = (newCoordinates) => {
@@ -107,6 +115,7 @@ const DaDataAddressLookup = ({ onChangeAddress }) => {
         id="address-input"
         options={suggestions}
         getOptionLabel={(option) => option.label}
+        value={{ label: address }}
         onChange={handleAddressChange}
         loading={isLoading}
         renderInput={(params) => (
@@ -116,17 +125,10 @@ const DaDataAddressLookup = ({ onChangeAddress }) => {
               e.persist();
               setAddress(e.target.value);
             }}
-            label="Enter your address"
+            label="Введите свой адрес"
           />
         )}
       />
-      <Button
-        variant="contained"
-        onClick={() => handleCoordinatesChange({ lat: 55.76, lon: 37.64 })}
-        disabled={!coordinates}
-      >
-        Lookup Coordinates
-      </Button>
     </Box>
   );
 };

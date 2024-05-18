@@ -1,12 +1,16 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Button,
   Drawer,
   FormControlLabel,
   FormGroup,
   IconButton,
   Switch,
+  Typography,
 } from "@mui/material";
-import { Funnel, X } from "@phosphor-icons/react";
+import { CaretDown, Funnel, X } from "@phosphor-icons/react";
 import { useState } from "react";
 import styled from "styled-components";
 import { CaloriesSlider } from "../CaloriesSlider/CaloriesSlider";
@@ -97,65 +101,79 @@ export const FilterFoodDrawer = ({
           >
             <X />
           </IconButton>
-          <FormGroup>
-            <FormControlLabel
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "row-reverse",
-              }}
-              control={
-                <Switch
-                  checked={selectedSort === "in_stock"}
-                  onChange={handleChangeAvailability}
+          <Accordion
+            sx={{
+              border: "none",
+              boxShadow: "none",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<CaretDown />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              <Typography>Сортировать по</Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ margin: "0 12px" }}>
+              <FormGroup>
+                <FormControlLabel
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row-reverse",
+                  }}
+                  control={
+                    <Switch
+                      checked={selectedSort === "in_stock"}
+                      onChange={handleChangeAvailability}
+                    />
+                  }
+                  label="В наличие"
                 />
-              }
-              label="В наличие"
-            />
-            <FormControlLabel
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "row-reverse",
-              }}
-              control={
-                <Switch
-                  checked={selectedSort === "createdAt"}
-                  onChange={handleChangeSortByDate}
+                <FormControlLabel
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row-reverse",
+                  }}
+                  control={
+                    <Switch
+                      checked={selectedSort === "createdAt"}
+                      onChange={handleChangeSortByDate}
+                    />
+                  }
+                  label="По дате"
                 />
-              }
-              label="По дате"
-            />
-            <FormControlLabel
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "row-reverse",
-              }}
-              control={
-                <Switch
-                  checked={selectedSort === "min-price"}
-                  onChange={handleChangeCheap}
+                <FormControlLabel
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row-reverse",
+                  }}
+                  control={
+                    <Switch
+                      checked={selectedSort === "min-price"}
+                      onChange={handleChangeCheap}
+                    />
+                  }
+                  label="Дешевые"
                 />
-              }
-              label="Дешевые"
-            />
-            <FormControlLabel
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "row-reverse",
-              }}
-              control={
-                <Switch
-                  checked={selectedSort === "max-price"}
-                  onChange={handleChangeExpensive}
+                <FormControlLabel
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row-reverse",
+                  }}
+                  control={
+                    <Switch
+                      checked={selectedSort === "max-price"}
+                      onChange={handleChangeExpensive}
+                    />
+                  }
+                  label="Дорогие"
                 />
-              }
-              label="Дорогие"
-            />
-            {/* //TODO */}
-            {/* <FormControlLabel
+                {/* //TODO */}
+                {/* <FormControlLabel
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -169,7 +187,10 @@ export const FilterFoodDrawer = ({
               }
               label="Высокий рейтинг"
             /> */}
-          </FormGroup>
+              </FormGroup>
+            </AccordionDetails>
+          </Accordion>
+
           <CaloriesSlider
             minCalories={minCalories}
             maxCalories={maxCalories}

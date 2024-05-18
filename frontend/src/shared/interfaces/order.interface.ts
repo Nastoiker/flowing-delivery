@@ -9,6 +9,7 @@ export interface IOrder {
   priceFood: number;
   totalPrice: number;
   userId: number;
+  isPickUp: boolean;
   products?: IFood[];
   user?: IUser;
 }

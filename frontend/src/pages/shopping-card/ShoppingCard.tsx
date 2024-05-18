@@ -23,15 +23,17 @@ export const ShoppingCardPage = () => {
   const [isPickup, setIsPickUp] = useState(false);
   const [address, setAddress] = useState();
   const [coordinates, setCoordinates] = useState();
+
   // const { register, handleSubmit, reset } = useForm<ICreateOrder>(); TODO
   //orderCreate: ICreateOrder
   const submit = async () => {
     try {
       await createOrderFetch({
-        deliveryAddress: "",
+        deliveryAddress: address,
         priceFood: sumPrice,
         deliveryPrice: deliveryPrice,
         status: "created",
+        isPickUp: isPickup,
         totalPrice: sumPrice + deliveryPrice,
       });
       toast.success("Успешное создание");
@@ -86,7 +88,12 @@ export const ShoppingCardPage = () => {
           {!isPickup && (
             <div>
               <Box margin="20px 0">
-                <MapComponent valueKm={0} onChangeKm={onChangeKm} />
+                <MapComponent
+                  setCoordinates={setCoordinates}
+                  coordinates={coordinates}
+                  valueKm={0}
+                  onChangeKm={onChangeKm}
+                />
               </Box>
               <DaDataAddressLookup
                 setCoordinates={setCoordinates}
@@ -99,7 +106,9 @@ export const ShoppingCardPage = () => {
             Доставка: {deliveryPrice}₽
           </Typography>
           <Divider />
-
+          <Typography variant="h5" margin="50px 0">
+            {address}
+          </Typography>
           <Box margin="50px 0">
             <Typography variant="h5" margin="50px 0">
               Сумма: {sumPrice + deliveryPrice}₽

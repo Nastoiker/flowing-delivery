@@ -2,6 +2,7 @@ import { PaginationType } from "@/shared/food/hooks/foods.queries";
 import { IOrder } from "@/shared/interfaces/order.interface";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { createOrder, getOrders } from "../api/orders.api";
+import { ordersQueryKeys } from "./ordersQueryKeys";
 // export function useOrders() {
 //   const query = useQuery(["orders"], async () => getOrders(), {
 //     retry: false,
@@ -35,11 +36,10 @@ const getNextPageParam: GetNextPageParam = (lastPage, pages) => {
   );
   return lastPage?.data.allCount > pagesCount ? pages.length + 1 : undefined;
 };
-export function useOrders({ pageSize, filter, sort }: FoodListParams) {
+export function useOrders({ pageSize, filter, sort, page }: FoodListParams) {
   return useInfiniteQuery(
-    ["orders", filter],
-    async ({ pageParam = 1 }) =>
-      getOrders({ page: pageParam, pageSize, sort, filter }),
+    ordersQueryKeys.foodList({ page, pageSize, filter, sort }),
+    async () => getOrders({ page, pageSize, sort, filter }),
     {
       getNextPageParam,
     }

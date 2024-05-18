@@ -40,13 +40,19 @@ export class OrderRepository {
 
   async findAllOrders({ sort, filter, page, pageSize }) {
     const { field = 'createdAt', direction = 'desc' } = sort || {};
-    const { minPrice, maxPrice, categoryId, status } = filter;
+    const { minPrice, maxPrice, userId, isPickUp, status } = filter;
     const offset = (page - 1) * pageSize;
     const where = {} as any;
+
     if (minPrice !== undefined)
       where.totalPrice = { ...where.totalPrice, [Op.gte]: minPrice };
     if (maxPrice !== undefined)
       where.totalPrice = { ...where.totalPrice, [Op.lte]: maxPrice };
+
+    if (status !== undefined) where.status = status;
+    if (userId !== undefined) where.userId = status;
+
+    if (isPickUp !== undefined) where.isPickUp = isPickUp;
     const allCount = await this.orderModel.count({
       where,
       include: [

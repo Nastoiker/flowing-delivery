@@ -1,6 +1,7 @@
 import {
   FoodGetAll,
   OrderCreate,
+  OrderFindById,
   OrderGetAll,
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
@@ -10,7 +11,16 @@ import { OrderRepository } from './order.repository';
 @Controller()
 export class OrderQueries {
   constructor(private readonly orderRepository: OrderRepository) {}
-
+  @RMQValidate()
+  @RMQRoute(OrderFindById.topic)
+  async foodByIdInfo(
+    @Body() { id }: OrderFindById.Request
+  ): Promise<OrderFindById.Response> {
+    const order = await this.orderRepository.findOrder(id);
+    return {
+      order,
+    };
+  }
   @RMQValidate()
   @RMQRoute(OrderGetAll.topic)
   async getOrders({

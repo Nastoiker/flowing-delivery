@@ -85,4 +85,20 @@ export class OrderRepository {
     const order = await this.orderModel.findOne({ where: { id } });
     await order.destroy();
   }
+  async findOrder(id: number) {
+    const order = await this.orderModel.findOne({ where: { id } , include: [
+      {
+        model: User,
+      },
+      {
+        model: Food,
+      },
+    ],});
+    if(
+      !order
+    ) {
+      throw new Error('Заказ не найден');
+    }
+    return order;
+  }
 }

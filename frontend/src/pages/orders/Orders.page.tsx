@@ -57,7 +57,7 @@ export const OrdersPage = () => {
           ));
         })}
         <div ref={ref}>
-          https://www.npmjs.com/package/react-intersection-observer
+          :D
         </div>
       </Wrapper>
     </>

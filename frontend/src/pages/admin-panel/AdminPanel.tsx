@@ -42,7 +42,7 @@ export const AdminPanel = () => {
           <Tab label="Создание баннера" {...a11yProps(2)} />
           <Tab label="База пользователей" {...a11yProps(3)} />
           <Tab label="База еды" {...a11yProps(4)} />
-          <Tab label="Категории" {...a11yProps(4)} />
+          <Tab label="Категории" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -59,6 +59,9 @@ export const AdminPanel = () => {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
         <TableFoods />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+        <Categories />
       </CustomTabPanel>
     </Box>
   );

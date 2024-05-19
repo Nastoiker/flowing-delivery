@@ -1,7 +1,12 @@
+import {
+  updateCategory,
+  useCategories,
+} from "@/shared/category/hooks/useCategories";
 import { Table } from "@radix-ui/themes";
 
 export const AdminCategories = () => {
-  const { data, isError, isLoading } = useFoods({});
+  const { data, isError, isLoading } = useCategories();
+  const {} = updateCategory();
   return (
     <Table.Root variant="surface">
       <Table.Header>

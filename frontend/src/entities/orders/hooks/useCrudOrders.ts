@@ -78,6 +78,8 @@ export function useCreateOrder() {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries("orders");
+        await queryClient.invalidateQueries("shopping-carts");
+        await queryClient.invalidateQueries("foods");
       },
       onError: async () => {
         await queryClient.invalidateQueries("orders");
@@ -86,6 +88,28 @@ export function useCreateOrder() {
   );
   return {
     createOrderFetch,
+    isLoading,
+    error,
+  };
+}
+export function useUpdateOrder(id) {
+  const queryClient = useQueryClient();
+  const {
+    mutate: updateOrder,
+    isLoading,
+    error,
+  } = useMutation(
+    "updateOrder",
+    (food: Partial<Omit<IOrder, "id">>) => api.put(`/order/`, { id, ...food }),
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("order");
+        await queryClient.invalidateQueries([]);
+      },
+    }
+  );
+  return {
+    updateOrder,
     isLoading,
     error,
   };

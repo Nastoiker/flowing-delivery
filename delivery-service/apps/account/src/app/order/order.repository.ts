@@ -35,7 +35,7 @@ export class OrderRepository {
       });
     }
   }
-  async updateOrder({ id, ...rest }: Order) {
+  async updateOrder({ id, ...rest }) {
     const order = await this.orderModel.update(
       {
         ...rest,
@@ -99,6 +99,13 @@ export class OrderRepository {
   async deleteOrder(id: number) {
     const order = await this.orderModel.findOne({ where: { id } });
     await order.destroy();
+  }
+  async update(id: number, orderDto) {
+    const order = this.orderModel.findByPk(id);
+    if (!order) {
+      throw new Error('Ошибка, коммент не найден');
+    }
+    return (await order).update(orderDto);
   }
   async findOrder(id: number) {
     const order = await this.orderModel.findOne({

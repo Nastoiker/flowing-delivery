@@ -57,6 +57,7 @@ export const FilterOrderDrawer = ({
   const [expensive, setExpensive] = useState(false);
   const [highRating, setHighRating] = useState(false);
   const [selectedSort, setSelectedSort] = useState("");
+  const [status, setStatus] = useState();
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -170,8 +171,11 @@ export const FilterOrderDrawer = ({
           <Typography>Статус заказа</Typography>
           <Select
             placeholder="Статус заказа"
+            value={status}
             onChange={(e) => {
               onChangeFilter({ status: e.target.value });
+              //@ts-ignore
+              setStatus({ status: e.target.value });
             }}
           >
             {optionsStatuses.map((m, index) => (

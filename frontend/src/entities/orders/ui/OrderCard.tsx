@@ -7,11 +7,19 @@ import {
   Divider,
   List,
   ListItem,
+  MenuItem,
+  Select,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
+import { useUpdateOrder } from "../hooks/useCrudOrders";
+const optionsStatuses = [
+  { status: "created" },
+  { status: "confirmed" },
+  { status: "delivery" },
+  { status: "received" },
+];
 const StyledCard = styled(Card)`
   margin: 20px;
   border: 1px solid #ccc;
@@ -24,15 +32,16 @@ const StyledListItem = styled(ListItem)`
 
 export const OrderCard = ({ order }: { order: IOrder }) => {
   const redirect = useNavigate();
+  const { updateOrder } = useUpdateOrder(order.id);
   const handleRedirect = (url: string) => {
     redirect(url);
   };
   return (
     <StyledCard>
       <CardContent
-        onClick={() => {
-          handleRedirect(`/orders/${order.id}`);
-        }}
+      // onClick={() => {
+      //   handleRedirect(`/orders/${order.id}`);
+      // }}
       >
         <Box
           sx={{
@@ -55,6 +64,19 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
         <Typography variant="body1">
           Статус: {getStatusLabel(order.status)}
         </Typography>
+        <Select
+          placeholder="Статус заказа"
+          value={order.status}
+          onChange={(e) => {
+            updateOrder({ status: e.target.value.toString() });
+          }}
+        >
+          {optionsStatuses.map((m, index) => (
+            <MenuItem key={index} value={m.status}>
+              {m.status}
+            </MenuItem>
+          ))}
+        </Select>
         <Typography variant="body1">
           Стоимость доставки: {order.deliveryPrice}₽
         </Typography>

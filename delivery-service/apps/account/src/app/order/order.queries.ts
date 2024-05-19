@@ -3,6 +3,7 @@ import {
   OrderCreate,
   OrderFindById,
   OrderGetAll,
+  OrderUpdate,
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
@@ -44,7 +45,16 @@ export class OrderQueries {
       allCount,
     };
   }
-
+  @RMQValidate()
+  @RMQRoute(OrderUpdate.topic)
+  async updateOrder(
+    @Body() dto: OrderUpdate.Request
+  ): Promise<OrderUpdate.Response> {
+    await this.orderRepository.updateOrder(dto);
+    return {
+      message: 'Обновлено',
+    };
+  }
   @RMQValidate()
   @RMQRoute(OrderCreate.topic)
   async orderCreate(

@@ -1,3 +1,4 @@
+import { AdminCategories } from "@/entities/admin/components/AdminTableCategories/Categories";
 import { TableFoods } from "@/entities/admin/components/AdminTableFoods/AdminTableFoods";
 import { TableUsers } from "@/entities/admin/components/AdminTableUser/AdminTableUser";
 import { CreateBanner } from "@/entities/admin/components/CreateBanner";
@@ -61,7 +62,7 @@ export const AdminPanel = () => {
         <TableFoods />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
-        <Categories />
+        <AdminCategories />
       </CustomTabPanel>
     </Box>
   );

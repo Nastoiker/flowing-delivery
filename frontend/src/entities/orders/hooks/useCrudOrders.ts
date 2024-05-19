@@ -62,6 +62,7 @@ export function useOrderById(orderId: number) {
       onError: (err: AxiosError<{ message?: string }>) => {
         console.error(err);
       },
+      staleTime: 3000,
     }
   );
   return query;

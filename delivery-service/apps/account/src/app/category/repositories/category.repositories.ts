@@ -40,6 +40,13 @@ export class CategoryRepository {
   async findCategory(id: number) {
     return this.categoryModel.findOne({ where: { id } });
   }
+  async update(id: number, categoryDto) {
+    const category = this.categoryModel.findByPk(id);
+    if (!category) {
+      throw new Error('Ошибка, коммент не найден');
+    }
+    return (await category).update(categoryDto);
+  }
   async getProductsByCategory(categoryId: number) {
     //{ include: [{ association: 'products'}]}
     return this.categoryModel.findOne({ where: { id: categoryId } });

@@ -122,7 +122,7 @@ export const ShoppingCardPage = () => {
           >
             оформить
           </Button>
-          <PaymentForm />
+          <PaymentForm totalPrice={sumPrice + deliveryPrice} />
         </>
       ) : (
         <Typography margin="20px 0" variant="h5">

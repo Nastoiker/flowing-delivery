@@ -31,6 +31,10 @@ export class Order extends Model {
   deliveryPrice: number;
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isPickUp: boolean;
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  completed: boolean;
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  isPaid: boolean;
   @ForeignKey(() => User)
   userId: number;
   @Column({ type: DataType.DOUBLE.UNSIGNED })

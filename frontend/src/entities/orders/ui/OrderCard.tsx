@@ -2,6 +2,7 @@ import { getStatusLabel } from "@/pages/orders/OrderById.edit";
 import { IOrder } from "@/shared/interfaces/order.interface";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Divider,
@@ -27,6 +28,7 @@ const StyledCard = styled(Card)`
 
 const StyledListItem = styled(ListItem)`
   display: flex;
+  padding: 0 !important;
   justify-content: space-between;
 `;
 
@@ -38,11 +40,7 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
   };
   return (
     <StyledCard>
-      <CardContent
-      // onClick={() => {
-      //   handleRedirect(`/orders/${order.id}`);
-      // }}
-      >
+      <CardContent>
         <Box
           sx={{
             marginBottom: "10px",
@@ -61,12 +59,10 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
           </Typography>
         </Box>
 
-        <Typography variant="body1">
-          Статус: {getStatusLabel(order.status)}
-        </Typography>
         <Select
           placeholder="Статус заказа"
           value={order.status}
+          sx={{ width: "100%" }}
           onChange={(e) => {
             updateOrder({ status: e.target.value.toString() });
           }}
@@ -77,6 +73,9 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
             </MenuItem>
           ))}
         </Select>
+        <Typography variant="body1">
+          Статус: {getStatusLabel(order.status)}
+        </Typography>
         <Typography variant="body1">
           Стоимость доставки: {order.deliveryPrice}₽
         </Typography>
@@ -97,9 +96,7 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
         {order.products && (
           <>
             <Divider />
-            <Typography variant="h6" gutterBottom>
-              Продукты
-            </Typography>
+            <Typography variant="h6">Продукты</Typography>
             <List>
               {order.products.map((product, index) => (
                 <StyledListItem key={index}>
@@ -113,6 +110,16 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
             </List>
           </>
         )}
+
+        <Button
+          onClick={() => {
+            handleRedirect(`/orders/${order.id}`);
+          }}
+          sx={{ width: "100%" }}
+          variant="contained"
+        >
+          Перейти
+        </Button>
       </CardContent>
     </StyledCard>
   );

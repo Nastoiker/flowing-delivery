@@ -2,6 +2,7 @@ import {
   CategoryCreate,
   CategoryFoodsInfo,
   CategoryGetAll,
+  CategoryUpdate,
 } from '@delivery-service/contracts';
 import { MFile } from '@delivery-service/interfaces';
 import {
@@ -11,6 +12,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UnauthorizedException,
   UploadedFile,
   UseInterceptors,
@@ -34,6 +36,21 @@ export class CategoryController {
         CategoryGetAll.Request,
         CategoryGetAll.Response
       >(CategoryGetAll.topic, {}, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @Put()
+  async update(@Body() categoryUpdate: any) {
+    try {
+      return await this.rmqService.send<
+        CategoryUpdate.Request,
+        CategoryUpdate.Response
+      >(CategoryUpdate.topic, categoryUpdate, {
+        headers: { requestId: 'adad' },
+      });
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

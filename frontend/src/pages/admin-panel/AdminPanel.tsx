@@ -42,6 +42,7 @@ export const AdminPanel = () => {
           <Tab label="Создание баннера" {...a11yProps(2)} />
           <Tab label="База пользователей" {...a11yProps(3)} />
           <Tab label="База еды" {...a11yProps(4)} />
+          <Tab label="Категории" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>

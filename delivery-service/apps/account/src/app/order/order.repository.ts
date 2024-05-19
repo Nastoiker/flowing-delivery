@@ -67,17 +67,6 @@ export class OrderRepository {
     if (isPickUp !== undefined) where.isPickUp = isPickUp;
     const allCount = await this.orderModel.count({
       where,
-      include: [
-        {
-          model: User,
-        },
-        {
-          model: Food,
-          through: {
-            attributes: ['quantity'],
-          },
-        },
-      ],
     });
     const data = await this.orderModel.findAll({
       order: [[field, direction]],

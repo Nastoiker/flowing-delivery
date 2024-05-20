@@ -28,10 +28,21 @@ export class UserQueries {
   }
   @RMQValidate()
   @RMQRoute(AccountGetAll.topic)
-  async users(_: AccountGetAll.Request): Promise<AccountGetAll.Response> {
-    const users = await this.userRepository.getAllUsers();
+  async users({
+    sort,
+    filter,
+    page,
+    pageSize,
+  }: AccountGetAll.Request): Promise<AccountGetAll.Response> {
+    const { users, allCount } = await this.userRepository.getAllUsers({
+      sort,
+      filter,
+      page,
+      pageSize,
+    });
     return {
       users,
+      allCount,
     };
   }
   @RMQValidate()

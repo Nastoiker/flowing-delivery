@@ -1,46 +1,83 @@
 import { useUpdateUserById, useUsers } from "@/entities/user/hooks/useUsers";
+import { SearchField } from "@/shared/search/SearchField";
+import { Box } from "@mui/material";
 import { Table } from "@radix-ui/themes";
+import React, { useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { UserActions } from "../../user/UserActions";
 
 export const TableUsers = () => {
-  const { data, isError } = useUsers();
+  const [filter, setFilter] = useState({});
+  const [sort, setSort] = useState({ field: "createdAt", direction: "desc" });
+  //@ts-ignore
+  const { data, isError } = useUsers({ filter, sort });
+  const [search, setSearch] = useState();
   const { updateUserFetch, isLoading } = useUpdateUserById();
+  const { ref, inView } = useInView();
+
   if (isError || !data) {
     return null;
   }
+
   const handleUpdateUser = (id: number, isBanned: boolean) => {
     updateUserFetch({ status: isBanned ? "new" : "banned", id });
   };
+  const handleChangeSort = (field, directon) => {
+    setSort((prev) => ({ ...prev, field, directon }));
+  };
+  const handleChangeFilter = (v) => {
+    setFilter((prev) => ({ ...prev, ...v }));
+  };
   return (
-    <Table.Root variant="surface">
-      <Table.Header>
-        <Table.Row>
-          {Object.keys(data.data.users[0]).map((k) => (
-            <Table.ColumnHeaderCell style={{ textAlign: "start" }}>
-              {k}
-            </Table.ColumnHeaderCell>
-          ))}
-        </Table.Row>
-      </Table.Header>
-
-      <Table.Body>
-        {data.data.users.map((u) => (
+    <Box>
+      <SearchField
+        value={search}
+        size="small"
+        onChange={(value) => {
+          setSearch(value);
+        }}
+      />
+      <Table.Root variant="surface">
+        <Table.Header>
           <Table.Row>
-            {Object.values(u).map((v) => (
-              <Table.Cell>{v}</Table.Cell>
+            {data?.pages.map((p, index) => (
+              <React.Fragment key={index}>
+                {Object.keys(p.data.users[0]).map((k) => (
+                  <Table.ColumnHeaderCell
+                    key={k}
+                    style={{ textAlign: "start" }}
+                  >
+                    {k}
+                  </Table.ColumnHeaderCell>
+                ))}
+              </React.Fragment>
             ))}
-            <UserActions
-              isLoading={isLoading}
-              banUser={() => {
-                if (window.confirm("Вы уверены?")) {
-                  handleUpdateUser(u.id || 0, u.status === "banned");
-                }
-              }}
-              isBanned={u.status === "banned"}
-            />
           </Table.Row>
-        ))}
-      </Table.Body>
-    </Table.Root>
+        </Table.Header>
+
+        <Table.Body>
+          {data?.pages.map((p, index) => (
+            <React.Fragment key={index}>
+              {p.data.users.map((u) => (
+                <Table.Row>
+                  {Object.values(u).map((v) => (
+                    <Table.Cell>{v}</Table.Cell>
+                  ))}
+                  <UserActions
+                    isLoading={isLoading}
+                    banUser={() => {
+                      if (window.confirm("Вы уверены?")) {
+                        handleUpdateUser(u.id || 0, u.status === "banned");
+                      }
+                    }}
+                    isBanned={u.status === "banned"}
+                  />
+                </Table.Row>
+              ))}
+            </React.Fragment>
+          ))}
+        </Table.Body>
+      </Table.Root>
+    </Box>
   );
 };

@@ -8,7 +8,7 @@ export type OrderListParams = PaginationType & {
 };
 
 export const ordersQueryKeys = {
-  allFoods: ["orders"] as const,
+  allOrders: ["orders"] as const,
   foodList: ({ page, pageSize, filter, sort }: OrderListParams) =>
-    [...ordersQueryKeys.allFoods, page, pageSize, filter, sort] as const,
+    [...ordersQueryKeys.allOrders, page, pageSize, filter, sort] as const,
 };

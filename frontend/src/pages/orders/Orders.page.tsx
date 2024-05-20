@@ -56,7 +56,7 @@ export const OrdersPage = () => {
             </GridEL>
           ));
         })}
-        <div style={{ height: "10px" }} ref={ref}></div>
+        <div style={{ height: "20px" }} ref={ref}></div>
       </Wrapper>
     </>
   );

@@ -13,16 +13,18 @@ export const fetchMe = async () => {};
 export const updateMe = async () => {};
 export async function getUsers({
   filter = {},
-  page = 1,
-  pageSize = 20,
-  sort = { field: 'createdAt', direction: 'desc'}
+  page = "1",
+  pageSize = "20",
+  sort = { field: "createdAt", direction: "desc" },
 }): Promise<{
-  data: { users: IUser[] };
+  data: { users: IUser[]; allCount: number };
 }> {
-  return api.get("user", { params: {
-    filter,
-    page,
-    sort,
-    pageSize,
-  }});
+  return api.get("user", {
+    params: {
+      filter,
+      page,
+      sort,
+      pageSize,
+    },
+  });
 }

@@ -10,5 +10,6 @@ export namespace AccountGetAll {
   }
   export class Response {
     users: IUser[] | undefined;
+    allCount: number | undefined;
   }
 }

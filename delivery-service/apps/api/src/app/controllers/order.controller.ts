@@ -133,6 +133,30 @@ export class OrderController {
     }
   }
   @UseGuards(JWTAuthGuard)
+  @Get()
+  async getPendingMyOrders(@UserId() userId, @Query() query) {
+    try {
+      const {
+        sort: { field = 'createdAt', direction = 'desc' },
+        filter = {},
+        page = 1,
+        pageSize = 20,
+      } = query || {};
+      return await this.rmqService.send<
+        OrderGetAll.Request,
+        OrderGetAll.Response
+      >(
+        OrderGetAll.topic,
+        { sort: { field, direction }, filter, page, pageSize },
+        { headers: { requestId: 'adad' } }
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @UseGuards(JWTAuthGuard)
   @Delete(':id')
   async removeOrder(@Param('id') id: number) {
     try {

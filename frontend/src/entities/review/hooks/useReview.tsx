@@ -6,23 +6,37 @@ import { getReviewsByFoodId, getReviewsByUserId } from "../review.api";
 import { useCreateComment } from "./useCrudComment";
 import { useCreateRating } from "./useCrudRating";
 
-export function useReviewByFoodId(foodId: number) {
-  return useQuery(["comments", foodId], () => getReviewsByFoodId(foodId), {
-    retry: false,
-    staleTime: 3000,
-    onError: (err: AxiosError<{ message?: string }>) => {
-      console.error(err);
-    },
-  });
+export function useReviewByFoodId({
+  foodId,
+  sort = { field: "createdAt", direction: "desc" },
+}) {
+  return useQuery(
+    ["comments", foodId],
+    () => getReviewsByFoodId({ foodId, sort }),
+    {
+      retry: false,
+      staleTime: 3000,
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
+    }
+  );
 }
-export function useReviewByUserId(userId: number) {
-  return useQuery(["comments-user", userId], () => getReviewsByUserId(userId), {
-    retry: false,
-    staleTime: 3000,
-    onError: (err: AxiosError<{ message?: string }>) => {
-      console.error(err);
-    },
-  });
+export function useReviewByUserId({
+  userId,
+  sort = { field: "createdAt", direction: "desc" },
+}) {
+  return useQuery(
+    ["comments-user", userId],
+    () => getReviewsByUserId({ userId, sort }),
+    {
+      retry: false,
+      staleTime: 3000,
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
+    }
+  );
 }
 
 export function useCreateReview() {

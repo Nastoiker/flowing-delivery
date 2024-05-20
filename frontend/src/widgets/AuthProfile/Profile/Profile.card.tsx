@@ -1,6 +1,7 @@
 import { useUpdateUsers } from "@/entities/user/hooks/useUsers";
 import { IUser } from "@/shared/interfaces/user.interface";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Tab, TextField, Typography } from "@mui/material";
+import Tabs from "@mui/material/Tabs";
 import { DataList } from "@radix-ui/themes";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,6 +29,10 @@ const Wrapper = styled.form`
 `;
 type UserEditKeys = "name" | "surname" | "username";
 export const UserDetails = ({ user }: { user: IUser }) => {
+  const [valueTab, setValueTab] = useState(0);
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setValueTab(newValue);
+  };
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const { updateMe } = useUpdateUsers();
   const { register, handleSubmit } = useForm({
@@ -51,43 +56,90 @@ export const UserDetails = ({ user }: { user: IUser }) => {
       <Typography margin={"50px 0"} variant="h4">
         Профиль
       </Typography>
-      {isEdit ? (
-        <Wrapper onSubmit={handleSubmit(submit)}>
-          {Object.entries(listParamsToEdit).map(([key, value]) => (
-            <TextField label={value} {...register(key as UserEditKeys)} />
-          ))}
-          <Button type="submit" variant="outlined">
-            Сохранить
-          </Button>
-        </Wrapper>
-      ) : (
-        <Box>
-          <DataList.Root
-            orientation={{ initial: "vertical", sm: "horizontal" }}
-          >
-            {Object.entries(listParams).map(([key, value]) => {
-              return (
-                <DataList.Item
-                  align="center"
-                  style={{ display: "flex" }}
-                  key={key}
-                >
-                  <DataList.Label minWidth="288px">{value}:</DataList.Label>
-                  <DataList.Value>
-                    <Typography color="primary">{user[key]}</Typography>
-                  </DataList.Value>
-                </DataList.Item>
-              );
-            })}
-          </DataList.Root>
-          <Button
-            variant="contained"
-            onClick={() => setIsEdit((prev) => !prev)}
-          >
-            Редактировать
-          </Button>
-        </Box>
-      )}
+      <Tabs
+        allowScrollButtonsMobile
+        variant="scrollable"
+        scrollButtons="auto"
+        value={valueTab}
+        onChange={handleChangeTab}
+        aria-label="basic tabs example"
+      >
+        <Tab label="Данные" {...a11yProps(0)} />
+        <Tab label="Ваши заказы" {...a11yProps(1)} />
+        <Tab label="Ваши отзывы" {...a11yProps(2)} />
+      </Tabs>
+      <CustomTabPanel value={valueTab} index={0}>
+        {isEdit ? (
+          <Wrapper onSubmit={handleSubmit(submit)}>
+            {Object.entries(listParamsToEdit).map(([key, value]) => (
+              <TextField label={value} {...register(key as UserEditKeys)} />
+            ))}
+            <Button type="submit" variant="outlined">
+              Сохранить
+            </Button>
+          </Wrapper>
+        ) : (
+          <Box>
+            <DataList.Root
+              orientation={{ initial: "vertical", sm: "horizontal" }}
+            >
+              {Object.entries(listParams).map(([key, value]) => {
+                return (
+                  <DataList.Item
+                    align="center"
+                    style={{ display: "flex" }}
+                    key={key}
+                  >
+                    <DataList.Label minWidth="288px">{value}:</DataList.Label>
+                    <DataList.Value>
+                      <Typography color="primary">{user[key]}</Typography>
+                    </DataList.Value>
+                  </DataList.Item>
+                );
+              })}
+            </DataList.Root>
+            <Button
+              variant="contained"
+              onClick={() => setIsEdit((prev) => !prev)}
+            >
+              Редактировать
+            </Button>
+          </Box>
+        )}
+      </CustomTabPanel>
+      <CustomTabPanel value={valueTab} index={1}></CustomTabPanel>
     </>
   );
 };
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}

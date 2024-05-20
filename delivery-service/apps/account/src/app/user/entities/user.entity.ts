@@ -8,6 +8,7 @@ export class UserEntity implements IUser {
   name: string;
   surname: string;
   username: string;
+  status: string;
   password: string;
   roles: UserRole;
   events: IDomainEvent[] = [];
@@ -15,6 +16,7 @@ export class UserEntity implements IUser {
     this.id = user.id;
     this.displayName = user.displayName;
     this.password = user.password;
+    this.status = user.status;
     this.email = user.email;
     this.roles = user.roles;
   }
@@ -39,6 +41,7 @@ export class UserEntity implements IUser {
       surname: this.surname,
       username: this.username,
       email: this.email,
+      status: this.status,
       roles: this.roles,
       displayName: this.displayName,
     };

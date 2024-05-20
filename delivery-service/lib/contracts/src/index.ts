@@ -52,4 +52,5 @@ export * from './lib/order/order.create';
 export * from './lib/order/order.delete';
 export * from './lib/order/order.get-all';
 export * from './lib/order/order.get-by-id';
+export * from './lib/order/order.get-pending-by-userId';
 export * from './lib/order/order.update';

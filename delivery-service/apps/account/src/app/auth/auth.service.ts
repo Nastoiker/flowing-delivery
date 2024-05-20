@@ -29,11 +29,13 @@ export class AuthService {
       email,
       roles: UserRole.buyer,
       password: '',
+      status: 'new',
       name,
       surname,
       username,
     }).setPassword(password);
     const newUser = await this.userRepository.createUser({
+      status: 'status',
       email,
       roles: userEntity.roles,
       password: userEntity.password,

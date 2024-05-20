@@ -84,7 +84,7 @@ export class OrderRepository {
     });
     return { data, allCount };
   }
-
+  async findMyPendingOrdersAllOrder() {}
   async deleteOrder(id: number) {
     const order = await this.orderModel.findOne({ where: { id } });
     await order.destroy();

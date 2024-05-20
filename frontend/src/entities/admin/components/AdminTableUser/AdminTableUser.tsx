@@ -8,8 +8,8 @@ export const TableUsers = () => {
   if (isError || !data) {
     return null;
   }
-  const handleUpdateUser = (id: number) => {
-    updateUserFetch({ status: "banned", id });
+  const handleUpdateUser = (id: number, isBanned: boolean) => {
+    updateUserFetch({ status: isBanned ? "new" : "banned", id });
   };
   return (
     <Table.Root variant="surface">
@@ -31,7 +31,11 @@ export const TableUsers = () => {
             ))}
             <UserActions
               isLoading={isLoading}
-              banUser={() => handleUpdateUser(u.id || 0)}
+              banUser={() => {
+                if (window.confirm("Вы уверены?")) {
+                  handleUpdateUser(u.id || 0, u.status === "banned");
+                }
+              }}
               isBanned={u.status === "banned"}
             />
           </Table.Row>

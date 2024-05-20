@@ -1,10 +1,11 @@
 import { useFoods } from "@/shared/food/hooks/useCrudFood";
 import { Table } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
+import { FoodActions } from "../../food/FoodActions";
 
 export const TableFoods = () => {
   //@ts-ignore TODO
-  const { data, isError, isLoading } = useFoods({});
+  const { data, isError } = useFoods({});
   if (isError || !data) {
     return null;
   }
@@ -28,6 +29,7 @@ export const TableFoods = () => {
                 <Link to={`/admin/menu/${u.id}`}>{JSON.stringify(v)} </Link>
               </Table.Cell>
             ))}
+            <FoodActions id={u.id} />
           </Table.Row>
         ))}
       </Table.Body>

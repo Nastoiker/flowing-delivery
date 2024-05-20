@@ -46,6 +46,25 @@ export class OrderQueries {
     };
   }
   @RMQValidate()
+  @RMQRoute(OrderGetAll.topic)
+  async getMyOrders({
+    sort,
+    filter,
+    page,
+    pageSize,
+  }: FoodGetAll.Request): Promise<OrderGetAll.Response> {
+    const { data, allCount } = await this.orderRepository.findAllOrders({
+      sort,
+      filter,
+      page,
+      pageSize,
+    });
+    return {
+      orders: data,
+      allCount,
+    };
+  }
+  @RMQValidate()
   @RMQRoute(OrderUpdate.topic)
   async updateOrder(
     @Body() dto: OrderUpdate.Request

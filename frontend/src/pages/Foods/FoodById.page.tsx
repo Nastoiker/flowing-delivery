@@ -78,7 +78,7 @@ export const FoodById = () => {
         justifyContent="space-between"
       >
         <ReviewForm
-          rating={4}
+          ratingUser={4}
           loading={isCreatingComment}
           onReviewSave={submitComment}
         />

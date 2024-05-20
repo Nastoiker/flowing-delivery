@@ -78,7 +78,7 @@ export function useCreateCategory() {
 }
 
 const handleDelete = async (id: number) => api.delete(`/category/${id}`);
-export function useDeleteFood() {
+export function useDeleteCategory() {
   const queryClient = useQueryClient();
   const {
     mutateAsync: deleteCategory,

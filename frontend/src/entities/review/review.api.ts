@@ -5,15 +5,23 @@ import {
   IReview,
 } from "@/shared/interfaces/review.interface";
 const rootPath = "review";
-export async function getReviewsByFoodId(foodId: number): Promise<{
+export async function getReviewsByFoodId({ foodId, sort }): Promise<{
   data: { reviews: IReview[] };
 }> {
-  return api.get(`${rootPath}/food/${foodId}`);
+  return api.get(`${rootPath}/food/${foodId}`, {
+    params: {
+      sort,
+    },
+  });
 }
-export async function getReviewsByUserId(userId: number): Promise<{
+export async function getReviewsByUserId({ userId, sort }): Promise<{
   data: { foods: IReview[] };
 }> {
-  return api.get(`${rootPath}/food/${userId}`);
+  return api.get(`${rootPath}/food/${userId}`, {
+    params: {
+      sort,
+    },
+  });
 }
 export const updateComment = (comment: Partial<IComment>) =>
   api.put(`${rootPath}/comment`, comment);

@@ -1,6 +1,5 @@
 import { getCategories } from "@/entities/category/api/category.api";
 import { api } from "@/helpers/api";
-import { ICategory } from "@/shared/interfaces/categories.interface";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -30,8 +29,30 @@ export function useFoodsByCategory(categoryId: number) {
   );
   return query;
 }
-export const updateCategory = (food: Partial<ICategory>) =>
-  api.put("categories", food);
+export const updateCategory = (category: FormData) =>
+  api.put("categories", category);
+export function useUpdateCategory() {
+  const queryClient = useQueryClient();
+  const {
+    mutate: updateCategoryFetch,
+    isLoading,
+    error,
+  } = useMutation(
+    "createCategory",
+    async (category: FormData) => updateCategory(category),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("categories");
+        toast.success("Успешное обновление");
+      },
+    }
+  );
+  return {
+    updateCategoryFetch,
+    isLoading,
+    error,
+  };
+}
 
 export function useCreateCategory() {
   const queryClient = useQueryClient();

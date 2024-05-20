@@ -4,6 +4,7 @@ export * from './lib/account/account.me';
 export * from './lib/account/account.register';
 export * from './lib/account/account.shopping-cart';
 export * from './lib/account/account.update';
+export * from './lib/account/account.update-user';
 export * from './lib/account/account.user-info';
 export * from './lib/account/account.user-orders';
 

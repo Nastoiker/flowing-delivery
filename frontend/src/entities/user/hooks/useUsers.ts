@@ -35,3 +35,24 @@ export function useUpdateUsers() {
     error,
   };
 }
+export function useUpdateUserById() {
+  const queryClient = useQueryClient();
+  const {
+    mutate: updateUserFetch,
+    isLoading,
+    error,
+  } = useMutation(
+    "updateUser",
+    ({ id, ...updateDto }: Partial<IUser>) => api.put(`/user/${id}`, updateDto),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("users");
+      },
+    }
+  );
+  return {
+    updateUserFetch,
+    isLoading,
+    error,
+  };
+}

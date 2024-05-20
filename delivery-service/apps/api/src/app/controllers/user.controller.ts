@@ -1,6 +1,7 @@
 import {
   AccountGetAll,
   AccountUpdate,
+  AccountUpdateUser,
   AccountUserInfo,
   AccountUserMe,
 } from '@delivery-service/contracts';
@@ -10,6 +11,7 @@ import {
   Controller,
   Get,
   Logger,
+  Param,
   Post,
   Put,
   Query,
@@ -44,7 +46,7 @@ export class UserController {
     }
   }
   @Put()
-  async update(@UserId() userId: number, @Body() updateDto: Partial<IUser>) {
+  async updateMe(@UserId() userId: number, @Body() updateDto: Partial<IUser>) {
     try {
       return await this.rmqService.send<
         AccountUpdate.Request,
@@ -52,6 +54,23 @@ export class UserController {
       >(
         AccountUpdate.topic,
         { user: { id: userId, ...updateDto } },
+        { headers: { requestId: 'adad' } }
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @Put(':id')
+  async updateUser(@Param('id') id: number, @Body() updateDto: Partial<IUser>) {
+    try {
+      return await this.rmqService.send<
+        AccountUpdateUser.Request,
+        AccountUpdateUser.Response
+      >(
+        AccountUpdateUser.topic,
+        { user: { id, ...updateDto } },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {

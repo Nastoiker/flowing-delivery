@@ -1,10 +1,12 @@
 import { Box, Button, Grid, Rating, TextField } from "@mui/material";
+import { isEmpty } from "lodash";
 import { Controller, useForm } from "react-hook-form";
 
 const REVIEW_MAX_LENGTH = 1000;
 type Props = {
   onReviewSave: (review: NewReviewType) => Promise<void>;
   loading: boolean;
+  ratingUser: number;
 };
 
 export type NewReviewType = {
@@ -13,7 +15,7 @@ export type NewReviewType = {
   rating: number;
 };
 
-export const ReviewForm = ({ onReviewSave, loading }: Props) => {
+export const ReviewForm = ({ onReviewSave, ratingUser, loading }: Props) => {
   const {
     control,
     handleSubmit,
@@ -61,7 +63,7 @@ export const ReviewForm = ({ onReviewSave, loading }: Props) => {
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
-              <Rating {...field} />
+              <Rating {...field} readOnly={!isEmpty(ratingUser)} />
               // <FormControlLabel`
               //   labelPlacement="top"
               //   control={}

@@ -1,17 +1,21 @@
 import {
-  updateCategory,
   useCategories,
+  useUpdateCategory,
 } from "@/shared/category/hooks/useCategories";
 import { Table } from "@radix-ui/themes";
 
 export const AdminCategories = () => {
   const { data, isError, isLoading } = useCategories();
-  const {} = updateCategory();
+  const { updateCategoryFetch } = useUpdateCategory();
+
+  if (isError || !data || isLoading) {
+    return null;
+  }
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
-          {Object.keys(data.data.foods[0]).map((k) => (
+          {Object.keys(data.data.categories[0]).map((k) => (
             <Table.ColumnHeaderCell style={{ textAlign: "start" }}>
               {k}
             </Table.ColumnHeaderCell>
@@ -20,10 +24,10 @@ export const AdminCategories = () => {
       </Table.Header>
 
       <Table.Body>
-        {data.data.foods.map((u) => (
+        {data.data.categories.map((u) => (
           <Table.Row>
             {Object.values(u).map((v) => (
-              <Table.Cell></Table.Cell>
+              <Table.Cell>{v}</Table.Cell>
             ))}
           </Table.Row>
         ))}

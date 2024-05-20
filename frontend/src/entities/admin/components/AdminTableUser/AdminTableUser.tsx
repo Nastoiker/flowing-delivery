@@ -1,11 +1,16 @@
-import { useUsers } from "@/entities/user/hooks/useUsers";
+import { useUpdateUserById, useUsers } from "@/entities/user/hooks/useUsers";
 import { Table } from "@radix-ui/themes";
+import { UserActions } from "../../user/UserActions";
 
 export const TableUsers = () => {
   const { data, isError } = useUsers();
+  const { updateUserFetch, isLoading } = useUpdateUserById();
   if (isError || !data) {
     return null;
   }
+  const handleUpdateUser = (id: number) => {
+    updateUserFetch({ status: "banned", id });
+  };
   return (
     <Table.Root variant="surface">
       <Table.Header>
@@ -24,6 +29,11 @@ export const TableUsers = () => {
             {Object.values(u).map((v) => (
               <Table.Cell>{v}</Table.Cell>
             ))}
+            <UserActions
+              isLoading={isLoading}
+              banUser={() => handleUpdateUser(u.id || 0)}
+              isBanned={u.status === "banned"}
+            />
           </Table.Row>
         ))}
       </Table.Body>

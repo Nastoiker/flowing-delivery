@@ -77,7 +77,11 @@ export const FoodById = () => {
         flexWrap="wrap"
         justifyContent="space-between"
       >
-        <ReviewForm loading={isCreatingComment} onReviewSave={submitComment} />
+        <ReviewForm
+          rating={4}
+          loading={isCreatingComment}
+          onReviewSave={submitComment}
+        />
         <RatingQuantity ratings={data?.data?.food?.ratings} />
       </Box>
       <ReviewWrapper reviews={reviews.data.reviews} />

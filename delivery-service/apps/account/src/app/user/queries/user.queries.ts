@@ -1,6 +1,7 @@
 import {
   AccountGetAll,
   AccountUpdate,
+  AccountUpdateUser,
   AccountUserInfo,
   AccountUserMe,
   AccountUserOrders,
@@ -48,6 +49,16 @@ export class UserQueries {
   async updateMe(
     @Body() { user }: AccountUpdate.Request
   ): Promise<AccountUpdate.Response> {
+    await this.userRepository.updateUser(user);
+    return {
+      message: 'Данные обновлены',
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(AccountUpdateUser.topic)
+  async updateUser(
+    @Body() { user }: AccountUpdateUser.Request
+  ): Promise<AccountUpdateUser.Response> {
     await this.userRepository.updateUser(user);
     return {
       message: 'Данные обновлены',

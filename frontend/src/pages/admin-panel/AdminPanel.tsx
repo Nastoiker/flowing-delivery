@@ -61,7 +61,7 @@ export const AdminPanel = () => {
       <CustomTabPanel value={value} index={4}>
         <TableFoods />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={4}>
+      <CustomTabPanel value={value} index={5}>
         <AdminCategories />
       </CustomTabPanel>
     </Box>

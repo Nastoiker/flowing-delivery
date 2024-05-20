@@ -17,7 +17,6 @@ export const CaloriesSlider = ({
 }: FilterByPriceProps): JSX.Element => {
   const [valueMax, setValueMax] = useState<number>(maxCalories);
   const [valueMin, setValueMin] = useState<number>(minCalories);
-  console.log(valueMax);
 
   const handleChange = ([low, high]: number[]) => {
     if (low > valueMax) return;

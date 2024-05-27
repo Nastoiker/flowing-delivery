@@ -49,6 +49,11 @@ export const FilterByPrice = ({
           label="Минимум"
           type={"number"}
           value={valueMin}
+          InputProps={{
+            inputProps: {
+              min: 0,
+            },
+          }}
         />
         <TextField
           label="Максимум"

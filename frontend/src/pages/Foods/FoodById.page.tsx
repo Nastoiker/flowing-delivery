@@ -2,16 +2,18 @@ import {
   useCreateReview,
   useReviewByFoodId,
 } from "@/entities/review/hooks/useReview";
+import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { ReviewForm } from "@/features/review/ReviewForm";
 import { ReviewWrapper } from "@/features/review/ReviewWrapper";
 import { HOST } from "@/helpers/api";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoodById } from "@/shared/food/hooks/useCrudFood";
 import { IReview } from "@/shared/interfaces/review.interface";
-import { Box, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
+import { PencilLine } from "@phosphor-icons/react";
 import DOMPurify from "dompurify";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { RatingQuantity } from "../Review/ui/RatingQuantity";
 const Wrapper = styled.div`
@@ -29,7 +31,8 @@ export const FoodById = () => {
   const { id } = useParams();
   const { data, isError, isLoading } = useFoodById(Number(id));
   const { createReview, isCreatingComment } = useCreateReview();
-
+  const currentUser = useCurrentUser();
+  const redirect = useNavigate();
   const [sort, setSort] = useState({ field: "createdAt", direction: "asc" });
   const handleChangeSort = (field, direction) => {
     setSort((prev) => ({ ...prev, field, direction }));
@@ -74,6 +77,15 @@ export const FoodById = () => {
           <Typography>{data?.data.food.price}₽</Typography>
           <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
           <Typography>Вес: {data?.data.food.grams}</Typography>
+          {currentUser.roles && currentUser.roles === 1 && (
+            <Button
+              variant="contained"
+              sx={{ width: "50px" }}
+              onClick={() => redirect(`/admin/menu/${data.data.food.id}`)}
+            >
+              <PencilLine />
+            </Button>
+          )}
         </Wrapper>
       </WrapperMain>
       <Box
@@ -90,7 +102,7 @@ export const FoodById = () => {
         />
         <RatingQuantity ratings={data?.data?.food?.ratings} />
       </Box>
-      
+
       <ReviewWrapper
         onChangeSort={handleChangeSort}
         reviews={reviews.data.reviews}

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 
 import { Op } from 'sequelize';
 import { Food } from '../food/models/food.model';
+import { Rating } from '../rating/rating.model';
 import { ShoppingCart } from '../shopping-cart/model/shopping-cart.model';
 import { User } from '../user/models/user.model';
 import { OrderFood } from './order-food.model';
@@ -90,11 +91,16 @@ export class OrderRepository {
     const orders = await this.orderModel.findAll({
       order: [[field, direction]],
       where: {
-        userId,
+        userId: userId,
       },
       include: [
         {
           model: Food,
+          include: [
+            {
+              model: Rating,
+            },
+          ],
         },
       ],
     });

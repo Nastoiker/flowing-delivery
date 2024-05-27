@@ -21,3 +21,15 @@ export async function getOrders({
 export async function createOrder(order: Partial<IOrder>): Promise<void> {
   return api.post("order", order);
 }
+
+export async function getMyOrders(): Promise<{
+  data: { orders: IOrder[]; allCount: number };
+}> {
+  return api.get("order/my");
+}
+
+export async function getMyPurchasedOrders(): Promise<{
+  data: { orders: IOrder[]; allCount: number };
+}> {
+  return api.get("order/my/purchased");
+}

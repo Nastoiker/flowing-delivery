@@ -8,7 +8,12 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { createOrder, getOrders } from "../api/orders.api";
+import {
+  createOrder,
+  getMyOrders,
+  getMyPurchasedOrders,
+  getOrders,
+} from "../api/orders.api";
 import { ordersQueryKeys } from "./ordersQueryKeys";
 // export function useOrders() {
 //   const query = useQuery(["orders"], async () => getOrders(), {
@@ -51,6 +56,26 @@ export function useOrders({ pageSize, filter, sort, page }: FoodListParams) {
       getNextPageParam,
     }
   );
+}
+export function useMyOrdersByUserId() {
+  return useQuery(["my-orders"], getMyOrders, {
+    keepPreviousData: true,
+    retry: false,
+    staleTime: 3000,
+    onError: (err: AxiosError<{ message?: string }>) => {
+      console.error(err);
+    },
+  });
+}
+export function useMyPurchasedOrdersByUserId() {
+  return useQuery(["my-purchased-orders"], getMyPurchasedOrders, {
+    keepPreviousData: true,
+    retry: false,
+    staleTime: 3000,
+    onError: (err: AxiosError<{ message?: string }>) => {
+      console.error(err);
+    },
+  });
 }
 export function useOrderById(orderId: number) {
   const query = useQuery(

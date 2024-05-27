@@ -3,6 +3,7 @@ import {
   OrderDelete,
   OrderFindById,
   OrderGetAll,
+  OrderGetPendingByUserId,
   OrderGetPurchsedByUserId,
   OrderUpdate,
 } from '@delivery-service/contracts';
@@ -96,19 +97,6 @@ export class OrderController {
   //       }
   //     }
   //   }
-  @Get(':id')
-  async getOrderByFoodId(@Param('id') id: number) {
-    try {
-      return await this.rmqService.send<
-        OrderFindById.Request,
-        OrderFindById.Response
-      >(OrderFindById.topic, { id }, { headers: { requestId: 'adad' } });
-    } catch (e) {
-      if (e instanceof Error) {
-        throw new UnauthorizedException(e.message);
-      }
-    }
-  }
 
   @UseGuards(JWTAuthGuard)
   @Get()
@@ -130,12 +118,13 @@ export class OrderController {
       );
     } catch (e) {
       if (e instanceof Error) {
+        console.log('getOrders');
         throw new UnauthorizedException(e.message);
       }
     }
   }
   @UseGuards(JWTAuthGuard)
-  @Get()
+  @Get('/my-purchased')
   async getPurchasedOrders(@UserId() userId, @Query() query) {
     try {
       const {
@@ -159,21 +148,17 @@ export class OrderController {
     }
   }
   @UseGuards(JWTAuthGuard)
-  @Get()
-  async getPendingMyOrders(@UserId() userId, @Query() query) {
+  @Get('/my')
+  async getPendingMyOrders(@UserId() userId: number) {
+    console.log('my');
+    console.log(userId);
     try {
-      const {
-        sort: { field = 'createdAt', direction = 'desc' },
-        filter = {},
-        page = 1,
-        pageSize = 20,
-      } = query || {};
       return await this.rmqService.send<
-        OrderGetAll.Request,
-        OrderGetAll.Response
+        OrderGetPendingByUserId.Request,
+        OrderGetPendingByUserId.Response
       >(
-        OrderGetAll.topic,
-        { sort: { field, direction }, filter, page, pageSize },
+        OrderGetPendingByUserId.topic,
+        { userId },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {
@@ -207,6 +192,20 @@ export class OrderController {
       });
     } catch (e) {
       if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @Get(':id')
+  async getOrderByFoodId(@Param('id') id: number) {
+    try {
+      return await this.rmqService.send<
+        OrderFindById.Request,
+        OrderFindById.Response
+      >(OrderFindById.topic, { id }, { headers: { requestId: 'adad' } });
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log('getOrderByFoodId');
         throw new UnauthorizedException(e.message);
       }
     }

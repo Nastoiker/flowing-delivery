@@ -164,26 +164,40 @@ export const OrderById = () => {
             margin: "20px 0",
           }}
         >
-          <Content>
-            <FormControl fullWidth>
-              <InputLabel id="status-label">Статус</InputLabel>
-              <Select
-                placeholder="Статус заказа"
-                labelId="status-label"
-                label="status"
-                value={order.data.order?.status}
-                sx={{ width: "100%" }}
-                onChange={(e) => {
-                  updateOrder({ status: e.target.value.toString() });
-                }}
-              >
-                {optionsStatuses.map((m, index) => (
-                  <MenuItem key={index} value={m.status}>
-                    {m.status}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              justifyContent: "space-between",
+            }}
+            padding={"0 40px"}
+          >
+            <Box>
+              <Header>
+                <Typography variant="h5">Действия</Typography>
+              </Header>
+              <FormControl fullWidth>
+                <InputLabel id="status-label">Статус</InputLabel>
+                <Select
+                  placeholder="Статус заказа"
+                  labelId="status-label"
+                  label="status"
+                  value={order.data.order?.status}
+                  sx={{ width: "100%" }}
+                  onChange={(e) => {
+                    updateOrder({ status: e.target.value.toString() });
+                  }}
+                >
+                  {optionsStatuses.map((m, index) => (
+                    <MenuItem key={index} value={m.status}>
+                      {m.status}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
             <Button
               variant="outlined"
               onClick={() => {
@@ -194,7 +208,7 @@ export const OrderById = () => {
             >
               Завершить
             </Button>
-          </Content>
+          </Box>
         </Paper>
       </Box>
 

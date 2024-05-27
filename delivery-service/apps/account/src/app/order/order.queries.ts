@@ -3,6 +3,7 @@ import {
   OrderCreate,
   OrderFindById,
   OrderGetAll,
+  OrderGetPendingByUserId,
   OrderGetPurchsedByUserId,
   OrderUpdate,
 } from '@delivery-service/contracts';
@@ -47,29 +48,24 @@ export class OrderQueries {
     };
   }
   @RMQValidate()
-  @RMQRoute(OrderGetAll.topic)
-  async getMyOrders({
-    sort,
-    filter,
-    page,
-    pageSize,
-  }: FoodGetAll.Request): Promise<OrderGetAll.Response> {
-    const { data, allCount } = await this.orderRepository.findAllOrders({
-      sort,
-      filter,
-      page,
-      pageSize,
+  @RMQRoute(OrderGetPendingByUserId.topic)
+  async getMyOrders(
+    @Body() { userId }: OrderGetPendingByUserId.Request
+  ): Promise<OrderGetAll.Response> {
+    const { orders } = await this.orderRepository.findMyPendingOrders({
+      userId,
+      sort: {},
     });
     return {
-      orders: data,
-      allCount,
+      orders,
+      allCount: orders.length,
     };
   }
   @RMQValidate()
   @RMQRoute(OrderGetPurchsedByUserId.topic)
-  async getMyPurchasedOrders({
-    userId,
-  }: OrderGetPurchsedByUserId.Request): Promise<OrderGetPurchsedByUserId.Response> {
+  async getMyPurchasedOrders(
+    @Body() { userId }: OrderGetPurchsedByUserId.Request
+  ): Promise<OrderGetPurchsedByUserId.Response> {
     // TODO SORT
     const sort = {};
     const { orders, allCount } =

@@ -160,6 +160,8 @@ export const FoodEditPage = () => {
           />
           <Button type="submit">Редактировать</Button>
           <Button
+            variant="contained"
+            sx={{ background: "red" }}
             onClick={() => {
               if (window.confirm("Вы уверены?")) {
                 deleteFood();

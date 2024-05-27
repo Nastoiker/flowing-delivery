@@ -30,9 +30,8 @@ export class ShoppingCartRepository {
       await checkExist.destroy();
       return;
     }
-    if (count !== checkExist.count) {
-      totalPrice = count * checkExist.product.price;
-    }
+    totalPrice = count * checkExist.product.price;
+
     const shoppingCart = await checkExist.update({
       count,
       totalPrice,

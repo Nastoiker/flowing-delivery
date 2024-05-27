@@ -70,7 +70,7 @@ export const ShoppintCartItem = ({
   shoppingCart: IShoppingCart;
 }) => {
   const { deleteShoppingCart } = useDeleteShoppingCart();
-  const { updateShoppingCart, isUpdating } = useUpdateShoppingCart();
+  const { updateShoppingCart, isLoading: isUpdating } = useUpdateShoppingCart();
   const handleIncrement = async () => {
     await updateShoppingCart({
       ...shoppingCart,

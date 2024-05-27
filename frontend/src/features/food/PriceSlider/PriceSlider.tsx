@@ -55,6 +55,7 @@ export const FilterByPrice = ({
           onChange={(e) => {
             setValueMax(Number(e.target.value));
           }}
+          type={"number"}
           value={valueMax}
         />
       </Box>

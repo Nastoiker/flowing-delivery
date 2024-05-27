@@ -3,6 +3,7 @@ import {
   OrderCreate,
   OrderFindById,
   OrderGetAll,
+  OrderGetPurchsedByUserId,
   OrderUpdate,
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
@@ -61,6 +62,23 @@ export class OrderQueries {
     });
     return {
       orders: data,
+      allCount,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(OrderGetPurchsedByUserId.topic)
+  async getMyPurchasedOrders({
+    userId,
+  }: OrderGetPurchsedByUserId.Request): Promise<OrderGetPurchsedByUserId.Response> {
+    // TODO SORT
+    const sort = {};
+    const { orders, allCount } =
+      await this.orderRepository.findMyPurchasedOrders({
+        userId,
+        sort,
+      });
+    return {
+      orders,
       allCount,
     };
   }

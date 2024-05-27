@@ -17,7 +17,7 @@ export async function getReviewsByFoodId({ foodId, sort }): Promise<{
 export async function getReviewsByUserId({ userId, sort }): Promise<{
   data: { foods: IReview[] };
 }> {
-  return api.get(`${rootPath}/food/${userId}`, {
+  return api.get(`${rootPath}/user/${userId}`, {
     params: {
       sort,
     },

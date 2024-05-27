@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { IUser } from '@delivery-service/interfaces';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { User } from '../models/user.model';
 
 @Injectable()
@@ -38,13 +39,35 @@ export class UserRepository {
   }
   async getAllUsers({ sort, filter, page, pageSize }) {
     const { field = 'createdAt', direction = 'desc' } = sort || {};
-    const { name, roles, phone, username, surname, status } = filter;
+    const { phone, surname, status, search } = filter;
     const offset = (page - 1) * pageSize;
-    const where = {} as any;
-
+    const where = {
+      ...(search && {
+        [Op.or]: [
+          {
+            name: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+          {
+            email: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+          {
+            surname: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+          {
+            username: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+        ],
+      }),
+    } as any;
     if (status !== undefined) where.status = status;
-    if (roles !== undefined) where.roles = status;
-
     const users = await this.userModel.findAll({
       order: [[field, direction]],
       where,

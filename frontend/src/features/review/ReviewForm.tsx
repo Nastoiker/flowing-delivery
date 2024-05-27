@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { Box, Button, Grid, Rating, TextField } from "@mui/material";
 import { isEmpty } from "lodash";
 import { Controller, useForm } from "react-hook-form";
@@ -29,6 +30,10 @@ export const ReviewForm = ({ onReviewSave, ratingUser, loading }: Props) => {
     // стоит тут тк до v7 так было по дефолту, возможно не нужно
     shouldUnregister: true,
   });
+  const currentUser = useCurrentUser();
+  if (!currentUser || !currentUser?.email?.length) {
+    return null;
+  }
   const submit = (review) => {
     onReviewSave(review);
     reset();

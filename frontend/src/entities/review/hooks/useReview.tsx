@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { getReviewsByFoodId, getReviewsByUserId } from "../review.api";
+import { commentsQueryKeys } from "./commentsQueryKeys";
 import { useCreateComment } from "./useCrudComment";
 import { useCreateRating } from "./useCrudRating";
 
@@ -11,7 +12,7 @@ export function useReviewByFoodId({
   sort = { field: "createdAt", direction: "desc" },
 }) {
   return useQuery(
-    ["comments", foodId],
+    commentsQueryKeys.commentsList({ sort, foodId }),
     () => getReviewsByFoodId({ foodId, sort }),
     {
       retry: false,

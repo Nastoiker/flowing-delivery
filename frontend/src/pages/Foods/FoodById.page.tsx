@@ -10,6 +10,7 @@ import { useFoodById } from "@/shared/food/hooks/useCrudFood";
 import { IReview } from "@/shared/interfaces/review.interface";
 import { Box, Skeleton, Typography } from "@mui/material";
 import DOMPurify from "dompurify";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { RatingQuantity } from "../Review/ui/RatingQuantity";
@@ -28,7 +29,12 @@ export const FoodById = () => {
   const { id } = useParams();
   const { data, isError, isLoading } = useFoodById(Number(id));
   const { createReview, isCreatingComment } = useCreateReview();
-  const { data: reviews } = useReviewByFoodId(Number(id));
+
+  const [sort, setSort] = useState({ field: "createdAt", direction: "asc" });
+  const handleChangeSort = (field, direction) => {
+    setSort((prev) => ({ ...prev, field, direction }));
+  };
+  const { data: reviews } = useReviewByFoodId({ foodId: Number(id), sort });
   if (isError || !data || !reviews) {
     return null;
   }
@@ -84,7 +90,11 @@ export const FoodById = () => {
         />
         <RatingQuantity ratings={data?.data?.food?.ratings} />
       </Box>
-      <ReviewWrapper reviews={reviews.data.reviews} />
+      
+      <ReviewWrapper
+        onChangeSort={handleChangeSort}
+        reviews={reviews.data.reviews}
+      />
     </div>
   );
 };

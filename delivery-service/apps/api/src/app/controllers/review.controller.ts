@@ -17,6 +17,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -36,15 +37,18 @@ export class ReviewController {
     private readonly filesService: FilesService
   ) {}
   @Get('food/:id')
-  async getReviewByFoodId(@Param('id') id: number) {
+  async getReviewByFoodId(@Param('id') id: number, @Query() query) {
     try {
+      const {
+        sort: { field = 'createdAt', direction = 'desc' },
+      } = query || {};
       const [comments, ratings] = await Promise.all([
         this.rmqService.send<
           ReviewsCommentsFindByFoodId.Request,
           ReviewsCommentsFindByFoodId.Response
         >(
           ReviewsCommentsFindByFoodId.topic,
-          { productId: id },
+          { productId: id, sort: { field, direction } },
           { headers: { requestId: 'adad' } }
         ),
         this.rmqService.send<

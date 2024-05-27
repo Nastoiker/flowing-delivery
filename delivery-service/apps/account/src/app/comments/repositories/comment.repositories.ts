@@ -24,9 +24,13 @@ export class CommentRepository {
     return this.commentModel.findAll({ where: { userId } });
   }
 
-  async findCommentByFoodId(productId: number) {
+  async findCommentByFoodId(productId: number, sort) {
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
+
     return this.commentModel.findAll({
+      order: [[field, direction]],
       where: { productId },
+
       include: [{ model: User }],
     });
   }

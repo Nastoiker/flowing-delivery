@@ -1,6 +1,7 @@
 import { IReview } from "@/shared/interfaces/review.interface";
 import { Box, Paper, Rating, Typography } from "@mui/material";
 import { Quotes } from "@phosphor-icons/react";
+import { format } from "date-fns";
 
 type Props = { review: IReview };
 
@@ -26,11 +27,15 @@ export const Review = ({ review }: Props) => {
             <Typography sx={{ fontWeight: "bold" }}>
               {review?.user?.name}
             </Typography>
+
             <Typography sx={{ fontWeight: "bold" }}>
               {review?.user?.surname}
             </Typography>
           </Box>
           <Quotes />
+          <Typography sx={{ fontWeight: "bold" }}>
+            {format(review?.createdAt || "", "dd/MM/yyyy HH:mm")}
+          </Typography>
         </Box>
 
         <Rating value={review.rating} readOnly />

@@ -102,7 +102,7 @@ export class UserController {
     try {
       const {
         sort: { field = 'createdAt', direction = 'desc' },
-        filter,
+        filter = {},
         page = 1,
         pageSize = 20,
       } = query;

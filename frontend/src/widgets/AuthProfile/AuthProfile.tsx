@@ -1,4 +1,5 @@
 import { removeItem } from "@/helpers/localStorage";
+import { USER_ROLES } from "@/pages/profile/Profile";
 import { IconButton } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -49,7 +50,12 @@ export default function BasicMenuAuth({ user }) {
             <MenuItem onClick={() => handleRedirect("profile")}>
               Профиль
             </MenuItem>
-            <MenuItem onClick={() => handleRedirect("admin")}>Админка</MenuItem>
+
+            {user?.roles === USER_ROLES.ADMIN && (
+              <MenuItem onClick={() => handleRedirect("admin")}>
+                Админка
+              </MenuItem>
+            )}
             <MenuItem onClick={() => handleRedirect("orders")}>Заказы</MenuItem>
             <MenuItem onClick={() => handleRedirect("shopping-cart")}>
               Корзина

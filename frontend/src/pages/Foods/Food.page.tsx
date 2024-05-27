@@ -19,8 +19,8 @@ export const FoodPage = () => {
   //@ts-ignore TODO
   const { data, isError } = useFoods({ filter, sort });
 
-  const handleChangeSort = (field, directon) => {
-    setSort((prev) => ({ ...prev, field, directon }));
+  const handleChangeSort = (field, direction) => {
+    setSort((prev) => ({ ...prev, field, direction }));
   };
   const handleChangeFilter = (v) => {
     setFilter((prev) => ({ ...prev, ...v }));

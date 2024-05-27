@@ -22,4 +22,5 @@ export interface IReview {
   foodId: number;
   userId: number;
   user?: IUser;
+  createdAt?: Date;
 }

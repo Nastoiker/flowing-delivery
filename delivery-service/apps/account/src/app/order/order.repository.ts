@@ -84,7 +84,39 @@ export class OrderRepository {
     });
     return { data, allCount };
   }
-  async findMyPendingOrdersAllOrder() {}
+  async findMyPendingOrders({ userId, sort }) {
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
+
+    const orders = await this.orderModel.findAll({
+      order: [[field, direction]],
+      where: {
+        userId,
+      },
+      include: [
+        {
+          model: Food,
+        },
+      ],
+    });
+    return { orders };
+  }
+  async findMyPurchasedOrders({ userId, sort }) {
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
+
+    const { rows: orders, count } = await this.orderModel.findAndCountAll({
+      order: [[field, direction]],
+      where: {
+        completed: true,
+        userId,
+      },
+      include: [
+        {
+          model: Food,
+        },
+      ],
+    });
+    return { orders, allCount: count };
+  }
   async deleteOrder(id: number) {
     const order = await this.orderModel.findOne({ where: { id } });
     await order.destroy();

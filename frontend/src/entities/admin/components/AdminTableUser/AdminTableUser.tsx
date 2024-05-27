@@ -15,15 +15,15 @@ export const TableUsers = () => {
   const { updateUserFetch, isLoading } = useUpdateUserById();
   const { ref, inView } = useInView();
 
-  if (isError || !data) {
+  if (isError || !data || !data.pages || !data.pages.length) {
     return null;
   }
 
   const handleUpdateUser = (id: number, isBanned: boolean) => {
     updateUserFetch({ status: isBanned ? "new" : "banned", id });
   };
-  const handleChangeSort = (field, directon) => {
-    setSort((prev) => ({ ...prev, field, directon }));
+  const handleChangeSort = (field, direction) => {
+    setSort((prev) => ({ ...prev, field, direction }));
   };
   const handleChangeFilter = (v) => {
     setFilter((prev) => ({ ...prev, ...v }));
@@ -31,46 +31,49 @@ export const TableUsers = () => {
   return (
     <Box>
       <SearchField
+        onEnter={() => {}}
         value={search}
         size="small"
         onChange={(value) => {
           setSearch(value);
+          handleChangeFilter({ search: value });
         }}
       />
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            {data?.pages.map((p, index) => (
+            {data?.pages?.map((p, index) => (
               <React.Fragment key={index}>
-                {Object.keys(p.data.users[0]).map((k) => (
-                  <Table.ColumnHeaderCell
-                    key={k}
-                    style={{ textAlign: "start" }}
-                  >
-                    {k}
-                  </Table.ColumnHeaderCell>
-                ))}
+                {p?.data?.users[0] &&
+                  Object.keys(p?.data?.users[0])?.map((k) => (
+                    <Table.ColumnHeaderCell
+                      key={k}
+                      style={{ textAlign: "start" }}
+                    >
+                      {k}
+                    </Table.ColumnHeaderCell>
+                  ))}
               </React.Fragment>
             ))}
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {data?.pages.map((p, index) => (
+          {data?.pages?.map((p, index) => (
             <React.Fragment key={index}>
-              {p.data.users.map((u) => (
+              {p?.data?.users?.map((u) => (
                 <Table.Row>
-                  {Object.values(u).map((v) => (
+                  {Object.values(u)?.map((v) => (
                     <Table.Cell>{v}</Table.Cell>
                   ))}
                   <UserActions
                     isLoading={isLoading}
                     banUser={() => {
                       if (window.confirm("Вы уверены?")) {
-                        handleUpdateUser(u.id || 0, u.status === "banned");
+                        handleUpdateUser(u?.id || 0, u?.status === "banned");
                       }
                     }}
-                    isBanned={u.status === "banned"}
+                    isBanned={u?.status === "banned"}
                   />
                 </Table.Row>
               ))}

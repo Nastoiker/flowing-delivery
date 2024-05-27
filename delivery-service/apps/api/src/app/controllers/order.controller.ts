@@ -3,6 +3,7 @@ import {
   OrderDelete,
   OrderFindById,
   OrderGetAll,
+  OrderGetPurchsedByUserId,
   OrderUpdate,
 } from '@delivery-service/contracts';
 import {
@@ -108,6 +109,7 @@ export class OrderController {
       }
     }
   }
+
   @UseGuards(JWTAuthGuard)
   @Get()
   async getOrders(@Query() query) {
@@ -124,6 +126,30 @@ export class OrderController {
       >(
         OrderGetAll.topic,
         { sort: { field, direction }, filter, page, pageSize },
+        { headers: { requestId: 'adad' } }
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @UseGuards(JWTAuthGuard)
+  @Get()
+  async getPurchasedOrders(@UserId() userId, @Query() query) {
+    try {
+      const {
+        sort: { field = 'createdAt', direction = 'desc' },
+        filter = {},
+        page = 1,
+        pageSize = 20,
+      } = query || {};
+      return await this.rmqService.send<
+        OrderGetPurchsedByUserId.Request,
+        OrderGetPurchsedByUserId.Response
+      >(
+        OrderGetPurchsedByUserId.topic,
+        { userId },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {

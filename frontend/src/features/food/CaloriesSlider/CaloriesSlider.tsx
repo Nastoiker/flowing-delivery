@@ -34,8 +34,8 @@ export const CaloriesSlider = ({
         allowCross={true}
         value={[valueMin, valueMax]}
         step={1}
-        min={minCalories}
-        max={maxCalories}
+        min={20}
+        max={2500}
         //@ts-ignore
         onChange={handleChange}
       />

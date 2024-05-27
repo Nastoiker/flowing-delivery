@@ -4,7 +4,7 @@ import {
   ShoppintCartItem,
 } from "@/pages/shopping-card/ShoppingCart.item";
 import { Button, Divider, Drawer, IconButton, Typography } from "@mui/material";
-import { Basket } from "@phosphor-icons/react";
+import { Basket, X } from "@phosphor-icons/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -27,12 +27,9 @@ const Wrapper = styled.div`
   overflow-y: auto;
   height: 100%;
 `;
-export const ShoppingCardSidebar = () => {
-  const [open, setOpen] = useState(false);
+export const ShoppingCardSidebar = ({open, toggleDrawer}) => {
   const { data: shoppingCarts, isError } = useShoppingCart();
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
+
   const redirect = useNavigate();
   const sumPrice = shoppingCarts?.data.shoppingCart.reduce(
     (accumulator, value) => accumulator + value.totalPrice,
@@ -45,6 +42,12 @@ export const ShoppingCardSidebar = () => {
       </IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
         <Container $isShowPmBlock={false}>
+          <IconButton
+            onClick={toggleDrawer(false)}
+            sx={{ position: "absolute", top: 8, right: 8 }}
+          >
+            <X />
+          </IconButton>
           {shoppingCarts && shoppingCarts?.data?.shoppingCart?.length > 0 ? (
             <>
               <AppBarScroll

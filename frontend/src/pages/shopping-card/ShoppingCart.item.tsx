@@ -70,7 +70,7 @@ export const ShoppintCartItem = ({
   shoppingCart: IShoppingCart;
 }) => {
   const { deleteShoppingCart } = useDeleteShoppingCart();
-  const { updateShoppingCart } = useUpdateShoppingCart();
+  const { updateShoppingCart, isUpdating } = useUpdateShoppingCart();
   const handleIncrement = async () => {
     await updateShoppingCart({
       ...shoppingCart,
@@ -103,12 +103,12 @@ export const ShoppintCartItem = ({
         </Box>
 
         <ActionsButttons>
-          <IconButton onClick={() => handleDicrement()}>
+          <IconButton disabled={isUpdating} onClick={() => handleDicrement()}>
             <Minus />
           </IconButton>
           <Number>{shoppingCart.count}</Number>
 
-          <IconButton onClick={() => handleIncrement()}>
+          <IconButton disabled={isUpdating} onClick={() => handleIncrement()}>
             <Plus />
           </IconButton>
 

@@ -47,7 +47,7 @@ export function FoodCard(props: { food: IFood }) {
   // }
   const { deleteShoppingCart, isLoading: isLoadingDelete } =
     useDeleteShoppingCart();
-  const { updateShoppingCart } = useUpdateShoppingCart();
+  const { updateShoppingCart, isLoading: isUpdating } = useUpdateShoppingCart();
 
   const navigate = useNavigate();
   const ratingProduct = useMemo(
@@ -134,12 +134,18 @@ export function FoodCard(props: { food: IFood }) {
           <>
             {isAdded && !isNaN(isAdded?.count) ? (
               <ActionsButttons>
-                <IconButton onClick={() => handleDicrement()}>
+                <IconButton
+                  disabled={isUpdating}
+                  onClick={() => handleDicrement()}
+                >
                   <Minus />
                 </IconButton>
                 <div>{isAdded?.count ?? 0}</div>
 
-                <IconButton onClick={() => handleIncrement()}>
+                <IconButton
+                  disabled={isUpdating}
+                  onClick={() => handleIncrement()}
+                >
                   <Plus />
                 </IconButton>
 

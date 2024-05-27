@@ -2,7 +2,7 @@ import { useAppThunkDispatch } from "@/shared/store/hooks";
 import { fetchCurrentUser } from "@/shared/store/slices/currentUser";
 import { ReactNode, useEffect } from "react";
 import toast from "react-hot-toast";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { getItem } from "./localStorage";
 
 export const RequireAuth = ({ children }: { children: ReactNode }) => {
@@ -10,6 +10,8 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
   // const user = useCurrentUser();
   const user = getItem("token");
   const dispatch = useAppThunkDispatch();
+  const location = useLocation();
+
   useEffect(() => {
     try {
       const fetch = async () => {
@@ -25,7 +27,7 @@ export const RequireAuth = ({ children }: { children: ReactNode }) => {
 
       console.log(e);
     }
-  }, [dispatch]);
+  }, [dispatch, location]);
   if (!user) {
     toast.success("Нужно авторизироваться");
     return <Navigate to="/auth/login" replace />;

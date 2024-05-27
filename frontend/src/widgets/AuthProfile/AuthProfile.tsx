@@ -23,6 +23,7 @@ export default function BasicMenuAuth({ user }) {
   };
   const handleLogout = async (url: string) => {
     removeItem("token");
+    window.location.reload();
     handleRedirect(url);
   };
   return (
@@ -66,7 +67,11 @@ export default function BasicMenuAuth({ user }) {
           </>
         ) : (
           <>
-            <MenuItem onClick={() => handleRedirect("/auth/login")}>
+            <MenuItem
+              onClick={() => {
+                handleRedirect("/auth/login");
+              }}
+            >
               Войти
             </MenuItem>
             <MenuItem onClick={() => handleRedirect("/auth/register")}>

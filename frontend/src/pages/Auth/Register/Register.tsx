@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -23,11 +22,7 @@ export type RegisterForm = {
 export function Register() {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
-  useEffect(() => {
-    if (currentUser?.name) {
-      navigate("/");
-    }
-  }, [currentUser, navigate]);
+
   const {
     register,
     control,

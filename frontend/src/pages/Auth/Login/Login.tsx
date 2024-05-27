@@ -1,5 +1,6 @@
+import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { Button, Input, InputLabel, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,7 +18,6 @@ export type LoginForm = {
 
 export function Login() {
   const navigate = useNavigate();
-  const jwt = localStorage.getItem("jwt");
   const {
     register,
     control,
@@ -25,11 +25,8 @@ export function Login() {
     formState: { errors },
     watch,
   } = useForm<{ email: string; password: string }>();
-  useEffect(() => {
-    if (jwt) {
-      navigate("/");
-    }
-  }, [jwt, navigate]);
+  const currentUser = useCurrentUser();
+
   const [error, setError] = useState<boolean>();
 
   const submit = async (data: { email: string; password: string }) => {
@@ -42,6 +39,7 @@ export function Login() {
       });
       localStorage.setItem("token", token.data.access_token);
       navigate("/menu");
+      window.location.reload();
       toast.success("Успешный вход");
     } catch (e: any) {
       toast.error(e?.response?.data?.message);

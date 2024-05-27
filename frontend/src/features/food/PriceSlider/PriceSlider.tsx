@@ -34,8 +34,8 @@ export const FilterByPrice = ({
         allowCross={true}
         value={[valueMin, valueMax]}
         step={1}
-        min={minPrice}
-        max={maxPrice}
+        min={0}
+        max={5000}
         //@ts-ignore
         onChange={handleChange}
       />

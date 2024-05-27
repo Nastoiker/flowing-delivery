@@ -91,14 +91,18 @@ const router = createBrowserRouter([
           {
             path: "orders/:id",
             element: (
-              // <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
-              <OrderById />
-              // </ProtectedRoute>
+              <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+                <OrderById />
+              </ProtectedRoute>
             ),
           },
           {
             path: "admin/menu/:id",
-            element: <FoodEditPage />,
+            element: (
+              <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+                <FoodEditPage />
+              </ProtectedRoute>
+            ),
           },
 
           {

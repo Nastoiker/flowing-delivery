@@ -22,7 +22,7 @@ export const Review = ({ review }: Props) => {
           marginBottom: 2,
         }}
       >
-        <Box display={"flex"} gap="20px">
+        <Box display={"flex"} flexWrap={"wrap"} gap="20px">
           <Box>
             <Typography sx={{ fontWeight: "bold" }}>
               {review?.user?.name}

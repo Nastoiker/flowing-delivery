@@ -23,6 +23,7 @@ const optionsStatuses = [
 ];
 const StyledCard = styled(Card)`
   margin: 20px;
+  width: 250px;
   border: 1px solid #ccc;
 `;
 

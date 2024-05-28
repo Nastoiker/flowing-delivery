@@ -5,7 +5,6 @@ import {
 } from "@/pages/shopping-card/ShoppingCart.item";
 import { Button, Divider, Drawer, IconButton, Typography } from "@mui/material";
 import { Basket, X } from "@phosphor-icons/react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useShoppingCart } from "../hooks/useCrudShoppingCard";
@@ -65,7 +64,7 @@ export const ShoppingCardSidebar = ({open, toggleDrawer}) => {
               <Button
                 variant="outlined"
                 onClick={() => {
-                  toggleDrawer(false);
+                  toggleDrawer(v => !v);
                   redirect("shopping-cart");
                 }}
               >

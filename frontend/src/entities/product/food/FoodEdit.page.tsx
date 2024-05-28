@@ -103,12 +103,15 @@ export const FoodEditPage = () => {
       />
       <FormProvider {...methods}>
         <Wrapper onSubmit={handleSubmit(submit)}>
+          <label htmlFor="title">Название</label>
           <Input
+            id="title"
             defaultValue={data?.data?.food?.title}
             placeholder="Название"
             required
             {...register("title")}
           />
+          <label htmlFor="count">Количество</label>
           <Input
             defaultValue={data?.data?.food?.count}
             placeholder="Количество"
@@ -119,30 +122,36 @@ export const FoodEditPage = () => {
           <RichTextFieldController
             defaultValue={data?.data?.food?.description}
           />
-
+          <label htmlFor="in_stock">В наличие</label>
           <Input
+            id="in_stock"
             defaultValue={data?.data?.food?.in_stock}
             placeholder="В наличие"
             type="number"
             required
             {...register("in_stock")}
           />
+          <label htmlFor="grams">Грамм</label>
           <Input
+            id={"grams"}
             defaultValue={data?.data?.food?.grams}
             placeholder="Грамов"
             type="number"
             required
             {...register("grams")}
           />
-
+          <label htmlFor="calories">Калориев</label>
           <Input
+            id="calories"
             defaultValue={data?.data?.food?.calories}
             placeholder="Энерг. ценность          "
             type="number"
             required
             {...register("calories")}
           />
+          <label htmlFor="price">Цена</label>
           <Input
+            id="price"
             defaultValue={data?.data?.food?.price}
             placeholder="Цена"
             type="number"
@@ -152,7 +161,7 @@ export const FoodEditPage = () => {
           <SelectCategoryController
             defaultValue={data?.data?.food?.categoryId}
           />
-
+          <label htmlFor="pictures">Фотка</label>
           <Input
             inputProps={{ accept: "image/jpeg" }}
             type="file"

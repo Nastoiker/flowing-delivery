@@ -31,5 +31,5 @@ export async function getMyOrders(): Promise<{
 export async function getMyPurchasedOrders(): Promise<{
   data: { orders: IOrder[]; allCount: number };
 }> {
-  return api.get("order/my/purchased");
+  return api.get("order/my-purchased");
 }

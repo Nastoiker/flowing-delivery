@@ -2,6 +2,7 @@ import {
   useCategories,
   useUpdateCategory,
 } from "@/shared/category/hooks/useCategories";
+import { Input } from "@mui/material";
 import { Table } from "@radix-ui/themes";
 
 export const AdminCategories = () => {
@@ -29,6 +30,7 @@ export const AdminCategories = () => {
             {Object.values(u).map((v) => (
               <Table.Cell>{v}</Table.Cell>
             ))}
+            <Input type="file" />
           </Table.Row>
         ))}
       </Table.Body>

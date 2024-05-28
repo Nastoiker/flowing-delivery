@@ -125,14 +125,14 @@ export class OrderController {
   }
   @UseGuards(JWTAuthGuard)
   @Get('/my-purchased')
-  async getPurchasedOrders(@UserId() userId, @Query() query) {
+  async getPurchasedOrders(@UserId() userId) {
     try {
-      const {
-        sort: { field = 'createdAt', direction = 'desc' },
-        filter = {},
-        page = 1,
-        pageSize = 20,
-      } = query || {};
+      // const {
+      //   sort: { field = 'createdAt', direction = 'desc' },
+      //   filter = {},
+      //   page = 1,
+      //   pageSize = 20,
+      // } = query || {};
       return await this.rmqService.send<
         OrderGetPurchsedByUserId.Request,
         OrderGetPurchsedByUserId.Response

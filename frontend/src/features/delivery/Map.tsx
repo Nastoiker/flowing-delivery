@@ -53,7 +53,7 @@ export const MapComponent = ({
         setKm(
           Number(
             calculateDistance(
-              { lng: coordinates[0], lat: coordinates[1] },
+              { lng: coordinates[1], lat: coordinates[0] },
               { lng: center[1], lat: center[0] }
             )
           )
@@ -61,8 +61,8 @@ export const MapComponent = ({
         onChangeKm(
           Number(
             calculateDistance(
-              { lng: coordinates[0], lat: coordinates[1] },
-              { lng: center[1], lat: center[0] }
+              { lng: center[1], lat: center[0] },
+              { lng: coordinates[1], lat: coordinates[0] }
             )
           )
         );

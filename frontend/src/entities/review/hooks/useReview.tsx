@@ -2,10 +2,26 @@ import { IReview } from "@/shared/interfaces/review.interface";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
-import { getReviewsByFoodId, getReviewsByUserId } from "../review.api";
+import {
+  getMyReviews,
+  getReviewsByFoodId,
+  getReviewsByUserId,
+} from "../review.api";
 import { commentsQueryKeys } from "./commentsQueryKeys";
 import { useCreateComment } from "./useCrudComment";
 import { useCreateRating } from "./useCrudRating";
+
+export function useMyReviews({
+  sort = { field: "createdAt", direction: "desc" },
+}) {
+  return useQuery(["my-reviews"], () => getMyReviews({ sort }), {
+    retry: false,
+    staleTime: 3000,
+    onError: (err: AxiosError<{ message?: string }>) => {
+      console.error(err);
+    },
+  });
+}
 
 export function useReviewByFoodId({
   foodId,

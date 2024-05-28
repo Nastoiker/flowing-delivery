@@ -1,6 +1,7 @@
 import { useUpdateUsers } from "@/entities/user/hooks/useUsers";
 import { ViewOrders } from "@/features/profile/components/ViewOrders/ViewOrders";
 import { ViewPurchasedOrders } from "@/features/profile/components/ViewPurchasedOrders/ViewPurchasedOrders";
+import { ViewReviews } from "@/features/profile/components/ViewReviews/ViewReviews";
 import { IUser } from "@/shared/interfaces/user.interface";
 import { Box, Button, Tab, TextField, Typography } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
@@ -112,6 +113,9 @@ export const UserDetails = ({ user }: { user: IUser }) => {
       </CustomTabPanel>
       <CustomTabPanel value={valueTab} index={1}>
         <ViewOrders />
+      </CustomTabPanel>
+      <CustomTabPanel value={valueTab} index={2}>
+        <ViewReviews />
       </CustomTabPanel>
       <CustomTabPanel value={valueTab} index={3}>
         <ViewPurchasedOrders />

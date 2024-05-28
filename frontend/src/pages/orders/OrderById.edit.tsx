@@ -202,7 +202,7 @@ export const OrderById = () => {
               variant="outlined"
               onClick={() => {
                 if (window.confirm("Вы уверены?")) {
-                  updateOrder({ isCompleted: true });
+                  updateOrder({ completed: true });
                 }
               }}
             >

@@ -58,13 +58,25 @@ export class FoodRepository {
   }
   async findAllFood({ sort, filter, page, pageSize }) {
     const { field = 'createdAt', direction = 'desc' } = sort || {};
-    const { minPrice, maxPrice, categoryId, calories, grams } = filter;
+    const {
+      minPrice,
+      maxPrice,
+      categoryId,
+      calories,
+      grams,
+      minCalories,
+      maxCalories,
+    } = filter;
     const offset = (page - 1) * pageSize;
     const where = {} as any;
     if (minPrice !== undefined)
       where.price = { ...where.price, [Op.gte]: minPrice };
     if (maxPrice !== undefined)
       where.price = { ...where.price, [Op.lte]: maxPrice };
+    if (minCalories !== undefined)
+      where.calories = { ...where.calories, [Op.gte]: minCalories };
+    if (maxCalories !== undefined)
+      where.calories = { ...where.calories, [Op.lte]: maxCalories };
     if (categoryId !== undefined) where.categoryId = categoryId;
     if (calories !== undefined) where.calories = calories;
     if (grams !== undefined) where.grams = grams;

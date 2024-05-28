@@ -73,6 +73,7 @@ export class ReviewController {
       }
     }
   }
+
   @Get('user/:id')
   async getReviewByUserId(@Param('id') id: number) {
     try {
@@ -89,7 +90,42 @@ export class ReviewController {
           ReviewsCommentsFindByUserId.Request,
           ReviewsCommentsFindByUserId.Response
         >(
+          ReviewsCommentsFindByUserId.topic,
+          { userId: id },
+          { headers: { requestId: 'adad' } }
+        ),
+      ]);
+      const data = comments.comments.map((c) => ({
+        ...ratings.ratings.find(
+          (r) => r.userId === c.userId && r.foodId === c.productId
+        ),
+        ...c,
+      }));
+      return { reviews: data };
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
+  @UseGuards(JWTAuthGuard)
+  @Get('my-reviews')
+  async getMyReviews(@UserId() id: number) {
+    try {
+      const [ratings, comments] = await Promise.all([
+        this.rmqService.send<
+          ReviewsRatingFindByUserId.Request,
+          ReviewsRatingFindByUserId.Response
+        >(
           ReviewsRatingFindByUserId.topic,
+          { userId: id },
+          { headers: { requestId: 'adad' } }
+        ),
+        this.rmqService.send<
+          ReviewsCommentsFindByUserId.Request,
+          ReviewsCommentsFindByUserId.Response
+        >(
+          ReviewsCommentsFindByUserId.topic,
           { userId: id },
           { headers: { requestId: 'adad' } }
         ),

@@ -1,5 +1,5 @@
 import { useMyPurchasedOrdersByUserId } from "@/entities/orders/hooks/useCrudOrders";
-import { FoodCard } from "@/entities/product/food/Card/Food.card";
+import { UserOrderCard } from "@/features/orders/UserOrder";
 import styled from "styled-components";
 const Wrapper = styled.div`
   display: grid;
@@ -18,9 +18,7 @@ export const ViewPurchasedOrders = () => {
     <Wrapper>
       {data?.data?.orders?.map((f) => (
         <GridEL key={f.id}>
-          {f.products?.map((v) => (
-            <FoodCard food={v} />
-          ))}
+          <UserOrderCard order={f} />
         </GridEL>
       ))}
     </Wrapper>

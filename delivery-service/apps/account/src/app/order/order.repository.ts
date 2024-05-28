@@ -55,7 +55,7 @@ export class OrderRepository {
     const { field = 'createdAt', direction = 'desc' } = sort || {};
     const { minPrice, maxPrice, userId, isPickUp, status } = filter;
     const offset = (page - 1) * pageSize;
-    const where = {} as any;
+    const where = { completed: false } as any;
 
     if (minPrice !== undefined)
       where.totalPrice = { ...where.totalPrice, [Op.gte]: minPrice };
@@ -92,6 +92,7 @@ export class OrderRepository {
       order: [[field, direction]],
       where: {
         userId: userId,
+        completed: false,
       },
       include: [
         {

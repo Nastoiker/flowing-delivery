@@ -14,6 +14,11 @@ export async function getReviewsByFoodId({ foodId, sort }): Promise<{
     },
   });
 }
+export async function getMyReviews({ sort }): Promise<{
+  data: { reviews: IReview[] };
+}> {
+  return api.get(`${rootPath}/my-reviews`);
+}
 export async function getReviewsByUserId({ userId, sort }): Promise<{
   data: { foods: IReview[] };
 }> {

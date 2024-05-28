@@ -8,6 +8,7 @@ export interface IOrder {
   deliveryPrice: number;
   priceFood: number;
   totalPrice: number;
+  completed: boolean;
   userId: number;
   products?: IFood[];
   user?: IUser;

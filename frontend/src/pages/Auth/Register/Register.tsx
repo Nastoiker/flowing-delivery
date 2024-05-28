@@ -61,7 +61,9 @@ export function Register() {
 
   return (
     <div className={styles["login"]}>
-      Регистрация
+       <Typography margin={"50px 0"} variant="h4">
+       Регистрация
+      </Typography>
       <form className={styles["form"]} onSubmit={handleSubmit(submit)}>
         <div className={styles["field"]}>
           <label htmlFor="email">Ваш email</label>

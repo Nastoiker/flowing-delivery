@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Food } from '../food/models/food.model';
 import { Rating } from './rating.model';
 
 @Injectable()
@@ -19,7 +20,10 @@ export class RatingRepository {
   }
 
   async findRatingsByUserId(userId: number) {
-    return this.ratingModel.findAll({ where: { userId } });
+    return this.ratingModel.findAll({
+      where: { userId },
+      include: [{ model: Food }],
+    });
   }
 
   async findRatingByFoodId(foodId: number) {

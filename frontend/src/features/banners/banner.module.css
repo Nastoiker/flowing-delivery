@@ -1,0 +1,8 @@
+.banner {
+  @media screen and (min-width: 1024px) {
+    border-radius: 40px;
+    padding-right: 20px;
+    max-height: 500px;
+  }
+  max-height: 250px;
+}

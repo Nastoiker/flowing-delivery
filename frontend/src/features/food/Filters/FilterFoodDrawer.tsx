@@ -108,13 +108,14 @@ export const FilterFoodDrawer = ({
             }}
           >
             <AccordionSummary
+              sx={{ padding: 0 }}
               expandIcon={<CaretDown />}
               aria-controls="panel1-content"
               id="panel1-header"
             >
               <Typography>Сортировать по</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ margin: "0 12px" }}>
+            <AccordionDetails sx={{ margin: "0 0" }}>
               <FormGroup>
                 <FormControlLabel
                   sx={{

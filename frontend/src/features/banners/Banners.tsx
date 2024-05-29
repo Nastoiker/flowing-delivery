@@ -5,18 +5,12 @@ import { Skeleton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import styled from "styled-components";
-
+import styles from "./banner.module.css";
 const Wrapper = styled.div`
-  margin: 100px 0;
+  margin: 50px 0;
+  max-height: 500px;
 `;
-const Banner = styled.div`
-  height: 200px;
-  padding: 20px;
-  font-weight: 500;
-  color: white;
-  border-radius: 25px;
-  margin: "0 30px";
-`;
+
 export const Banners = () => {
   const { data } = useBanners();
   const navigate = useNavigate();
@@ -24,59 +18,39 @@ export const Banners = () => {
     return null;
   }
   const settings = {
+    dots: true,
     infinite: true,
     speed: 500,
+    // centerMode: false,
     slidesToShow: 1,
     slidesToScroll: 1,
-    style: { marginRight: "20px" },
+    variableWidth: true,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+          arrows: false,
+          variableWidth: false,
         },
       },
     ],
   };
   return (
     <Wrapper>
-      <style>
-        {`
-         .slick-slide {
-            padding: 0 8px;
-            box-sizing: border-box;
-     }
-        `}
-      </style>
       <Slider {...settings}>
-        {data?.data.banner.map(({ picture, alt, link }) => (
-          <AppImage
-            onClick={() => navigate(link)}
-            fallback={<Skeleton variant="rectangular" height={140} />}
-            errorFallback={<Skeleton variant="rectangular" height={140} />}
-            src={`${HOST + picture}`}
-            alt={alt}
-            height="200px"
-            width="100%"
-          />
+        {data?.data.banner.map(({ picture, alt, link }, index) => (
+          <div key={index}>
+            <AppImage
+              className={styles["banner"]}
+              onClick={() => navigate(link)}
+              fallback={<Skeleton variant="rectangular" height={400} />}
+              errorFallback={<Skeleton variant="rectangular" height={400} />}
+              src={`${HOST + picture}`}
+              alt={alt}
+              height="400px"
+              width="100%"
+            />
+          </div>
         ))}
       </Slider>
     </Wrapper>

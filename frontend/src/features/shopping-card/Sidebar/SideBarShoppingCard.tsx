@@ -26,7 +26,7 @@ const Wrapper = styled.div`
   overflow-y: auto;
   height: 100%;
 `;
-export const ShoppingCardSidebar = ({open, toggleDrawer}) => {
+export const ShoppingCardSidebar = ({ open, toggleDrawer }) => {
   const { data: shoppingCarts, isError } = useShoppingCart();
 
   const redirect = useNavigate();
@@ -34,6 +34,10 @@ export const ShoppingCardSidebar = ({open, toggleDrawer}) => {
     (accumulator, value) => accumulator + value.totalPrice,
     0
   );
+  const handleRedirectToShoppingCard = () => {
+    toggleDrawer(false);
+    redirect("shopping-cart");
+  };
   return (
     <>
       <IconButton onClick={toggleDrawer(true)}>
@@ -61,13 +65,7 @@ export const ShoppingCardSidebar = ({open, toggleDrawer}) => {
 
               <Divider />
               <Price>Тотал: {sumPrice}₽</Price>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  toggleDrawer(v => !v);
-                  redirect("shopping-cart");
-                }}
-              >
+              <Button variant="outlined" onClick={handleRedirectToShoppingCard}>
                 Перейти в корзину
               </Button>
             </>

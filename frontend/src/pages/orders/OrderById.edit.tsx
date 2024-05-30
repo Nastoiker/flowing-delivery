@@ -24,6 +24,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 const Wrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   gap: 10px;
 `;

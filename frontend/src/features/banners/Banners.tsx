@@ -27,7 +27,7 @@ export const Banners = () => {
     variableWidth: true,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 748,
         settings: {
           arrows: false,
           variableWidth: false,

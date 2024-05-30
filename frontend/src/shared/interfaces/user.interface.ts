@@ -1,3 +1,4 @@
+import { USER_ROLES } from "@/pages/profile/Profile";
 import { IShoppingCart } from "./shopping-cart.interface";
 
 export interface IUser {
@@ -5,7 +6,7 @@ export interface IUser {
   displayName?: string;
   email: string;
   password: string;
-  roles: UserRole;
+  roles: USER_ROLES;
   status: string | null;
   name: string;
   surname: string;

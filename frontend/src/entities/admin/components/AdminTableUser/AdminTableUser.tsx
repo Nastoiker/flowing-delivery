@@ -1,5 +1,6 @@
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { useUpdateUserById, useUsers } from "@/entities/user/hooks/useUsers";
+import { USER_ROLES } from "@/pages/profile/Profile";
 import { SearchField } from "@/shared/search/SearchField";
 import { Box } from "@mui/material";
 import { Table } from "@radix-ui/themes";
@@ -63,7 +64,7 @@ export const TableUsers = () => {
         <Table.Body>
           {data?.pages?.map((p, index) => (
             <React.Fragment key={index}>
-              {p?.data?.users?.filter( f => f.id !== currentUser.id ).map((u) => (
+              {p?.data?.users?.filter( f => f.id !== currentUser.id && f.roles !== USER_ROLES.ADMIN).map((u) => (
                 <Table.Row>
                   {Object.values(u)?.map((v) => (
                     <Table.Cell>{v}</Table.Cell>

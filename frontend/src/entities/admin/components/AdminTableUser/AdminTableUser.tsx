@@ -1,3 +1,4 @@
+import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { useUpdateUserById, useUsers } from "@/entities/user/hooks/useUsers";
 import { SearchField } from "@/shared/search/SearchField";
 import { Box } from "@mui/material";
@@ -12,6 +13,7 @@ export const TableUsers = () => {
   //@ts-ignore
   const { data, isError } = useUsers({ filter, sort });
   const [search, setSearch] = useState();
+  const currentUser = useCurrentUser();
   const { updateUserFetch, isLoading } = useUpdateUserById();
   const { ref, inView } = useInView();
 
@@ -61,7 +63,7 @@ export const TableUsers = () => {
         <Table.Body>
           {data?.pages?.map((p, index) => (
             <React.Fragment key={index}>
-              {p?.data?.users?.map((u) => (
+              {p?.data?.users?.filter( f => f.id !== currentUser.id ).map((u) => (
                 <Table.Row>
                   {Object.values(u)?.map((v) => (
                     <Table.Cell>{v}</Table.Cell>

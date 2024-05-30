@@ -27,7 +27,7 @@ export const CategoriesFoodsById = () => {
             </GridEL>
           ))
         ) : (
-          <Typography margin={"0 50px"}>Не найдено</Typography>
+          <Typography variant="h5" margin={"0 50px"}>Не найдено</Typography>
         )}
       </Wrapper>
     </div>

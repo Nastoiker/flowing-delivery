@@ -100,7 +100,7 @@ export const FoodEditPage = () => {
         src={`${HOST + data?.data?.food?.pictures}`}
         alt={data?.data?.food?.title}
         height="100%"
-        width="500px"
+        width="100%"
       />
       <FormProvider {...methods}>
         <Wrapper onSubmit={handleSubmit(submit)}>

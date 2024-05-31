@@ -2,6 +2,7 @@ import { getShoppingCarts } from "@/entities/shopping-cart/shoping-cart.api";
 import { api } from "@/helpers/api";
 import { IShoppingCart } from "@/shared/interfaces/shopping-cart.interface";
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export function useShoppingCart() {
@@ -24,6 +25,11 @@ export function useUpdateShoppingCart() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("shopping-carts");
+      },
+      onError: (err: AxiosError<{ message?: string }>) => {
+        toast.error(
+          err?.response?.data?.message || "ошибка обновление корзины"
+        );
       },
     }
   );

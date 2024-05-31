@@ -6,6 +6,7 @@ export interface IComment {
   title: string;
   description: string;
   productId: number;
+  status: string;
   userId: number;
 }
 export interface IRating {
@@ -17,6 +18,7 @@ export interface IRating {
 }
 export interface IReview {
   id: number;
+  status?: number;
   title: string;
   description: string;
   rating: number;

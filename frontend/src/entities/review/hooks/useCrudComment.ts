@@ -52,6 +52,7 @@ export function useUpdateComment() {
   } = useMutation("updateComment", updateComment, {
     onSuccess: () => {
       queryClient.invalidateQueries("comments");
+      queryClient.invalidateQueries("all-reviews");
     },
   });
   return {

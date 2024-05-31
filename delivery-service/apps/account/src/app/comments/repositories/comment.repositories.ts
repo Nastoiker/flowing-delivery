@@ -14,6 +14,7 @@ export class CommentRepository {
   ) {}
   async createComment(comment: any) {
     const commentCreated = await this.commentModel.create({
+      status: 0,
       ...comment,
     });
     if (!commentCreated) {
@@ -36,6 +37,15 @@ export class CommentRepository {
       where: { productId },
 
       include: [{ model: User }],
+    });
+  }
+  async getAllComments({ sort, filter, page, pageSize }) {
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
+    const where = {} as any;
+    return this.commentModel.findAndCountAll({
+      order: [[field, direction]],
+      where,
+      include: [{ model: User }, { model: Food }],
     });
   }
   async update(commentId: number, commentDto) {

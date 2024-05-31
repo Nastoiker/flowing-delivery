@@ -25,6 +25,14 @@ export class RatingRepository {
       include: [{ model: Food }],
     });
   }
+  async getAllRating({ sort, filter }) {
+    const { field = 'createdAt', direction = 'desc' } = sort || {};
+    const where = {} as any;
+    return await this.ratingModel.findAll({
+      order: [[field, direction]],
+      where,
+    });
+  }
 
   async findRatingByFoodId(foodId: number) {
     return this.ratingModel.findAll({ where: { foodId } });

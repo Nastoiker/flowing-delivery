@@ -1,16 +1,41 @@
+import { PaginationType } from "@/entities/user/usersQueryKets";
 import { IReview } from "@/shared/interfaces/review.interface";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import {
+  getAllReviews,
   getMyReviews,
   getReviewsByFoodId,
   getReviewsByUserId,
 } from "../review.api";
+import { reviewQueryKeys } from "../reviewQueryKeys";
 import { commentsQueryKeys } from "./commentsQueryKeys";
 import { useCreateComment } from "./useCrudComment";
 import { useCreateRating } from "./useCrudRating";
+export type OrderResult<T = any> = {
+  readonly reviews: T[];
+  readonly allCount: number;
+};
+export type ResType<T = any> = {
+  data: OrderResult<T>;
+};
+export type FoodListParams = PaginationType & {
+  filter: any;
+  sort: any;
+};
 
+type GetNextPageParam = <T = any>(
+  lastPage: ResType<T>,
+  pages: ResType<T>[]
+) => number | undefined;
+const getNextPageParam: GetNextPageParam = (lastPage, pages) => {
+  const pagesCount = pages.reduce(
+    (acc, page) => acc + page.data.reviews.length,
+    0
+  );
+  return lastPage?.data.allCount > pagesCount ? pages.length + 1 : undefined;
+};
 export function useMyReviews({
   sort = { field: "createdAt", direction: "desc" },
 }) {
@@ -56,6 +81,20 @@ export function useReviewByUserId({
   );
 }
 
+export function useAllReviews({
+  pageSize,
+  filter,
+  sort,
+  page,
+}: FoodListParams) {
+  return useInfiniteQuery(
+    reviewQueryKeys.reviewList({ page, pageSize, filter, sort }),
+    async () => getAllReviews({ page, pageSize, sort, filter }),
+    {
+      getNextPageParam,
+    }
+  );
+}
 export function useCreateReview() {
   const { createCommentFood, isLoading: isCreatingComment } =
     useCreateComment();

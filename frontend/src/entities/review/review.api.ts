@@ -40,3 +40,21 @@ export const createRating = (rating: Partial<IRating>) =>
 
 export const removeComment = (id: number) =>
   api.delete(`${rootPath}/comment/${id}`);
+
+export async function getAllReviews({
+  filter = {},
+  page = "1",
+  pageSize = "20",
+  sort = { field: "createdAt", direction: "desc" },
+}): Promise<{
+  data: { reviews: IReview[]; allCount: number };
+}> {
+  return api.get("review/all-reviews", {
+    params: {
+      filter,
+      page,
+      sort,
+      pageSize,
+    },
+  });
+}

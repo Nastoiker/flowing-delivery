@@ -7,7 +7,7 @@ import { FoodRepository } from './repositories/food.repositories';
 @Module({
   imports: [SequelizeModule.forFeature([Food])],
   providers: [FoodRepository],
-  exports: [FoodRepository],
+  exports: [FoodRepository, SequelizeModule.forFeature([Food])],
   controllers: [FoodQueries],
 })
 export class FoodModule {}

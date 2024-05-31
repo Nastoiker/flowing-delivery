@@ -38,6 +38,8 @@ export * from './lib/file/file.get';
 export * from './lib/file/file.update';
 export * from './lib/file/file.upload';
 
+export * from './lib/review/review.all-comments';
+export * from './lib/review/review.all-ratings';
 export * from './lib/review/review.create-rating';
 export * from './lib/review/review.find-rating-by-userId';
 export * from './lib/review/review.rating-remove';

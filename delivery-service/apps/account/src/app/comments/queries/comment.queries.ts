@@ -1,4 +1,5 @@
 import {
+  ReviewAllComments,
   ReviewCommentCreate,
   ReviewCommentUpdate,
   ReviewsCommentsFindByFoodId,
@@ -36,10 +37,11 @@ export class CommentQueries {
   async commentsByFoodId(
     @Body() { productId, sort }: ReviewsCommentsFindByFoodId.Request
   ): Promise<ReviewsCommentsFindByFoodId.Response> {
-    const comments = await this.commentRepository.findCommentByFoodId(
+    const data = await this.commentRepository.findCommentByFoodId(
       productId,
       sort
     );
+    const comments = data.filter((c) => c.status === 1);
     return {
       comments,
     };
@@ -52,6 +54,22 @@ export class CommentQueries {
     const comments = await this.commentRepository.findCommentsUser(userId);
     return {
       comments,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(ReviewAllComments.topic)
+  async getAllComments(
+    @Body() { sort, filter, pageSize, page }: ReviewAllComments.Request
+  ): Promise<ReviewAllComments.Response> {
+    const { rows, count } = await this.commentRepository.getAllComments({
+      sort,
+      filter,
+      pageSize,
+      page,
+    });
+    return {
+      comments: rows,
+      allCount: count,
     };
   }
 }

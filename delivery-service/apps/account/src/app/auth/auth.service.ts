@@ -55,6 +55,9 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new Error('Неверный пароль или логин');
     }
+    if (user.status === 'banned') {
+      throw new Error('К сожалению, вы забанены');
+    }
     return { id: user.id };
   }
   async login(id: number) {

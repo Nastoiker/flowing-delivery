@@ -1,5 +1,6 @@
 import { AdminCategories } from "@/entities/admin/components/AdminTableCategories/Categories";
 import { TableFoods } from "@/entities/admin/components/AdminTableFoods/AdminTableFoods";
+import { AdminTableReviews } from "@/entities/admin/components/AdminTableReviews/AdminTableReviews";
 import { TableUsers } from "@/entities/admin/components/AdminTableUser/AdminTableUser";
 import { CreateBanner } from "@/entities/admin/components/CreateBanner";
 import { CreateCategory } from "@/entities/admin/components/CreateCategory";
@@ -44,6 +45,7 @@ export const AdminPanel = () => {
           <Tab label="База пользователей" {...a11yProps(3)} />
           <Tab label="База еды" {...a11yProps(4)} />
           <Tab label="Категории" {...a11yProps(5)} />
+          <Tab label="Отзывы" {...a11yProps(6)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -63,6 +65,9 @@ export const AdminPanel = () => {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={5}>
         <AdminCategories />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={6}>
+        <AdminTableReviews />
       </CustomTabPanel>
     </Box>
   );

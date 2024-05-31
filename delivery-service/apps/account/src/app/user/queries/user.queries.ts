@@ -81,6 +81,9 @@ export class UserQueries {
     @Query() { id }: AccountUserMe.Request
   ): Promise<AccountUserMe.Response> {
     const user = await this.userRepository.me(id);
+    if (user.status === 'banned') {
+      throw new Error('К сожалению, вы забанены');
+    }
     return {
       profile: user,
     };

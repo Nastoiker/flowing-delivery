@@ -1,4 +1,5 @@
 import {
+  ReviewAllRatings,
   ReviewRatingCreate,
   ReviewRatingUpdate,
   ReviewsRatingFindByUserId,
@@ -51,6 +52,16 @@ export class RatingQueries {
     @Body() { userId }: ReviewsRatingFindByUserId.Request
   ): Promise<ReviewsRatingFindByUserId.Response> {
     const ratings = await this.ratingRepository.findRatingsByUserId(userId);
+    return {
+      ratings,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(ReviewAllRatings.topic)
+  async getAllRating(
+    @Body() { sort, filter }: ReviewAllRatings.Request
+  ): Promise<ReviewAllRatings.Response> {
+    const ratings = await this.ratingRepository.getAllRating({ sort, filter });
     return {
       ratings,
     };

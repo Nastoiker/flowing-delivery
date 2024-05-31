@@ -1,4 +1,6 @@
 import {
+  ReviewAllComments,
+  ReviewAllRatings,
   ReviewCommentCreate,
   ReviewCommentRemove,
   ReviewCommentUpdate,
@@ -36,6 +38,47 @@ export class ReviewController {
     private readonly rmqService: RMQService,
     private readonly filesService: FilesService
   ) {}
+  @UseGuards(JWTAuthGuard)
+  @Get('all-reviews')
+  async getAllReviews(@Query() query) {
+    const {
+      sort: { field = 'createdAt', direction = 'desc' },
+      filter = {},
+      page = 1,
+      pageSize = 20,
+    } = query || {};
+    try {
+      const [ratings, { comments, allCount }] = await Promise.all([
+        this.rmqService.send<
+          ReviewAllRatings.Request,
+          ReviewAllRatings.Response
+        >(
+          ReviewAllRatings.topic,
+          { sort: { field, direction }, filter },
+          { headers: { requestId: 'adad' } }
+        ),
+        this.rmqService.send<
+          ReviewAllComments.Request,
+          ReviewAllComments.Response
+        >(
+          ReviewAllComments.topic,
+          { sort: { field, direction }, pageSize, page, filter },
+          { headers: { requestId: 'adad' } }
+        ),
+      ]);
+      const data = comments.map((c) => ({
+        ...ratings.ratings.find(
+          (r) => r.userId === c.user.id && r.foodId === c.product.id
+        ),
+        ...c,
+      }));
+      return { reviews: data, allCount };
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new UnauthorizedException(e.message);
+      }
+    }
+  }
   @Get('food/:id')
   async getReviewByFoodId(@Param('id') id: number, @Query() query) {
     try {
@@ -108,6 +151,7 @@ export class ReviewController {
       }
     }
   }
+
   @UseGuards(JWTAuthGuard)
   @Get('my-reviews')
   async getMyReviews(@UserId() id: number) {

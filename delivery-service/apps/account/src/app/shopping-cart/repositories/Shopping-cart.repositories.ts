@@ -9,7 +9,9 @@ import { ShoppingCart } from '../model/shopping-cart.model';
 export class ShoppingCartRepository {
   constructor(
     @InjectModel(ShoppingCart)
-    private readonly shoppingCartModel: typeof ShoppingCart
+    private readonly shoppingCartModel: typeof ShoppingCart,
+    @InjectModel(Food)
+    private readonly foodModel: typeof Food
   ) {}
 
   async createShoppingCart(shoppingCart: any) {
@@ -26,10 +28,15 @@ export class ShoppingCartRepository {
     const checkExist = await this.shoppingCartModel.findByPk(id, {
       include: [{ model: Food }],
     });
+    const product = await this.foodModel.findByPk(checkExist.productId);
+    if (count > product.count) {
+      throw new Error('Нету такого количества продукта');
+    }
     if (count === 0) {
       await checkExist.destroy();
       return;
     }
+
     totalPrice = count * checkExist.product.price;
 
     const shoppingCart = await checkExist.update({

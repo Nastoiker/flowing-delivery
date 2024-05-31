@@ -15,7 +15,9 @@ export class OrderRepository {
     @InjectModel(Order)
     private readonly orderModel: typeof Order,
     @InjectModel(OrderFood)
-    private readonly orderFoodModel: typeof OrderFood
+    private readonly orderFoodModel: typeof OrderFood,
+    @InjectModel(Food)
+    private readonly foodModel: typeof Food
   ) {}
 
   async createOrder(order: any) {
@@ -29,11 +31,23 @@ export class OrderRepository {
   }
   async createFoodForOrder(shoppingCarts: ShoppingCart[], orderId: number) {
     for (const item of shoppingCarts) {
-      await this.orderFoodModel.create({
-        orderId,
-        foodId: item.productId,
-        quantity: item.count, // Передаем количество из корзины
-      });
+      const food = await this.foodModel.findByPk(item.productId);
+      if (food.in_stock < item.count || food.count < item.count) {
+        throw new Error(
+          'Извините, но у нас нет такого количество товара. Измените количестов'
+        );
+      }
+      await Promise.all([
+        food.update({
+          in_stock: food.in_stock - item.count,
+          count: food.count - item.count,
+        }),
+        this.orderFoodModel.create({
+          orderId,
+          foodId: item.productId,
+          quantity: item.count, // Передаем количество из корзины
+        }),
+      ]);
     }
   }
   async updateOrder({ id, ...rest }) {

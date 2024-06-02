@@ -1,8 +1,8 @@
-import { Review } from "@/entities/review/components/Review";
 import { useMyReviews } from "@/entities/review/hooks/useReview";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
+import { UserReview } from "./UserReview";
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -30,11 +30,15 @@ export const ViewReviews = () => {
     <Wrapper>
       {data?.data?.reviews?.map((f) => (
         <GridEL key={f.id}>
-          <Review review={f} />
+          <UserReview review={f} />
           <Box paddingLeft="15px">
-            <Typography>
-              {f.status ? REVIEWS_LABEL[f.status] : "Не проверено"}
-            </Typography>
+            {f.status ? (
+              <Typography sx={{ color: "green" }}>
+                {REVIEWS_LABEL[f.status]}
+              </Typography>
+            ) : (
+              <Typography> не проверено</Typography>
+            )}
           </Box>
         </GridEL>
       ))}

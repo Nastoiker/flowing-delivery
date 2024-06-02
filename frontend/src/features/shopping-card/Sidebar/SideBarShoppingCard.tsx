@@ -21,6 +21,20 @@ const Container = styled.div<{ $isShowPmBlock: boolean }>`
     width: 100%;
   }
 `;
+const StyledBasketDiv = styled.div`
+  background: white;
+  border-radius: 50px;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  color: #4c7c7d;
+  right: 2px;
+  font-size: 10px;
+`;
 const Wrapper = styled.div`
   width: 100%;
   overflow-y: auto;
@@ -40,8 +54,11 @@ export const ShoppingCardSidebar = ({ open, toggleDrawer }) => {
   };
   return (
     <>
-      <IconButton onClick={toggleDrawer(true)}>
-        <Basket />
+      <IconButton sx={{ position: "relative" }} onClick={toggleDrawer(true)}>
+        <Basket size={"30px"} />
+        <StyledBasketDiv>
+          {shoppingCarts?.data?.shoppingCart?.length}
+        </StyledBasketDiv>
       </IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
         <Container $isShowPmBlock={false}>

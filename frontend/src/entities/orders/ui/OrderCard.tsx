@@ -1,4 +1,6 @@
+import { HOST } from "@/helpers/api";
 import { getStatusLabel } from "@/pages/orders/OrderById.edit";
+import { AppImage } from "@/shared/components/image/AppImage";
 import { IOrder } from "@/shared/interfaces/order.interface";
 import {
   Box,
@@ -10,6 +12,7 @@ import {
   ListItem,
   MenuItem,
   Select,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -106,6 +109,26 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
                     {product["OrderFood"]["quantity"]} шт. - {product.price}₽ за
                     шт.
                   </Typography>
+                  <AppImage
+                    fallback={
+                      <Skeleton
+                        variant="rectangular"
+                        width={100}
+                        height={100}
+                      />
+                    }
+                    errorFallback={
+                      <Skeleton
+                        variant="rectangular"
+                        height={100}
+                        width={100}
+                      />
+                    }
+                    src={`${HOST + product.pictures}`}
+                    alt={product.title}
+                    height="100px"
+                    width="100px"
+                  />
                 </StyledListItem>
               ))}
             </List>

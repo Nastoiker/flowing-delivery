@@ -1,17 +1,18 @@
-import { Review } from "@/entities/review/components/Review";
 import { useUpdateComment } from "@/entities/review/hooks/useCrudComment";
 import { useAllReviews } from "@/entities/review/hooks/useReview";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import styled from "styled-components";
+import { UserReviewAdmin } from "../UserReviewAdminTable";
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
+  gap: 40px;
 `;
 const GridEL = styled.div`
   margin: 0 auto;
+  width: fit-content;
 `;
 const optionsStatuses = [
   { id: 1, status: 1, name: "Проверено" },
@@ -34,11 +35,11 @@ export const AdminTableReviews = () => {
     }
   }, [inView, fetchNextPage]);
   return (
-    <div>
+    <Wrapper>
       {data?.pages.map((p) => {
         return p?.data?.reviews?.map((o) => (
           <GridEL key={o.id}>
-            <Review review={o} />
+            <UserReviewAdmin review={o} />
             <FormControl fullWidth>
               <InputLabel id="review-label">Статус</InputLabel>
 
@@ -66,6 +67,6 @@ export const AdminTableReviews = () => {
         ));
       })}
       <div style={{ height: "20px" }} ref={ref}></div>
-    </div>
+    </Wrapper>
   );
 };

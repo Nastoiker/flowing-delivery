@@ -39,6 +39,10 @@ const ActionsButttons = styled.div`
   display: flex;
   gap: 40px;
   align-items: center;
+  background-color: white;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 20px;
 `;
 export const FoodById = () => {
   const { id } = useParams();
@@ -137,7 +141,9 @@ export const FoodById = () => {
             style={{ fontSize: "20px" }}
             dangerouslySetInnerHTML={{ __html: santizeDesc }}
           />
-          <Typography variant={"h5"} sx={{ fontWeight: "bold" }}>{data?.data.food.price}₽</Typography>
+          <Typography variant={"h5"} sx={{ fontWeight: "bold" }}>
+            {data?.data.food.price}₽
+          </Typography>
           <Typography>Энерг. ценность : {data?.data.food.calories}</Typography>
           <Typography>Вес: {data?.data.food.grams}г</Typography>
 

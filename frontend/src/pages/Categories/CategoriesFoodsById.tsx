@@ -1,6 +1,9 @@
 import { FoodCard } from "@/entities/product/food/Card/Food.card";
+import { FilterFoodDrawer } from "@/features/food/Filters/FilterFoodDrawer";
 import { useFoodsByCategory } from "@/shared/category/hooks/useCategories";
-import { Typography } from "@mui/material";
+import { useFoods } from "@/shared/food/hooks/useCrudFood";
+import { Box, Typography } from "@mui/material";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 const Wrapper = styled.div`
@@ -13,12 +16,60 @@ const GridEL = styled.div`
 `;
 export const CategoriesFoodsById = () => {
   const { id } = useParams();
-  const { data, isError, isLoading } = useFoodsByCategory(Number(id));
+  const [filter, setFilter] = useState({ categoryId: id });
+  const [sort, setSort] = useState({ field: "createdAt", direction: "desc" });
+  const { data: categoryFoods } = useFoodsByCategory(Number(id));
+  //@ts-ignore TODO
+  const { data, isError, isLoading } = useFoods({ filter, sort });
+  if (isError || !data) {
+    return null;
+  }
+  const handleChangeSort = (field, direction) => {
+    setSort((prev) => ({ ...prev, field, direction }));
+  };
+  const handleChangeFilter = (v) => {
+    setFilter((prev) => ({ ...prev, ...v }));
+  };
+  const filterValues = data?.data?.foods.reduce(
+    (acc, curr) => {
+      // if (!isEmpty(filter)) {
+      //   return acc;
+      // } NOT WORK
+      acc.minPrice = Math.min(acc.minPrice, curr.price);
+      acc.maxPrice = Math.max(acc.maxPrice, curr.price);
+      // Находим минимальное и максимальное количество калорий
+      acc.minCalories = Math.min(acc.minCalories, curr.calories);
+      acc.maxCalories = Math.max(acc.maxCalories, curr.calories);
+      return acc;
+    },
+    {
+      minCalories: 0,
+      maxCalories: 0,
+      minPrice: 0,
+      maxPrice: 0,
+    }
+  );
   return (
     <div>
-      <Typography margin={"50px"} variant="h4">
-        {data?.data.category.name}
-      </Typography>
+      <Box
+        margin={"50px"}
+        justifyContent={"space-between"}
+        display={"flex"}
+        alignItems={"center"}
+      >
+        <Typography variant="h4">
+          {categoryFoods?.data.category.name}
+        </Typography>
+        <FilterFoodDrawer
+          minCalories={filterValues.minCalories}
+          maxCalories={filterValues.maxCalories}
+          minPrice={filterValues.minPrice}
+          maxPrice={filterValues.maxPrice}
+          onChangeFilter={handleChangeFilter}
+          onChangeSort={handleChangeSort}
+        />
+      </Box>
+
       <Wrapper>
         {data?.data?.foods?.length > 0 ? (
           data?.data?.foods.map((f) => (
@@ -27,7 +78,9 @@ export const CategoriesFoodsById = () => {
             </GridEL>
           ))
         ) : (
-          <Typography variant="h5" margin={"0 50px"}>Не найдено</Typography>
+          <Typography variant="h5" margin={"0 50px"}>
+            Не найдено
+          </Typography>
         )}
       </Wrapper>
     </div>

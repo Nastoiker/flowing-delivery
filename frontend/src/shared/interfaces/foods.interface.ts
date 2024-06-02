@@ -1,3 +1,4 @@
+import { ICategory } from "./categories.interface";
 import { IComment, IRating } from "./review.interface";
 
 export interface IFood {
@@ -12,5 +13,6 @@ export interface IFood {
   description: string;
   pictures: string;
   ratings: IRating[];
+  category?: ICategory;
   commnets: IComment[];
 }

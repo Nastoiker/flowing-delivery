@@ -150,7 +150,6 @@ export const FilterOrderDrawer = ({
                   }
                   label="Дорогие"
                 />
-             
               </FormGroup>
             </AccordionDetails>
           </Accordion>
@@ -180,12 +179,7 @@ export const FilterOrderDrawer = ({
           <Button
             variant="outlined"
             onClick={() => {
-              setAvailability(true);
-              setSortByDate(false);
-              setCheap(false);
-              setExpensive(false);
-              setHighRating(false);
-              onChangeFilter("reset");
+              window.location.reload();
             }}
           >
             Сбросить фильтры

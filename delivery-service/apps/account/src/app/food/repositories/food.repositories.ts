@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { IFood } from '@delivery-service/interfaces';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { Category } from '../../category/model/category.model';
 import { Comment } from '../../comments/comment.model';
 import { Rating } from '../../rating/rating.model';
 import { User } from '../../user/models/user.model';
@@ -88,6 +89,9 @@ export class FoodRepository {
       include: [
         {
           model: Rating,
+        },
+        {
+          model: Category,
         },
         {
           model: Comment,

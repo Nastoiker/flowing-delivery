@@ -73,13 +73,21 @@ export const FilterFoodDrawer = ({
   const handleChangeCheap = (event) => {
     setCheap(event.target.checked);
     setSelectedSort("min-price");
-    onChangeSort("price", event.target.checked ? "desc" : "asc");
+    if (event.target.checked) {
+      onChangeSort("price", "asc");
+    } else {
+      onChangeSort("createdAt", "desc");
+    }
   };
 
   const handleChangeExpensive = (event) => {
     setExpensive(event.target.checked);
     setSelectedSort("max-price");
-    onChangeSort("price", event.target.checked ? "desc" : "asc");
+    if (event.target.checked) {
+      onChangeSort("price", "desc");
+    } else {
+      onChangeSort("createdAt", "desc");
+    }
   };
 
   const handleChangeHighRating = (event) => {
@@ -209,12 +217,7 @@ export const FilterFoodDrawer = ({
           <Button
             variant="outlined"
             onClick={() => {
-              setAvailability(true);
-              setSortByDate(false);
-              setCheap(false);
-              setExpensive(false);
-              setHighRating(false);
-              onChangeFilter("reset");
+              window.location.reload();
             }}
           >
             Сбросить фильтры

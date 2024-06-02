@@ -71,15 +71,22 @@ export const FilterOrderDrawer = ({
   const handleChangeCheap = (event) => {
     setCheap(event.target.checked);
     setSelectedSort("min-price");
-    onChangeSort("totalPrice", event.target.checked ? "desc" : "asc");
+    if (event.target.checked) {
+      onChangeSort("price", "asc");
+    } else {
+      onChangeSort("createdAt", "desc");
+    }
   };
 
   const handleChangeExpensive = (event) => {
     setExpensive(event.target.checked);
     setSelectedSort("max-price");
-    onChangeSort("totalPrice", event.target.checked ? "desc" : "asc");
+    if (event.target.checked) {
+      onChangeSort("price", "desc");
+    } else {
+      onChangeSort("createdAt", "desc");
+    }
   };
-
   return (
     <>
       <IconButton onClick={toggleDrawer(true)}>
@@ -194,12 +201,7 @@ export const FilterOrderDrawer = ({
           <Button
             variant="outlined"
             onClick={() => {
-              setAvailability(true);
-              setSortByDate(false);
-              setCheap(false);
-              setExpensive(false);
-              setHighRating(false);
-              onChangeFilter("reset");
+              window.location.reload();
             }}
           >
             Сбросить фильтры

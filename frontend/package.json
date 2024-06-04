@@ -25,6 +25,7 @@
     "@types/lodash": "^4.17.0",
     "@types/react-slick": "^0.23.13",
     "@vitejs/plugin-react": "^4.2.1",
+    "@yandex/smart-captcha": "2.6.0",
     "axios": "^1.6.7",
     "classnames": "^2.5.1",
     "consola": "^2.14.0",

@@ -1,8 +1,10 @@
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
+import { ReactSmartCaptcha } from "@/app/Captcha/ReactSmartCaptcha";
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { Button, Checkbox, Input, Typography } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../../helpers/api";
 import styles from "../Login/Login.module.css";
@@ -22,6 +24,7 @@ export type RegisterForm = {
 export function Register() {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
+  const [token, setToken] = useState("");
 
   const {
     register,
@@ -61,8 +64,8 @@ export function Register() {
 
   return (
     <div className={styles["login"]}>
-       <Typography margin={"50px 0"} variant="h4">
-       Регистрация
+      <Typography margin={"50px 0"} variant="h4">
+        Регистрация
       </Typography>
       <form className={styles["form"]} onSubmit={handleSubmit(submit)}>
         <div className={styles["field"]}>
@@ -100,7 +103,6 @@ export function Register() {
           <Input
             placeholder="Имя"
             error={Boolean(errors.name)}
-
             {...register("name", {
               required: { value: true, message: "Заполните имя" },
               pattern: {
@@ -130,7 +132,6 @@ export function Register() {
           <Input
             id="username"
             error={Boolean(errors.username)}
-
             {...register("username", {
               required: { value: true, message: "Заполните username" },
             })}
@@ -148,6 +149,9 @@ export function Register() {
             Условиями
           </Link>
         </Typography>
+        <div>
+          <ReactSmartCaptcha token={token} setToken={setToken} />
+        </div>
       </form>
       <div className={styles["links"]}>
         <div>Есть акканут?</div>

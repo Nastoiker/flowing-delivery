@@ -1,3 +1,4 @@
+import { ReactSmartCaptcha } from "@/app/Captcha/ReactSmartCaptcha";
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { Button, Input, InputLabel, Typography } from "@mui/material";
 import { useState } from "react";
@@ -25,6 +26,8 @@ export function Login() {
     formState: { errors },
     watch,
   } = useForm<{ email: string; password: string }>();
+  const [token, setToken] = useState("");
+
   const currentUser = useCurrentUser();
 
   const [error, setError] = useState<boolean>();
@@ -90,6 +93,9 @@ export function Login() {
         <Link to="/auth/register">
           <Typography color="primary">Зарегистрироваться</Typography>
         </Link>
+      </div>
+      <div>
+        <ReactSmartCaptcha token={token} setToken={setToken} />
       </div>
     </div>
   );

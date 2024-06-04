@@ -38,7 +38,7 @@ export function useUpdateCategory() {
     isLoading,
     error,
   } = useMutation(
-    "createCategory",
+    "updateCategory",
     async (category: FormData) => updateCategory(category),
     {
       onSuccess: () => {

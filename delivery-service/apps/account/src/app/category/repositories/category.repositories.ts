@@ -1,4 +1,3 @@
-import { ICategory } from '@delivery-service/interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Food } from '../../food/models/food.model';
@@ -22,7 +21,7 @@ export class CategoryRepository {
     return categoryCreated;
   }
 
-  async updateCategory({ id, ...rest }: ICategory) {
+  async updateCategory({ id, ...rest }: any) {
     const category = await this.categoryModel.update(
       {
         ...rest,

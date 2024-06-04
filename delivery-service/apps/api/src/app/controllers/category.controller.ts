@@ -43,14 +43,36 @@ export class CategoryController {
     }
   }
   @Put()
-  async update(@Body() categoryUpdate: any) {
+  @UseInterceptors(FileInterceptor('pictures'))
+  async update(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() categoryUpdate: any
+  ) {
     try {
+      const saveFile: MFile = new MFile(file);
+      if (!file.mimetype.includes('image')) {
+        throw new BadRequestException('Неверный формат файла');
+      }
+      const extension = file.originalname.split('.');
+      const img = await this.filesService.saveFile(
+        new MFile({
+          originalname:
+            file.originalname.split('.')[0] +
+            '.' +
+            extension[extension.length - 1],
+          buffer: Buffer.from(file.buffer),
+        })
+      );
       return await this.rmqService.send<
         CategoryUpdate.Request,
         CategoryUpdate.Response
-      >(CategoryUpdate.topic, categoryUpdate, {
-        headers: { requestId: 'adad' },
-      });
+      >(
+        CategoryUpdate.topic,
+        { pictures: img.url, ...categoryUpdate },
+        {
+          headers: { requestId: 'adad' },
+        }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

@@ -23,13 +23,9 @@ export class CategoryQueries {
   @RMQValidate()
   @RMQRoute(CategoryUpdate.topic)
   async categoryUpdate(
-    @Body() { name, slug, pictures }: CategoryUpdate.Request
+    @Body() { ...rest }: CategoryUpdate.Request
   ): Promise<CategoryUpdate.Response> {
-    const category = await this.categoryRepository.createCategory({
-      name,
-      slug,
-      pictures,
-    });
+    const category = await this.categoryRepository.updateCategory({ ...rest });
     return {
       message: 'Обновлено',
     };

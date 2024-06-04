@@ -26,7 +26,7 @@ export function Login() {
     formState: { errors },
     watch,
   } = useForm<{ email: string; password: string }>();
-  const [token, setToken] = useState("");
+  const [tokenCaptcha, setTokenCaptcha] = useState("");
 
   const currentUser = useCurrentUser();
 
@@ -34,6 +34,10 @@ export function Login() {
 
   const submit = async (data: { email: string; password: string }) => {
     try {
+      if (!tokenCaptcha) {
+        toast.error("Пройдите капчу");
+        return;
+      }
       setError(false);
       const { email, password } = data;
       const token = await api.post("auth/login", {
@@ -95,7 +99,7 @@ export function Login() {
         </Link>
       </div>
       <div>
-        <ReactSmartCaptcha token={token} setToken={setToken} />
+        <ReactSmartCaptcha token={tokenCaptcha} setToken={setTokenCaptcha} />
       </div>
     </div>
   );

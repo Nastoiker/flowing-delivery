@@ -20,6 +20,12 @@ export type RegisterForm = {
     value: string;
   };
 };
+export enum STATUS_CAPTCHA {
+  VISIBLE = "visible",
+  HIDEN = "hiden",
+  SUCCES = "succes",
+  TOKEN_EXPIRED = "token-expired",
+}
 
 export function Register() {
   const navigate = useNavigate();
@@ -47,6 +53,11 @@ export function Register() {
     surname: string;
   }) => {
     try {
+      if (!token) {
+        toast.error("Пройдите капчу");
+
+        return;
+      }
       const { name, email, password, username, surname } = data;
       await api.post("auth/register", {
         email,

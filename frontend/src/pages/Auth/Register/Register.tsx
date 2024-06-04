@@ -87,6 +87,7 @@ export function Register() {
             {...register("password", {
               required: { value: true, message: "Заполните login" },
             })}
+            error={Boolean(errors.password)}
             id="password"
             name="password"
             type="password"
@@ -98,6 +99,8 @@ export function Register() {
 
           <Input
             placeholder="Имя"
+            error={Boolean(errors.name)}
+
             {...register("name", {
               required: { value: true, message: "Заполните имя" },
               pattern: {
@@ -111,6 +114,7 @@ export function Register() {
           <label htmlFor="surname">Ваша фамилия</label>
           <Input
             id="surname"
+            error={Boolean(errors.surname)}
             {...register("surname", {
               required: { value: true, message: "Заполните Фамилию" },
               pattern: {
@@ -125,6 +129,8 @@ export function Register() {
           <label htmlFor="username">Ваше пользовательское имя</label>
           <Input
             id="username"
+            error={Boolean(errors.username)}
+
             {...register("username", {
               required: { value: true, message: "Заполните username" },
             })}

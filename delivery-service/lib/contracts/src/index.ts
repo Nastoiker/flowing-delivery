@@ -57,3 +57,6 @@ export * from './lib/order/order.get-by-id';
 export * from './lib/order/order.get-pending-by-userId';
 export * from './lib/order/order.purchased';
 export * from './lib/order/order.update';
+
+export * from './lib/payment/payment.check-payment';
+export * from './lib/payment/payment.notify';

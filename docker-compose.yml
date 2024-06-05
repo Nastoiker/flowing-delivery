@@ -37,6 +37,22 @@ services:
     depends_on:
       - rmq
       - db
+  payment:
+    container_name: payment
+    restart: always
+    ports:
+      - "8082:4443"
+    env_file:
+      - ./delivery-service/envs/.payment.env
+    build:
+      context: ./delivery-service
+      dockerfile: ./apps/payment/Dockerfile
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
+    depends_on:
+      - rmq
+      - db
   account:
     container_name: account
     restart: always

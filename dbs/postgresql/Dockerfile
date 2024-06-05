@@ -2,6 +2,7 @@ FROM postgres:13.8
 
 EXPOSE 5432 
 RUN ls -la
+COPY ./dump.sql /dumps/dump.sql
 
 COPY ./init docker-entrypoint-initdb.d
 

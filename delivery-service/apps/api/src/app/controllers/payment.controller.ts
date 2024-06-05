@@ -3,7 +3,7 @@ import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
 
 @Controller('payments')
-export class OrderController {
+export class PaymentController {
   constructor(private readonly rmqService: RMQService) {}
 
   @Post('notify')

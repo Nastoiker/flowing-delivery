@@ -17,9 +17,9 @@ export class PaymentController {
         {
           sha1_hash: body.sha1_hash,
           datetime: body.datetime,
-          sender: +body.sender,
+          sender: body.sender,
           amount: +body.amount,
-          operation_id: null,
+          operation_id: body.operation_id,
         },
         { headers: { requestId: 'adad' } }
       );

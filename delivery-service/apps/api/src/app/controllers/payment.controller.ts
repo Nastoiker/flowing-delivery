@@ -12,7 +12,17 @@ export class PaymentController {
       return await this.rmqService.send<
         PaymentNotify.Request,
         PaymentNotify.Response
-      >(PaymentNotify.topic, { ...body }, { headers: { requestId: 'adad' } });
+      >(
+        PaymentNotify.topic,
+        {
+          sha1_hash: body.sha1_hash,
+          datetime: body.datetime,
+          sender: +body.sender,
+          amount: +body.amoun,
+          operation_id: null,
+        },
+        { headers: { requestId: 'adad' } }
+      );
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

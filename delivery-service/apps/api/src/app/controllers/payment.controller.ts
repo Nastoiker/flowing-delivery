@@ -19,7 +19,7 @@ export class PaymentController {
           datetime: body.datetime,
           sender: 1,
           amount: +body.amount,
-          operation_id: null,
+          operation_id: undefined,
         },
         //TODO
         // {

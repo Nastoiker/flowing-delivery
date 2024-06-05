@@ -10,6 +10,7 @@ import configuration from './configs/configuration';
 import { getRMQConfig } from './configs/rmq.config';
 import { Payment } from './payment.model';
 import { PaymentQueries } from './payment.queries';
+import { PaymentRepository } from './payment.repository';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PaymentQueries } from './payment.queries';
     SequelizeModule.forFeature([Payment]),
   ],
   controllers: [PaymentQueries],
-  providers: [AppService],
+  providers: [AppService, PaymentRepository],
+  exports: [PaymentRepository],
 })
 export class AppModule {}

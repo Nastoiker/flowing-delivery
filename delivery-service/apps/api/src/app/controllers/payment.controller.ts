@@ -17,10 +17,18 @@ export class PaymentController {
         {
           sha1_hash: body.sha1_hash,
           datetime: body.datetime,
-          sender: body.sender,
+          sender: 1,
           amount: +body.amount,
-          operation_id: body.operation_id,
+          operation_id: null,
         },
+        //TODO
+        // {
+        //   sha1_hash: body.sha1_hash,
+        //   datetime: body.datetime,
+        //   sender: body.sender,
+        //   amount: +body.amount,
+        //   operation_id: body.operation_id,
+        // },
         { headers: { requestId: 'adad' } }
       );
     } catch (e) {

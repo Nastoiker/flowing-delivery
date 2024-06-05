@@ -19,7 +19,7 @@ export class PaymentController {
           datetime: body.datetime,
           sender: 1,
           amount: +body.amount,
-          operation_id: +body.amount + Math.floor(Math.random() * 666),
+          operation_id: Math.floor(+body.amount + Math.random() * 666),
         },
         //TODO
         // {

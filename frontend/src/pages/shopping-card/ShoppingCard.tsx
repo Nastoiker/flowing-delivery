@@ -1,7 +1,6 @@
 import { useCreateOrder } from "@/entities/orders/hooks/useCrudOrders";
 import DaDataAddressLookup from "@/features/delivery/Address/AddressAutoComplete";
 import { MapComponent } from "@/features/delivery/Map";
-import { PaymentForm } from "@/features/payment/PaymentForm";
 import { useShoppingCart } from "@/features/shopping-card/hooks/useCrudShoppingCard";
 import { Box, Button, Divider, Switch, Typography } from "@mui/material";
 import { useState } from "react";
@@ -122,7 +121,8 @@ export const ShoppingCardPage = () => {
           >
             оформить
           </Button>
-          <PaymentForm totalPrice={sumPrice + deliveryPrice} />
+          {/* TODO */}
+          {/* <PaymentForm totalPrice={sumPrice + deliveryPrice} /> */}
         </>
       ) : (
         <Typography margin="20px 0" variant="h5">

@@ -104,10 +104,11 @@ export default function AccountMenu() {
               }}
             />
           </div>
-          <ShoppingCardSidebar
+          { profile?.email  &&  <ShoppingCardSidebar
             open={openShoppingCard}
             toggleDrawer={toggleShoppingCardDrawer}
-          />
+          />}
+         
           <IconButton
             onClick={handleClick}
             size="medium"

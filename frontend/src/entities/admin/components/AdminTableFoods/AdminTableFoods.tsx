@@ -1,8 +1,38 @@
+import { HOST } from "@/helpers/api";
+import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoods } from "@/shared/food/hooks/useCrudFood";
+import { Skeleton } from "@mui/material";
 import { Table } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
 import { FoodActions } from "../../food/FoodActions";
+export const TABLE_FOOD_ADMIN_CONFIGS = {
+  'pictures': (pictures) =>  <Table.Cell><AppImage
+  fallback={
+    <Skeleton
+      variant="rectangular"
+      width={100}
+      height={100}
+    />
+  }
+  errorFallback={
+    <Skeleton
+      variant="rectangular"
+      height={100}
+      width={100}
+    />
+  }
+  src={`${HOST + pictures}`}
+  alt={'product-img'}
+  height="100px"
+  width="100px"
+/></Table.Cell> ,
+[Symbol]: (v) => {
+  <Table.Cell>
+                    <Link to={`/admin/menu/${u.id}`}>{JSON.stringify(v)} </Link>
 
+  </Table.Cell> 
+},
+}
 export const TableFoods = () => {
   //@ts-ignore TODO
   const { data, isError } = useFoods({});

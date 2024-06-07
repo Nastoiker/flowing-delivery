@@ -22,7 +22,7 @@ import { Profile, USER_ROLES } from "../../pages/profile/Profile";
 import { NotFoundErrorPage } from "../Error/NotFoundPage";
 import { default as NavigationBar } from "../components/navigation/NavigationBar";
 const Wrapper = styled(Box)`
-  @media (max-width: 559px) {
+  @media (max-width: 1260px) {
     margin: auto 20px;
   }
 `;

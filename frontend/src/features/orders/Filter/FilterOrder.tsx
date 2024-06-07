@@ -72,7 +72,7 @@ export const FilterOrderDrawer = ({
     setCheap(event.target.checked);
     setSelectedSort("min-price");
     if (event.target.checked) {
-      onChangeSort("price", "asc");
+      onChangeSort("totalPrice", "asc");
     } else {
       onChangeSort("createdAt", "desc");
     }
@@ -82,7 +82,7 @@ export const FilterOrderDrawer = ({
     setExpensive(event.target.checked);
     setSelectedSort("max-price");
     if (event.target.checked) {
-      onChangeSort("price", "desc");
+      onChangeSort("totalPrice", "desc");
     } else {
       onChangeSort("createdAt", "desc");
     }

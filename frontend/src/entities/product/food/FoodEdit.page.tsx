@@ -92,6 +92,8 @@ export const FoodEditPage = () => {
       gap="50px"
       margin="50px"
     >
+              <Box maxWidth={"500px"}>
+
       <AppImage
         fallback={<Skeleton variant="rectangular" height={500} width={350} />}
         errorFallback={
@@ -102,6 +104,8 @@ export const FoodEditPage = () => {
         height="100%"
         width="100%"
       />
+              </Box>
+
       <FormProvider {...methods}>
         <Wrapper onSubmit={handleSubmit(submit)}>
           <label htmlFor="title">Название</label>

@@ -64,22 +64,26 @@ export const TableUsers = () => {
         <Table.Body>
           {data?.pages?.map((p, index) => (
             <React.Fragment key={index}>
-              {p?.data?.users?.filter( f => f.id !== currentUser.id && f.roles !== USER_ROLES.ADMIN).map((u) => (
-                <Table.Row>
-                  {Object.values(u)?.map((v) => (
-                    <Table.Cell>{v}</Table.Cell>
-                  ))}
-                  <UserActions
-                    isLoading={isLoading}
-                    banUser={() => {
-                      if (window.confirm("Вы уверены?")) {
-                        handleUpdateUser(u?.id || 0, u?.status === "banned");
-                      }
-                    }}
-                    isBanned={u?.status === "banned"}
-                  />
-                </Table.Row>
-              ))}
+              {p?.data?.users
+                ?.filter(
+                  (f) => f.id !== currentUser.id && f.roles !== USER_ROLES.ADMIN
+                )
+                .map((u) => (
+                  <Table.Row>
+                    {Object.values(u)?.map((v) => (
+                      <Table.Cell>{v}</Table.Cell>
+                    ))}
+                    <UserActions
+                      isLoading={isLoading}
+                      banUser={() => {
+                        if (window.confirm("Вы уверены?")) {
+                          handleUpdateUser(u?.id || 0, u?.status === "banned");
+                        }
+                      }}
+                      isBanned={u?.status === "banned"}
+                    />
+                  </Table.Row>
+                ))}
             </React.Fragment>
           ))}
         </Table.Body>

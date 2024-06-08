@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { Food } from '../../food/models/food.model';
 import { User } from '../../user/models/user.model';
 import { Comment } from '../comment.model';
@@ -41,7 +42,23 @@ export class CommentRepository {
   }
   async getAllComments({ sort, filter, page, pageSize }) {
     const { field = 'createdAt', direction = 'desc' } = sort || {};
-    const where = {} as any;
+    const { search } = filter;
+    const where = {
+      ...(search && {
+        [Op.or]: [
+          {
+            title: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+          {
+            description: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+        ],
+      }),
+    } as any;
     return this.commentModel.findAndCountAll({
       order: [[field, direction]],
       where,

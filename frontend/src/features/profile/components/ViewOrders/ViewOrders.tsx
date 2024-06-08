@@ -1,5 +1,6 @@
 import { useMyOrdersByUserId } from "@/entities/orders/hooks/useCrudOrders";
 import { UserOrderCard } from "@/features/orders/UserOrder";
+import { Typography } from "@mui/material";
 import styled from "styled-components";
 const Wrapper = styled.div`
   display: grid;
@@ -16,11 +17,17 @@ export const ViewOrders = () => {
   }
   return (
     <Wrapper>
-      {data?.data?.orders?.map((f) => (
-        <GridEL key={f.id}>
-          <UserOrderCard order={f} />
-        </GridEL>
-      ))}
+      {data?.data?.orders?.length ? (
+        data?.data?.orders?.map((f) => (
+          <GridEL key={f.id}>
+            <UserOrderCard order={f} />
+          </GridEL>
+        ))
+      ) : (
+        <Typography variant="h5" textAlign="center">
+          К сожалению, ничего не найдено
+        </Typography>
+      )}
     </Wrapper>
   );
 };

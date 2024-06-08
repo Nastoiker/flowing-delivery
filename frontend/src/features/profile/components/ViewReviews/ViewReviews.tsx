@@ -28,20 +28,26 @@ export const ViewReviews = () => {
   }
   return (
     <Wrapper>
-      {data?.data?.reviews?.map((f) => (
-        <GridEL key={f.id}>
-          <UserReview review={f} />
-          <Box paddingLeft="15px">
-            {f.status ? (
-              <Typography sx={{ color: "green" }}>
-                {REVIEWS_LABEL[f.status]}
-              </Typography>
-            ) : (
-              <Typography> не проверено</Typography>
-            )}
-          </Box>
-        </GridEL>
-      ))}
+      {data?.data?.reviews?.length ? (
+        data?.data?.reviews?.map((f) => (
+          <GridEL key={f.id}>
+            <UserReview review={f} />
+            <Box paddingLeft="15px">
+              {f.status ? (
+                <Typography sx={{ color: "green" }}>
+                  {REVIEWS_LABEL[f.status]}
+                </Typography>
+              ) : (
+                <Typography> не проверено</Typography>
+              )}
+            </Box>
+          </GridEL>
+        ))
+      ) : (
+        <Typography variant="h5" textAlign="center">
+          К сожалению, ничего не найдено
+        </Typography>
+      )}
     </Wrapper>
   );
 };

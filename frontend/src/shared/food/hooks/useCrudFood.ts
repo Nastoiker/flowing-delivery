@@ -97,6 +97,9 @@ export function useCreateFood() {
         queryClient.invalidateQueries("foods");
         toast.success("Успешное создание");
       },
+      onError: (err: AxiosError<{ message?: string }>) => {
+        console.error(err);
+      },
     }
   );
   return {

@@ -65,11 +65,27 @@ export class FoodRepository {
       categoryId,
       calories,
       grams,
+      search,
       minCalories,
       maxCalories,
     } = filter;
     const offset = (page - 1) * pageSize;
-    const where = {} as any;
+    const where = {
+      ...(search && {
+        [Op.or]: [
+          {
+            title: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+          {
+            description: {
+              [Op.iLike]: `%${search}%`,
+            },
+          },
+        ],
+      }),
+    } as any;
     if (minPrice !== undefined)
       where.price = { ...where.price, [Op.gte]: minPrice };
     if (maxPrice !== undefined)

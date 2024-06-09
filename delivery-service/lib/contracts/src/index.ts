@@ -63,3 +63,10 @@ export * from './lib/payment/payment.notify';
 
 export * from './lib/event/event.create';
 export * from './lib/event/event.get-all';
+
+export * from './lib/event/event.add-service-notification';
+export * from './lib/event/event.add-service-notifications';
+export * from './lib/event/event.get-service-notifications';
+export * from './lib/event/event.get-unread-service-notifications';
+export * from './lib/event/event.update-all-service-notifications';
+export * from './lib/event/event.update-service-notification';

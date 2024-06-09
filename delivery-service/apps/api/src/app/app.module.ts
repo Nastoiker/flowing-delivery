@@ -21,6 +21,7 @@ import { ReviewController } from './controllers/review.controller';
 import { ShoppingCartController } from './controllers/shopping-cart.controller';
 import { UserController } from './controllers/user.controller';
 import { FilesService } from './file.service';
+import { SocketGateway } from './socket.gateway';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
@@ -51,6 +52,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     CategoryController,
     FileController,
   ],
-  providers: [JwtStrategy, FilesService],
+  providers: [JwtStrategy, SocketGateway, FilesService],
 })
 export class AppModule {}

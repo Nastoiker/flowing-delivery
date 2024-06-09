@@ -1,10 +1,11 @@
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { Box, Button, Grid, Rating, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const REVIEW_MAX_LENGTH = 1000;
 type Props = {
-  onReviewSave: (review: NewReviewType) => Promise<void>;
+  onReviewSave: (review: NewReviewType, hasRating: boolean) => Promise<void>;
   loading: boolean;
   ratingUser?: number;
 };
@@ -25,6 +26,7 @@ export const ReviewForm = ({ onReviewSave, ratingUser, loading }: Props) => {
     defaultValues: {
       title: "",
       description: "",
+      rating: ratingUser,
     },
     // стоит тут тк до v7 так было по дефолту, возможно не нужно
     shouldUnregister: true,
@@ -34,8 +36,13 @@ export const ReviewForm = ({ onReviewSave, ratingUser, loading }: Props) => {
     return null;
   }
   const submit = (review) => {
-    onReviewSave(review);
-    reset();
+    try {
+      alert(JSON.stringify(review));
+      onReviewSave(review, Boolean(ratingUser));
+      reset();
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message);
+    }
   };
   return (
     <Box
@@ -80,6 +87,24 @@ export const ReviewForm = ({ onReviewSave, ratingUser, loading }: Props) => {
               // />
             )}
           />
+          {/* {Number(ratingUser) > 0 ? (
+            <Rating value={ratingUser} readOnly />
+          ) : (
+            <Controller
+              name="rating"
+              control={control}
+              rules={{ required: Number(ratingUser) > 0 }}
+              render={({ field }) => (
+                <Rating {...field} value={ratingUser} />
+                // <FormControlLabel`
+                //   labelPlacement="top"
+                //   control={}
+                //   label="Оценка продукта"
+                //   {...field}
+                // />
+              )}
+            />
+          )} */}
         </Grid>
 
         <Grid item xs={8}>

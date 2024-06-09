@@ -99,16 +99,14 @@ export function useCreateReview() {
   const { createCommentFood, isLoading: isCreatingComment } =
     useCreateComment();
   const { createRatingFood, isLoading: isCreatingRating } = useCreateRating();
-  const createReview = async ({
-    description,
-    foodId,
-    rating,
-    title,
-  }: Omit<IReview, "id" | "userId">) => {
+  const createReview = async (
+    { description, foodId, rating, title }: Omit<IReview, "id" | "userId">,
+    hasReview: boolean
+  ) => {
     try {
       await Promise.all([
         createCommentFood({ description, productId: foodId, title }),
-        createRatingFood({ foodId, rating: Number(rating) }),
+        !hasReview && createRatingFood({ foodId, rating: Number(rating) }),
       ]);
     } catch {
       toast.error("Ошибка создания отзыва");

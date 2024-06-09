@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Container, StyledButton, Text } from './styled';
+import { useEffect, useState } from "react";
+import { Container, StyledButton, Text } from "./styled";
 
-const STORAGE_KEY = 'isCookiePolicyAccepted';
+const STORAGE_KEY = "isCookiePolicyAccepted";
 
 export const CookieAlert = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onAccept = () => {
     setIsOpen(false);
-    localStorage.setItem(STORAGE_KEY, 'true');
+    localStorage.setItem(STORAGE_KEY, "true");
   };
 
   useEffect(() => {
@@ -19,14 +19,7 @@ export const CookieAlert = () => {
     isOpen && (
       <Container>
         <Text>
-        FINLEO использует cookie, чтобы повысить удобство пользования сайтом.
-          <a
-            href="https://storage.yandexcloud.net/public-production/privacy_policy_FINLEO.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            &nbsp;Политика конфиденциальности.
-          </a>
+          Food использует cookie, чтобы повысить удобство пользования сайтом.
         </Text>
         <StyledButton onClick={onAccept} variant="contained">
           Ок

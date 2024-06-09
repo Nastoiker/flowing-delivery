@@ -81,9 +81,10 @@ export const FoodById = () => {
   const santizeDesc = DOMPurify.sanitize(data?.data.food.description);
 
   const submitComment = async (
-    review: Omit<IReview, "id" | "userId" | "foodId">
+    review: Omit<IReview, "id" | "userId" | "foodId">,
+    hasReview: boolean
   ) => {
-    await createReview({ foodId: Number(id), ...review });
+    await createReview({ foodId: Number(id), ...review }, hasReview);
   };
   const handleAddToCart = async () => {
     if (isNumber(isAdded?.id)) {

@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Docker:finleo-crm:frontend",
+      "name": "Docker:frontend",
       "url": "http://localhost:3000",
       "request": "launch",
       "type": "chrome",
@@ -17,7 +17,7 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Docker:finleo-crm:backend",
+      "name": "Dockerbackend",
       "remoteRoot": "/app",
       "localRoot": "${workspaceFolder}/bankServer",
       "restart": true,
@@ -29,7 +29,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/bankServer/node_modules/jest/bin/jest",
       "args": [
-        "--runInBand",
+        "--runInBand"
         // "test/stable_tests/passwordRecovery.test.ts",
         // "-t",
         // "\"showing error on uncorrect fill fields phone\""
@@ -38,6 +38,6 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true
-    },
+    }
   ]
 }

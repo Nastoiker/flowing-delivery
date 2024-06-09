@@ -32,7 +32,6 @@ export class CommentRepository {
 
   async findCommentByFoodId(productId: number, sort) {
     const { field = 'createdAt', direction = 'desc' } = sort || {};
-
     return this.commentModel.findAll({
       order: [[field, direction]],
       where: { productId },

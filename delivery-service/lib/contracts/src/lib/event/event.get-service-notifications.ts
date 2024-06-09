@@ -1,20 +1,16 @@
-import { IServiceNotification, UserRole } from "@myhome/interfaces";
-import { IsNumber, Validate } from "class-validator";
-import { IsValidEnumValue } from '../../../enum.validator';
-import { MetaRequest } from "../../../meta.validator";
+import { IEvent } from '@delivery-service/interfaces';
+import { IsNumber } from 'class-validator';
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace EventGetServiceNotifications {
-    export const topic = 'event.get-service-notifications.query';
+  export const topic = 'event.get-service-notifications.query';
 
-    export class Request extends MetaRequest {
-        @IsNumber({}, { message: "Id пользователя должно быть числом" })
-        userId!: number;
+  export class Request {
+    @IsNumber({}, { message: 'Id пользователя должно быть числом' })
+    userId!: number;
+  }
 
-        @Validate(IsValidEnumValue, [UserRole])
-        userRole!: UserRole;
-    }
-
-    export class Response {
-        notifications!: IServiceNotification[];
-    }
+  export class Response {
+    notifications!: IEvent[];
+  }
 }

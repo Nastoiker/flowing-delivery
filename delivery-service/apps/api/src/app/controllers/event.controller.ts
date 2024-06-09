@@ -7,10 +7,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
+import { SocketGateway } from '../socket.gateway';
 
 @Controller('events')
 export class EventController {
-  constructor(private readonly rmqService: RMQService) {}
+  constructor(
+    private readonly rmqService: RMQService,
+    private readonly socketGateway: SocketGateway
+  ) {}
 
   @Get()
   async getEvents() {

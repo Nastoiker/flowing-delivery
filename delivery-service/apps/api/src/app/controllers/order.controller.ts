@@ -25,10 +25,14 @@ import { CreateOrderDto } from '../dtos/order/OrderCreateDto';
 import { UpdateOrderDto } from '../dtos/order/OrderUpdateDto';
 import { JWTAuthGuard } from '../guards/jwt.guard';
 import { UserId } from '../guards/user.decorator';
+import { SocketGateway } from '../socket.gateway';
 
 @Controller('order')
 export class OrderController {
-  constructor(private readonly rmqService: RMQService) {}
+  constructor(
+    private readonly rmqService: RMQService,
+    private readonly socketGateway: SocketGateway
+  ) {}
   //TODO сделай получение по food и user
   //   @Get('food/:id')
   //   async getOrderByFoodId(@Param('id') id: number) {
@@ -226,6 +230,11 @@ export class OrderController {
           headers: { requestId: 'adad' },
         }
       );
+      this.socketGateway.sendNewNotification({
+        type: 'new-order',
+        message: `новая заявка ${newOrder.order.id}`,
+        priority: '1',
+      });
       await this.rmqService.send<EventCreate.Request, EventCreate.Response>(
         EventCreate.topic,
         {

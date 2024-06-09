@@ -1,4 +1,6 @@
 import {
+  EventAddServiceNotification,
+  EventAddServiceNotifications,
   EventGetUnreadServiceNotifications,
   EventUpdateAllServiceNotifications,
 } from '@delivery-service/contracts';
@@ -43,7 +45,25 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(socket: Socket) {
     this.hasUnreadNotifications(socket);
   }
+  sendNewNotification(dto: EventAddServiceNotification.Request) {
+    const key = `${dto.type}_${dto.priority}`;
+    const socket = this.clients.get(key);
+    if (socket) {
+      socket.emit('newNotification', dto.message);
+      socket.emit('hasUnreadNotifications', 1);
+    }
+  }
 
+  sendNewNotifications(dto: EventAddServiceNotifications.Response) {
+    // dto.notifications.map((notification) => {
+    //   const key = `${notification.userId}_${notification.userRole}`;
+    //   const socket = this.clients.get(key);
+    //   if (socket) {
+    //     socket.emit('newNotification', notification);
+    //     socket.emit('hasUnreadNotifications', 1);
+    //   }
+    // });
+  }
   async hasUnreadNotifications(socket: Socket) {
     try {
       const hasUnread = await this.rmqService.send<
@@ -58,11 +78,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     dto: EventUpdateAllServiceNotifications.Response,
     value: number
   ) {
-    const key = `${dto.userId}_${dto.userRole}`;
-    const socket = this.clients.get(key);
-    if (socket) {
-      socket.emit('hasUnreadNotifications', value);
-    }
+    // const key = `${dto.userId}_${dto.userRole}`;
+    // const socket = this.clients.get(key);
+    // if (socket) {
+    //   socket.emit('hasUnreadNotifications', value);
+    // }
   }
 
   handleDisconnect(socket: Socket) {

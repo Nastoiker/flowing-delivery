@@ -118,14 +118,16 @@ export function FoodCard(props: { food: IFood }) {
           <Typography variant="body2" color="text.secondary">
             {food.grams} г
           </Typography>
-          <Box display="flex" alignContent={"center"}>
+          <Box display="flex" gap="5px" alignContent={"center"}>
             <Rating
               name="half-rating-read"
               defaultValue={ratingProduct}
               precision={0.5}
               readOnly
             />
-            <Typography>{food.ratings.length}</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {food.ratings.length}
+            </Typography>
           </Box>
         </CardContent>
       </CardActionArea>

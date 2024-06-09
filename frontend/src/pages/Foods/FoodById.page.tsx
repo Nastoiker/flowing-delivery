@@ -17,7 +17,14 @@ import { AppImage } from "@/shared/components/image/AppImage";
 import { useFoodById } from "@/shared/food/hooks/useCrudFood";
 import { IReview } from "@/shared/interfaces/review.interface";
 import { Box, Button, IconButton, Skeleton, Typography } from "@mui/material";
-import { Basket, Minus, PencilLine, Plus, Trash } from "@phosphor-icons/react";
+import {
+  Basket,
+  Minus,
+  PencilLine,
+  Plus,
+  Star,
+  Trash,
+} from "@phosphor-icons/react";
 import DOMPurify from "dompurify";
 import { isNumber } from "lodash";
 import { useMemo, useState } from "react";
@@ -79,7 +86,9 @@ export const FoodById = () => {
     return null;
   }
   const santizeDesc = DOMPurify.sanitize(data?.data.food.description);
-
+  const ratingProduct =
+    data.data.food.ratings.reduce((acc, r) => acc + r.rating, 0) /
+      data.data.food.ratings.length || 0;
   const submitComment = async (
     review: Omit<IReview, "id" | "userId" | "foodId">,
     hasReview: boolean
@@ -135,9 +144,23 @@ export const FoodById = () => {
         </Box>
 
         <Wrapper>
-          <Typography margin={"50px 0"} variant="h3">
-            {data?.data.food.title}
-          </Typography>
+          <Box
+            gap="20px"
+            display={"flex"}
+            flexWrap="wrap"
+            alignItems={"center"}
+          >
+            <Typography margin={"50px 0"} variant="h3">
+              {data?.data.food.title}
+            </Typography>
+            <Box display={"flex"} gap="5px" alignItems={"center"}>
+              <Typography margin={"50px 0"} variant="h3">
+                {ratingProduct}
+              </Typography>
+              <Star size="40px" />
+            </Box>
+          </Box>
+
           <div
             style={{ fontSize: "20px" }}
             dangerouslySetInnerHTML={{ __html: santizeDesc }}

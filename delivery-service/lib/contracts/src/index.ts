@@ -60,3 +60,6 @@ export * from './lib/order/order.update';
 
 export * from './lib/payment/payment.check-payment';
 export * from './lib/payment/payment.notify';
+
+export * from './lib/event/event.create';
+export * from './lib/event/event.get-all';

@@ -1,4 +1,5 @@
 import {
+  EventCreate,
   OrderCreate,
   OrderDelete,
   OrderFindById,
@@ -215,7 +216,7 @@ export class OrderController {
   @Post()
   async create(@UserId() userId: number, @Body() orderDto: CreateOrderDto) {
     try {
-      return await this.rmqService.send<
+      const newOrder = await this.rmqService.send<
         OrderCreate.Request,
         OrderCreate.Response
       >(
@@ -225,6 +226,18 @@ export class OrderController {
           headers: { requestId: 'adad' },
         }
       );
+      await this.rmqService.send<EventCreate.Request, EventCreate.Response>(
+        EventCreate.topic,
+        {
+          type: 'new-order',
+          message: `новая заявка ${newOrder.order.id}`,
+          priority: '1',
+        },
+        {
+          headers: { requestId: 'adad' },
+        }
+      );
+      return newOrder;
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);

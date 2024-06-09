@@ -37,6 +37,22 @@ services:
     depends_on:
       - rmq
       - db
+  event:
+    container_name: event-service
+    restart: always
+    ports:
+      - "8083:4443"
+    env_file:
+      - ./delivery-service/envs/.event.env
+    build:
+      context: ./delivery-service
+      dockerfile: ./apps/event/Dockerfile
+    volumes:
+      - ./delivery-service:/app
+      - /app/node_modules
+    depends_on:
+      - rmq
+      - db
   payment:
     container_name: payment
     restart: always

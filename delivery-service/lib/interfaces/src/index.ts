@@ -2,6 +2,7 @@ export * from './lib/auth.interface';
 export * from './lib/banner.interface';
 export * from './lib/categories.interface';
 export * from './lib/comment.interface';
+export * from './lib/event.interface';
 export * from './lib/events.interface';
 export * from './lib/file-element.response';
 export * from './lib/foods.interface';

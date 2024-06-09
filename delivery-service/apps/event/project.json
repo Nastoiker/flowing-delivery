@@ -1,0 +1,24 @@
+{
+  "name": "event",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/event/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "event:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "event:build:development"
+        },
+        "production": {
+          "buildTarget": "event:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

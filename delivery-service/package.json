@@ -24,6 +24,7 @@
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.3",
     "app-root-path": "^3.1.0",
+    "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.14.1",
     "date-fns": "^3.6.0",

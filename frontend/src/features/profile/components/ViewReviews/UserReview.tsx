@@ -34,6 +34,7 @@ export const UserReview = ({ review }: { review: IReview }) => {
           sx={{
             display: "flex",
             alignItems: "center",
+            flexWrap: "wrap",
             justifyContent: "space-between",
           }}
         >

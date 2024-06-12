@@ -12,7 +12,7 @@ interface FilterByPriceProps {
 const WrapperFilter = styled.div``;
 export const FilterByPrice = ({
   minPrice = 200,
-  maxPrice = 5000,
+  maxPrice = 600,
   onChange,
 }: FilterByPriceProps): JSX.Element => {
   const [valueMax, setValueMax] = useState<number>(maxPrice);
@@ -35,7 +35,7 @@ export const FilterByPrice = ({
         value={[valueMin, valueMax]}
         step={1}
         min={0}
-        max={5000}
+        max={600}
         //@ts-ignore
         onChange={handleChange}
       />

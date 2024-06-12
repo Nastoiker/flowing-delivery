@@ -156,7 +156,7 @@ export function Register() {
         <Typography>
           <Checkbox required />Я согласен на обработку моих персональных данных
           в соответствии с{" "}
-          <Link style={{ color: "primary" }} to="/politics">
+          <Link style={{ color: "#4C7C7D" }} to="/politics">
             Условиями
           </Link>
         </Typography>

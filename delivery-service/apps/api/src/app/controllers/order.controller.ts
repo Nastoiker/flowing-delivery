@@ -202,7 +202,7 @@ export class OrderController {
       });
       if (orderUpdateDto.status) {
         this.socketGateway.sendNewNotification({
-          type: 'new-order',
+          type: 'update-order',
           message: `Изменился статус заявки ${orderUpdateDto.id},\nстатус: ${
             statusTranslations[orderUpdateDto.status]
           }`,
@@ -263,7 +263,7 @@ export class OrderController {
         type: 'new-order',
         message: `Новая заявка ${newOrder.order.id}`,
         priority: '1',
-        userIds: [...adminIds.ids, userId],
+        userIds: [...new Set([...adminIds.ids, userId])],
       });
       return newOrder;
     } catch (e) {

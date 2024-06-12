@@ -144,19 +144,10 @@ export const FoodById = () => {
         </Box>
 
         <Wrapper>
-          <Box
-            gap="20px"
-            display={"flex"}
-            flexWrap="wrap"
-            alignItems={"center"}
-          >
-            <Typography margin={"50px 0"} variant="h3">
-              {data?.data.food.title}
-            </Typography>
+          <Box gap="20px" display={"flex"} flexWrap="wrap" margin={"50px 0"}>
+            <Typography variant="h3">{data?.data.food.title}</Typography>
             <Box display={"flex"} gap="5px" alignItems={"center"}>
-              <Typography margin={"50px 0"} variant="h3">
-                {ratingProduct}
-              </Typography>
+              <Typography variant="h3">{ratingProduct}</Typography>
               <Star size="40px" />
             </Box>
           </Box>

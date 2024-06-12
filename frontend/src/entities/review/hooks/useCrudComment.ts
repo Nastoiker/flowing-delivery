@@ -32,6 +32,8 @@ export function useCreateComment() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comments");
+        queryClient.invalidateQueries("foods");
+        queryClient.invalidateQueries("ratings");
         toast.success("Успешное создание");
       },
     }

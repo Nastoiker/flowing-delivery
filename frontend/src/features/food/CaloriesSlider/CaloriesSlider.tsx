@@ -12,7 +12,7 @@ interface FilterByPriceProps {
 const WrapperFilter = styled.div``;
 export const CaloriesSlider = ({
   minCalories = 200,
-  maxCalories = 5000,
+  maxCalories = 1000,
   onChange,
 }: FilterByPriceProps): JSX.Element => {
   const [valueMax, setValueMax] = useState<number>(maxCalories);
@@ -35,7 +35,7 @@ export const CaloriesSlider = ({
         value={[valueMin, valueMax]}
         step={1}
         min={20}
-        max={2500}
+        max={1000}
         //@ts-ignore
         onChange={handleChange}
       />

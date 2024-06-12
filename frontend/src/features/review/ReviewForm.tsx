@@ -37,7 +37,6 @@ export const ReviewForm = ({ onReviewSave, ratingUser, loading }: Props) => {
   }
   const submit = (review) => {
     try {
-      alert(JSON.stringify(review));
       onReviewSave(review, Boolean(ratingUser));
       reset();
     } catch (e: any) {

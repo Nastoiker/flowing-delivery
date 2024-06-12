@@ -21,6 +21,7 @@ export const UserReviewAdmin = ({ review }: { review: IReview }) => {
             flexDirection: { sm: "row" },
             justifyContent: "space-between",
             marginBottom: 2,
+            flexWrap: "wrap",
           }}
         >
           <Box>

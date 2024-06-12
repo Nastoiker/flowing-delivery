@@ -27,6 +27,10 @@ export const ShoppingCardPage = () => {
   //orderCreate: ICreateOrder
   const submit = async () => {
     try {
+      if (!address && !isPickup) {
+        toast.error("Выберите адрес");
+        return;
+      }
       await createOrderFetch({
         deliveryAddress: address,
         priceFood: sumPrice,
@@ -101,26 +105,36 @@ export const ShoppingCardPage = () => {
               />
             </div>
           )}
-          <Typography variant="h5" margin="50px 0">
+          <Typography variant="h5" margin="25px 0">
             Доставка: {deliveryPrice}₽
           </Typography>
           <Divider />
-          <Typography variant="h5" margin="50px 0">
+          <Typography variant="h5" margin="25px 0">
             {address}
           </Typography>
-          <Box margin="50px 0">
-            <Typography variant="h5" margin="50px 0">
-              Сумма: {sumPrice + deliveryPrice}₽
-            </Typography>
-          </Box>
-          <Button
-            onClick={() => submit()}
-            variant="outlined"
-            size="large"
-            type="submit"
+          <Box
+            display={"flex"}
+            margin="25px 0 50px 0"
+            flexWrap={"wrap"}
+            gap="20px"
+            alignItems={"center"}
           >
-            оформить
-          </Button>
+            <Box>
+              <Typography variant="h5">
+                Сумма: {sumPrice + deliveryPrice}₽
+              </Typography>
+            </Box>
+            <Button
+              onClick={() => submit()}
+              variant="outlined"
+              size="large"
+              sx={{ margin: "10px 0" }}
+              type="submit"
+            >
+              <Typography variant="h5">оформить</Typography>
+            </Button>
+          </Box>
+
           {/* TODO */}
           {/* <PaymentForm totalPrice={sumPrice + deliveryPrice} /> */}
         </>

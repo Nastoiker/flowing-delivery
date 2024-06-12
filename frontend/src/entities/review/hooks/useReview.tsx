@@ -91,6 +91,8 @@ export function useAllReviews({
     reviewQueryKeys.reviewList({ page, pageSize, filter, sort }),
     async () => getAllReviews({ page, pageSize, sort, filter }),
     {
+      retry: false,
+      staleTime: 3000,
       getNextPageParam,
     }
   );

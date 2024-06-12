@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { createBanner, getBanners } from "../api/banner.api";
 export function useBanners() {
@@ -23,6 +24,7 @@ export function useCreateBanner() {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries("banners");
+        toast.success("Успешное создание");
       },
     }
   );

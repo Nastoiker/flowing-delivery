@@ -53,6 +53,7 @@ export const CreateFood = () => {
       data.append("price", food.price?.toString());
       data.append("grams", food.grams?.toString());
       await createFood(data);
+      
       reset();
     } catch (e: any) {
       toast.error(e?.response?.data?.message);

@@ -74,7 +74,12 @@ export const OrderById = () => {
 
   return (
     <Wrapper>
-      <Box display={"flex"} flexWrap={'wrap'} gap="50px" alignContent={"center"}>
+      <Box
+        display={"flex"}
+        flexWrap={"wrap"}
+        gap="50px"
+        alignContent={"center"}
+      >
         <Paper sx={{ width: "fit-content", margin: "20px 0" }} elevation={0}>
           <Header>
             <Typography variant="h5">
@@ -170,9 +175,10 @@ export const OrderById = () => {
               display: "flex",
               flexDirection: "column",
               gap: "20px",
+              width: "fit-content",
               justifyContent: "space-between",
             }}
-            padding={"0 40px"}
+            padding={"10px 40px"}
           >
             <Box>
               <Header>

@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useState } from "react";
@@ -28,6 +28,7 @@ export const CaloriesSlider = ({
   };
   return (
     <div>
+      <Typography>Калории</Typography>
       <Slider
         range
         // reverse={true}

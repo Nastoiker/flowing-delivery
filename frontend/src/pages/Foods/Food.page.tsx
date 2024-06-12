@@ -56,7 +56,7 @@ export const FoodPage = () => {
     }
   );
   return (
-    <>
+    <Box padding="0 0 20px 0">
       <Banners />
       <Box
         margin={"50px"}
@@ -82,6 +82,6 @@ export const FoodPage = () => {
           </GridEL>
         ))}
       </Wrapper>
-    </>
+    </Box>
   );
 };

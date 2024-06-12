@@ -8,4 +8,5 @@ export interface ICategory {
   parent?: ICategory;
   subcategories?: ICategory[];
   products?: IFood[];
+  pictures?: string;
 }

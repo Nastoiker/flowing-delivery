@@ -1,10 +1,14 @@
+import { HOST } from "@/helpers/api";
 import {
   useCategories,
   useUpdateCategory,
 } from "@/shared/category/hooks/useCategories";
-import { Input } from "@mui/material";
+import { AppImage } from "@/shared/components/image/AppImage";
+import { Input, Skeleton } from "@mui/material";
 import { Table } from "@radix-ui/themes";
+import { format } from "date-fns";
 import { ChangeEvent } from "react";
+import { Link } from "react-router-dom";
 
 export const AdminCategories = () => {
   const { data, isError, isLoading } = useCategories();
@@ -40,9 +44,35 @@ export const AdminCategories = () => {
       <Table.Body>
         {data.data.categories.map((u) => (
           <Table.Row>
-            {Object.values(u).map((v) => (
-              <Table.Cell>{v}</Table.Cell>
-            ))}
+            <Table.Cell>
+              <Link to={`/categproes/${u.id}`}>{u.id}</Link>
+            </Table.Cell>
+            <Table.Cell>{u.name}</Table.Cell>
+            <Table.Cell>{u?.slug}</Table.Cell>
+            <Table.Cell>{u?.parentId}</Table.Cell>
+            <Table.Cell>
+              <AppImage
+                fallback={
+                  <Skeleton variant="rectangular" width={100} height={100} />
+                }
+                errorFallback={
+                  <Skeleton variant="rectangular" height={100} width={100} />
+                }
+                src={`${HOST + u.pictures}`}
+                alt={u.name}
+                height="100px"
+                width="100px"
+              />
+            </Table.Cell>
+            <Table.Cell>
+              {/* @ts-ignore */}
+              {format(u?.createdAt, "yyyy-MM-dd")}
+            </Table.Cell>
+            <Table.Cell>
+              {/* @ts-ignore */}
+              {format(u?.updatedAt, "yyyy-MM-dd")}
+            </Table.Cell>
+
             <Input
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleUpdatePicture(e, u.id as number)

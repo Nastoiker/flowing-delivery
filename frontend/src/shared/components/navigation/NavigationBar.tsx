@@ -42,13 +42,10 @@ export default function AccountMenu() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const [openShoppingCard, setOpenShoppingCard] = useState(false);
   const [notifications, setNotifications] = useState<any>([]);
 
   const { matches960 } = useWindowSize();
-  const toggleShoppingCardDrawer = (newOpen) => () => {
-    setOpenShoppingCard(newOpen);
-  };
+
   const navigate = useNavigate();
   const profile = useCurrentUser();
   const { setSearch, search } = useContext(SearchContext);
@@ -108,12 +105,7 @@ export default function AccountMenu() {
               }}
             />
           </div>
-          {profile?.email && (
-            <ShoppingCardSidebar
-              open={openShoppingCard}
-              toggleDrawer={toggleShoppingCardDrawer}
-            />
-          )}
+          {profile?.email && <ShoppingCardSidebar />}
           {profile?.email && <NotifyDrawer />}
           <IconButton
             onClick={handleClick}

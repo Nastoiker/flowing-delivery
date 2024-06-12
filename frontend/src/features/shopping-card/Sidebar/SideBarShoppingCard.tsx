@@ -5,6 +5,7 @@ import {
 } from "@/pages/shopping-card/ShoppingCart.item";
 import { Button, Divider, Drawer, IconButton, Typography } from "@mui/material";
 import { Basket, X } from "@phosphor-icons/react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useShoppingCart } from "../hooks/useCrudShoppingCard";
@@ -40,16 +41,20 @@ const Wrapper = styled.div`
   overflow-y: auto;
   height: 100%;
 `;
-export const ShoppingCardSidebar = ({ open, toggleDrawer }) => {
+export const ShoppingCardSidebar = () => {
   const { data: shoppingCarts, isError } = useShoppingCart();
-
+  const [open, setOpen] = useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
   const redirect = useNavigate();
   const sumPrice = shoppingCarts?.data.shoppingCart.reduce(
     (accumulator, value) => accumulator + value.totalPrice,
     0
   );
   const handleRedirectToShoppingCard = () => {
-    toggleDrawer(false);
+    setOpen(false);
+
     redirect("shopping-cart");
   };
   return (

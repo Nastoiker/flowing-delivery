@@ -1,5 +1,5 @@
 import {
-  EventCreate,
+  AccountGetAdminsAll,
   OrderCreate,
   OrderDelete,
   OrderFindById,
@@ -26,7 +26,12 @@ import { UpdateOrderDto } from '../dtos/order/OrderUpdateDto';
 import { JWTAuthGuard } from '../guards/jwt.guard';
 import { UserId } from '../guards/user.decorator';
 import { SocketGateway } from '../socket.gateway';
-
+const statusTranslations: { [key: string]: string } = {
+  created: 'Создано',
+  confirmed: 'Подтверждено',
+  delivery: 'Доставляется',
+  received: 'Получено',
+};
 @Controller('order')
 export class OrderController {
   constructor(
@@ -55,7 +60,7 @@ export class OrderController {
   //           { headers: { requestId: 'adad' } }
   //         ),
   //       ]);
-  //       const data = comments.comments.map((c) => ({
+  //       const data = comments.comments.map((c) =P> ({
   //         ...ratings.ratings.find(
   //           (r) => r.userId === c.userId && r.foodId === c.productId
   //         ),
@@ -189,12 +194,24 @@ export class OrderController {
   @Put()
   async update(@Body() orderUpdateDto: UpdateOrderDto) {
     try {
-      return await this.rmqService.send<
+      const orderUpdated = await this.rmqService.send<
         OrderUpdate.Request,
         OrderUpdate.Response
       >(OrderUpdate.topic, orderUpdateDto, {
         headers: { requestId: 'adad' },
       });
+      if (orderUpdateDto.status) {
+        this.socketGateway.sendNewNotification({
+          type: 'new-order',
+          message: `Изменился статус заявки ${orderUpdateDto.id},\nстатус: ${
+            statusTranslations[orderUpdateDto.status]
+          }`,
+          priority: '1',
+          userId: orderUpdated.userId,
+        });
+      }
+
+      return orderUpdateDto;
     } catch (e) {
       if (e instanceof Error) {
         throw new UnauthorizedException(e.message);
@@ -230,22 +247,24 @@ export class OrderController {
           headers: { requestId: 'adad' },
         }
       );
-      this.socketGateway.sendNewNotification({
-        type: 'new-order',
-        message: `новая заявка ${newOrder.order.id}`,
-        priority: '1',
-      });
-      await this.rmqService.send<EventCreate.Request, EventCreate.Response>(
-        EventCreate.topic,
-        {
-          type: 'new-order',
-          message: `новая заявка ${newOrder.order.id}`,
-          priority: '1',
-        },
+      const adminIds = await this.rmqService.send<
+        AccountGetAdminsAll.Request,
+        AccountGetAdminsAll.Response
+      >(
+        AccountGetAdminsAll.topic,
+        {},
         {
           headers: { requestId: 'adad' },
         }
       );
+      console.log('sendusers');
+      console.log([...adminIds.ids, userId]);
+      this.socketGateway.sendNewNotifications({
+        type: 'new-order',
+        message: `Новая заявка ${newOrder.order.id}`,
+        priority: '1',
+        userIds: [...adminIds.ids, userId],
+      });
       return newOrder;
     } catch (e) {
       if (e instanceof Error) {

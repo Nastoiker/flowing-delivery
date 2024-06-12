@@ -47,6 +47,7 @@ export class OrderQueries {
       allCount,
     };
   }
+
   @RMQValidate()
   @RMQRoute(OrderGetPendingByUserId.topic)
   async getMyOrders(
@@ -83,9 +84,10 @@ export class OrderQueries {
   async updateOrder(
     @Body() dto: OrderUpdate.Request
   ): Promise<OrderUpdate.Response> {
-    await this.orderRepository.updateOrder(dto);
+    const updatedOrder = await this.orderRepository.updateOrder(dto);
     return {
       message: 'Обновлено',
+      userId: updatedOrder.userId,
     };
   }
   @RMQValidate()
@@ -97,7 +99,7 @@ export class OrderQueries {
       dto.userId
     );
     if (!cartItems.length) {
-      throw new Error('Корзина пуста');
+      throw new Error('Корзина пуста ' + dto.userId);
     }
     const order = await this.orderRepository.createOrder({ ...dto });
     await this.orderRepository.createFoodForOrder(cartItems, order.id);

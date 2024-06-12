@@ -14,11 +14,12 @@ import {
 } from '@nestjs/websockets';
 import { RMQService } from 'nestjs-rmq';
 import { Server, Socket } from 'socket.io';
+import { WSAuthMiddleware } from './socket.middleware';
 
 @Injectable()
 @WebSocketGateway({
   cors: {
-    origin: true,
+    origin: 'http://localhost:5173',
     credentials: true,
   },
 })
@@ -32,37 +33,53 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
   private clients = new Map<string, Socket>();
 
-  afterInit() {
-    // const middle = WSAuthMiddleware(
-    //   this.jwtService,
-    //   this.clients,
-    //   this.rmqService,
-    //   this.authController
-    // );
-    // this.server.use(middle);
+  // afterInit() {
+  //   // const middle = WSAuthMiddleware(
+  //   //   this.jwtService,
+  //   //   this.clients,
+  //   //   this.rmqService,
+  //   //   this.authController
+  //   // );
+  //   // this.server.use(middle);
+  // }
+  afterInit(server: Server) {
+    const authMiddleware = new WSAuthMiddleware(this.jwtService);
+    server.use(authMiddleware.use.bind(authMiddleware));
   }
-
   async handleConnection(socket: Socket) {
-    this.hasUnreadNotifications(socket);
+    if (!socket.data.user) {
+      console.log(`Authentication failed, disconnecting socket.`);
+      socket.disconnect();
+      return;
+    }
+    const socketKey = `user_${socket.data.user.userId}`;
+
+    this.clients.set(socketKey, socket);
+    console.log(
+      `Current connected clients: ${Array.from(this.clients.keys())}`
+    );
+    socket.on('disconnect', () => {
+      this.clients.delete(socketKey);
+    });
   }
   sendNewNotification(dto: EventAddServiceNotification.Request) {
-    const key = `${dto.type}_${dto.priority}`;
+    const key = `user_${dto.userId}`;
+
     const socket = this.clients.get(key);
     if (socket) {
+      console.log('emit', dto.message);
       socket.emit('newNotification', dto.message);
       socket.emit('hasUnreadNotifications', 1);
     }
   }
-
-  sendNewNotifications(dto: EventAddServiceNotifications.Response) {
-    // dto.notifications.map((notification) => {
-    //   const key = `${notification.userId}_${notification.userRole}`;
-    //   const socket = this.clients.get(key);
-    //   if (socket) {
-    //     socket.emit('newNotification', notification);
-    //     socket.emit('hasUnreadNotifications', 1);
-    //   }
-    // });
+  sendNewNotifications(dto: EventAddServiceNotifications.Request) {
+    dto.userIds.map((id) => {
+      const key = `user_${id}`;
+      const socket = this.clients.get(key);
+      if (socket) {
+        socket.emit('newNotification', dto.message);
+      }
+    });
   }
   async hasUnreadNotifications(socket: Socket) {
     try {
@@ -86,7 +103,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(socket: Socket) {
-    const key = `${socket.data.user.userId}_${socket.data.user.userRole}`;
+    const key = `user_${socket.data.user.userId}`;
     this.clients.delete(key);
   }
 }

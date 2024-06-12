@@ -85,7 +85,13 @@ export class UserRepository {
   async findUserById(id: number) {
     return this.userModel.findByPk(id);
   }
-
+  async findAdmins() {
+    return this.userModel.findAll({
+      where: {
+        roles: 1,
+      },
+    });
+  }
   async deleteUser(email: string) {
     const user = await this.userModel.findOne({ where: { email } });
     await user.destroy();

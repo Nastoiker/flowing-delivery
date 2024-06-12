@@ -1,4 +1,5 @@
 import {
+  AccountGetAdminsAll,
   AccountGetAll,
   AccountUpdate,
   AccountUpdateUser,
@@ -24,6 +25,18 @@ export class UserQueries {
     const profile = new UserEntity(user).getPublicProfile();
     return {
       profile,
+    };
+  }
+  @RMQValidate()
+  @RMQRoute(AccountGetAdminsAll.topic)
+  async getAdmins(
+    @Body() _: AccountGetAdminsAll.Request
+  ): Promise<AccountGetAdminsAll.Response> {
+    const data = await this.userRepository.findAdmins();
+    const ids = data.map((user) => user.id);
+    console.log('admin', ids);
+    return {
+      ids,
     };
   }
   @RMQValidate()

@@ -7,6 +7,7 @@ export namespace EventAddServiceNotification {
   export class Request {
     type: string | undefined;
     message: string | undefined;
+    userId: number | undefined;
     priority: string | undefined;
   }
   export class Response {

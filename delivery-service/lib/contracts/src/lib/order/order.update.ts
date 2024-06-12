@@ -12,5 +12,6 @@ export namespace OrderUpdate {
   }
   export class Response {
     message: string | undefined;
+    userId: number | undefined;
   }
 }

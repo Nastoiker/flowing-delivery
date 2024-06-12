@@ -109,6 +109,8 @@ export function useCreateOrder() {
       },
       onError: async () => {
         await queryClient.invalidateQueries("orders");
+        await queryClient.invalidateQueries("shopping-carts");
+        await queryClient.invalidateQueries("foods");
       },
     }
   );

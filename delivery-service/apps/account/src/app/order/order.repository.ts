@@ -51,16 +51,13 @@ export class OrderRepository {
     }
   }
   async updateOrder({ id, ...rest }) {
-    const order = await this.orderModel.update(
-      {
-        ...rest,
-      },
-      {
-        where: {
-          id,
-        },
-      }
-    );
+    const order = await this.orderModel.findByPk(id);
+    if (!order) {
+      throw new Error('не найдено');
+    }
+    await order.update({
+      ...rest,
+    });
 
     return order;
   }

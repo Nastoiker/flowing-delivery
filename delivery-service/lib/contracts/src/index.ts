@@ -1,3 +1,4 @@
+export * from './lib/account/account.get-admins-ids';
 export * from './lib/account/account.get-all';
 export * from './lib/account/account.login';
 export * from './lib/account/account.me';

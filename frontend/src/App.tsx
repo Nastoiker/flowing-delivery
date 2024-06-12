@@ -1,7 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import { Toaster } from "react-hot-toast";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { RouterProvider } from "react-router-dom";
 
 import { useEffect } from "react";
@@ -46,7 +45,7 @@ function App() {
                 <RouterProvider router={router} />
                 <GlobalLoader />
 
-                <ReactQueryDevtools />
+                {/* <ReactQueryDevtools /> */}
               </PhosphorProvider>
             </QueryClientProvider>
           </ThemeProvider>

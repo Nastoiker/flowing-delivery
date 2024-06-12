@@ -3,9 +3,11 @@ import { getMenuListByUserRole } from "@/app/Menu/menu.constants";
 import { useWindowSize } from "@/app/hooks/useWindowSize";
 import Logo from "@/assets/logo.svg";
 import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
+import { NotifyDrawer } from "@/features/notifications/NotifyDrawer";
 import { ShoppingCardSidebar } from "@/features/shopping-card/Sidebar/SideBarShoppingCard";
 import { SearchField } from "@/shared/search/SearchField";
 import BasicMenuAuth from "@/widgets/AuthProfile/AuthProfile";
+
 import {
   AppBar,
   Button,
@@ -41,6 +43,7 @@ export default function AccountMenu() {
     setAnchorEl(event.currentTarget);
   };
   const [openShoppingCard, setOpenShoppingCard] = useState(false);
+  const [notifications, setNotifications] = useState<any>([]);
 
   const { matches960 } = useWindowSize();
   const toggleShoppingCardDrawer = (newOpen) => () => {
@@ -53,6 +56,7 @@ export default function AccountMenu() {
     () => getMenuListByUserRole(profile?.roles),
     [profile]
   );
+
   return (
     <ScrollToHide threshold={0}>
       <AppBar color="secondary" position="sticky">
@@ -104,11 +108,13 @@ export default function AccountMenu() {
               }}
             />
           </div>
-          { profile?.email  &&  <ShoppingCardSidebar
-            open={openShoppingCard}
-            toggleDrawer={toggleShoppingCardDrawer}
-          />}
-         
+          {profile?.email && (
+            <ShoppingCardSidebar
+              open={openShoppingCard}
+              toggleDrawer={toggleShoppingCardDrawer}
+            />
+          )}
+          {profile?.email && <NotifyDrawer />}
           <IconButton
             onClick={handleClick}
             size="medium"

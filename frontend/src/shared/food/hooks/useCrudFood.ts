@@ -120,8 +120,9 @@ export function useUpdateFood(id) {
     (food: FormData) => api.put(`/food/${id}`, food),
     {
       onSuccess: async () => {
-        await queryClient.invalidateQueries("foods");
-        await queryClient.invalidateQueries([]);
+        await queryClient.invalidateQueries(["foods"]);
+        await queryClient.invalidateQueries(["food-by-id", id]);
+        toast.success("Товар отредактирован");
       },
     }
   );

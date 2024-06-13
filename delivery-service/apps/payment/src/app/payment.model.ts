@@ -12,7 +12,7 @@ export class Payment extends Model {
   sha1_hash: string;
   @Column({ type: DataType.DOUBLE.UNSIGNED, allowNull: false })
   amount: number;
-  @Column({ type: DataType.STRING })
+@Column({ type: DataType.STRING })
   sender: string;
   @Column
   datetime: string;

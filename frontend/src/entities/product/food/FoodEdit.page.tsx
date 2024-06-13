@@ -57,6 +57,10 @@ export const FoodEditPage = () => {
   }
   const submit = async (food: IFoodDto) => {
     try {
+      if (food.price < 0) {
+        toast.error("Цена должна быть больше нуля");
+        return;
+      }
       const dataDto = new FormData();
       for (let i = 0; i < food?.pictures.length; i++) {
         dataDto.append("pictures", food.pictures[i]);
@@ -74,7 +78,6 @@ export const FoodEditPage = () => {
       dataDto.append("price", food.price?.toString());
       dataDto.append("grams", food.grams?.toString());
       await updateFood(dataDto);
-      reset();
     } catch (e: any) {
       toast.error(e?.response?.data?.message);
     }
@@ -92,19 +95,18 @@ export const FoodEditPage = () => {
       gap="50px"
       margin="50px"
     >
-              <Box maxWidth={"500px"}>
-
-      <AppImage
-        fallback={<Skeleton variant="rectangular" height={500} width={350} />}
-        errorFallback={
-          <Skeleton variant="rectangular" height={500} width={350} />
-        }
-        src={`${HOST + data?.data?.food?.pictures}`}
-        alt={data?.data?.food?.title}
-        height="100%"
-        width="100%"
-      />
-              </Box>
+      <Box maxWidth={"500px"}>
+        <AppImage
+          fallback={<Skeleton variant="rectangular" height={500} width={350} />}
+          errorFallback={
+            <Skeleton variant="rectangular" height={500} width={350} />
+          }
+          src={`${HOST + data?.data?.food?.pictures}`}
+          alt={data?.data?.food?.title}
+          height="100%"
+          width="100%"
+        />
+      </Box>
 
       <FormProvider {...methods}>
         <Wrapper onSubmit={handleSubmit(submit)}>

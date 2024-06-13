@@ -9,7 +9,7 @@ import { UserReviewAdmin } from "../UserReviewAdminTable";
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 40px;
+  gap: 30px;
 `;
 const GridEL = styled.div`
   margin: 0 auto;

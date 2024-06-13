@@ -10,6 +10,8 @@ const Wrapper = styled.div`
 `;
 const GridEL = styled.div`
   margin: 0 auto;
+  width: 100%;
+  max-width: 350px;
 `;
 enum ReviewsValues {
   NOT_VERIFED,

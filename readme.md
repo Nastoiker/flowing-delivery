@@ -12,7 +12,7 @@ docker compose -f docker-compose.yml -d --build
 ## Запуск без докера
 
 ```
-docker compose -f docker-compose.local.yml up
+docker compose -f docker-compose.local.yml up --build
 ```
 
 ### backend:

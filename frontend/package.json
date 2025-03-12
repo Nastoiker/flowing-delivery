@@ -21,6 +21,7 @@
     "@phosphor-icons/react": "^2.1.5",
     "@radix-ui/themes": "^3.0.2",
     "@reduxjs/toolkit": "^2.2.3",
+    "@tanstack/react-virtual": "^3.13.2",
     "@types/dompurify": "^3.0.5",
     "@types/lodash": "^4.17.0",
     "@types/react-slick": "^0.23.13",

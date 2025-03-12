@@ -41,8 +41,8 @@ export class Purchase extends Model {
   order: Order;
 
   @Column({ type: DataType.INTEGER })
-  quantity: number; // Количество купленного продукта
+  quantity: number;
 
   @Column({ type: DataType.DOUBLE })
-  totalPrice: number; // Цена за единицу
+  totalPrice: number;
 }

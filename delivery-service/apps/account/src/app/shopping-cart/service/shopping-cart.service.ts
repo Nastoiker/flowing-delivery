@@ -6,7 +6,7 @@ import { ShoppingCart } from '../model/shopping-cart.model';
 export class ShoppingCartService {
   constructor(
     @InjectModel(ShoppingCart)
-    private shoppingCartModel: typeof ShoppingCart // private readonly usersService: UserService, // private readonly productService: ProductService,
+    private shoppingCartModel: typeof ShoppingCart
   ) {}
 
   async findAll(userId: number | string): Promise<ShoppingCart[]> {

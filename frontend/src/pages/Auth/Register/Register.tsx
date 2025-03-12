@@ -53,11 +53,6 @@ export function Register() {
     surname: string;
   }) => {
     try {
-      if (!token) {
-        toast.error("Пройдите капчу");
-
-        return;
-      }
       const { name, email, password, username, surname } = data;
       await api.post("auth/register", {
         email,

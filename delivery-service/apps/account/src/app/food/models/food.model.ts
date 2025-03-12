@@ -25,13 +25,13 @@ export class Food extends Model {
   categoryId: number;
   @Column
   title: string;
-  @Column({ defaultValue: 0 })
+  @Column({ type: DataType.DOUBLE.UNSIGNED, defaultValue: 0 })
   price: number;
-  @Column({ defaultValue: 0 })
+  @Column({ defaultValue: 0, type: DataType.INTEGER.UNSIGNED })
   count: number;
-  @Column({ defaultValue: 0 })
+  @Column({ defaultValue: 0, type: DataType.INTEGER.UNSIGNED })
   calories: number;
-  @Column({ defaultValue: 0 })
+  @Column({ defaultValue: 0, type: DataType.DOUBLE.UNSIGNED })
   grams: number;
   @Column({ defaultValue: 0 })
   in_stock: number;

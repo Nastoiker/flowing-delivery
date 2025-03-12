@@ -47,15 +47,6 @@ const getNextPageParam: GetNextPageParam = (lastPage, pages) => {
   return lastPage?.allCount > pagesCount ? pages.length + 1 : undefined;
 };
 // TODO
-// export function useFoods({ page, pageSize, filter, sort }: FoodListParams) {
-//   return useInfiniteQuery(
-//     ["projects", filter],
-//     async ({ pageParam = 1 }) => getFoods({ pageParam, filter }),
-//     {
-//       getNextPageParam,
-//     }
-//   );
-// }
 export function useFoodById(foodId: number) {
   const query = useQuery(
     ["food-by-id", foodId],

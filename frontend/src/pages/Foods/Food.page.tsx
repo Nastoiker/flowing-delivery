@@ -37,13 +37,8 @@ export const FoodPage = () => {
     : data.data.foods;
   const filterValues = data.data?.foods.reduce(
     (acc, curr) => {
-      // if (!isEmpty(filter)) {
-      //   return acc;
-      // } NOT WORK
       acc.minPrice = Math.min(acc.minPrice, curr.price);
       acc.maxPrice = Math.max(acc.maxPrice, curr.price);
-
-      // Находим минимальное и максимальное количество калорий
       acc.minCalories = Math.min(acc.minCalories, curr.calories);
       acc.maxCalories = Math.max(acc.maxCalories, curr.calories);
       return acc;

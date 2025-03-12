@@ -6,10 +6,10 @@ import { RouterProvider } from "react-router-dom";
 import { useEffect } from "react";
 import { QueryClientProvider } from "react-query";
 import "react-quill/dist/quill.snow.css";
+import { scan } from "react-scan";
 import "./App.css";
 import BreakpointsProvider from "./app/Context/Breakpoints/BreakpointsProvider";
 import { PhosphorProvider } from "./app/Context/IconContext";
-import { GlobalLoader } from "./app/Loader/GlobalLoader";
 import { queryClient } from "./libs/react-query";
 import { ErrorPage } from "./shared/Error/Error.page";
 import { ErrorBoundary } from "./shared/ErrorBoundary";
@@ -24,15 +24,17 @@ function App() {
   useEffect(() => {
     try {
       const fetch = async () => {
-        const user = await dispatch(fetchCurrentUser());
-        console.log(user);
+        await dispatch(fetchCurrentUser());
       };
       fetch();
-      console.log("fetchMe");
     } catch (e) {
       console.log(e);
     }
   }, [dispatch]);
+
+  scan({
+    enabled: true,
+  });
   return (
     <>
       <ErrorBoundary fallback={<ErrorPage />}>
@@ -43,9 +45,6 @@ function App() {
             <QueryClientProvider client={queryClient}>
               <PhosphorProvider>
                 <RouterProvider router={router} />
-                <GlobalLoader />
-
-                {/* <ReactQueryDevtools /> */}
               </PhosphorProvider>
             </QueryClientProvider>
           </ThemeProvider>

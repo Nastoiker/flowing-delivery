@@ -34,10 +34,6 @@ export function Login() {
 
   const submit = async (data: { email: string; password: string }) => {
     try {
-      if (!tokenCaptcha) {
-        toast.error("Пройдите капчу");
-        return;
-      }
       setError(false);
       const { email, password } = data;
       const token = await api.post("auth/login", {

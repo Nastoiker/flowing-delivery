@@ -3,13 +3,11 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY package.json ./
+COPY package.json yarn.lock* ./
+RUN yarn install --frozen-lockfile --silent && yarn cache clean --all
+
 COPY . .
 
 EXPOSE 5173
 
-RUN npm run build
-RUN npm prune --production
-RUN npm ci --only=production && npm cache clean --force
-
-ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
+CMD yarn start

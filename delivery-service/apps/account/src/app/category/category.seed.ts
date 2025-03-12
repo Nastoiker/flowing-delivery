@@ -4,15 +4,6 @@ const categoriesData = [
   {
     name: 'Основные блюда',
     slug: 'main-dishes',
-    // products: [
-    //   { title: 'Паста', description: 'Вкусная паста', price: 10, in_stock: 1 },
-    //   {
-    //     title: 'Пицца',
-    //     description: 'Итальянская пицца',
-    //     price: 12,
-    //     in_stock: 1,
-    //   },
-    // ],
     subcategories: [
       {
         name: 'Салаты',
@@ -33,9 +24,6 @@ const categoriesData = [
   {
     name: 'Десерты',
     slug: 'desserts',
-    // products: [
-    //   { title: 'Тирамису', description: 'Итальянский десерт', price: 6 },
-    // ],
   },
 ];
 

@@ -6,9 +6,9 @@ import {
   useUpdateShoppingCart,
 } from "@/features/shopping-card/hooks/useCrudShoppingCard";
 import { HOST } from "@/helpers/api";
+import { getRandomColor } from "@/helpers/getRandomColor";
 import { AppImage } from "@/shared/components/image/AppImage";
 import { IFood } from "@/shared/interfaces/foods.interface";
-import { useAppDispatch } from "@/shared/store/hooks";
 import {
   Box,
   Button,
@@ -34,7 +34,6 @@ const ActionsButttons = styled.div`
 export function FoodCard(props: { food: IFood }) {
   const { food } = props;
   const { data: myCarts, isLoading: isLoadingCarts } = useShoppingCart();
-  const dispatch = useAppDispatch();
   const currentUser = useCurrentUser();
   const { createShoppingCart, isLoading: isLoadingCreate } =
     useCreateShoppingCart();
@@ -97,8 +96,21 @@ export function FoodCard(props: { food: IFood }) {
         }}
       >
         <AppImage
-          fallback={<Skeleton variant="rectangular" height={140} />}
-          errorFallback={<Skeleton variant="rectangular" height={140} />}
+          fallback={
+            <Skeleton
+              sx={{ bgcolor: "red" }}
+              variant="rectangular"
+              height={140}
+            />
+          }
+          errorFallback={
+            <Skeleton
+              color={getRandomColor()}
+              variant="rectangular"
+              sx={{ bgcolor: "red" }}
+              height={140}
+            />
+          }
           src={`${HOST + food.pictures}`}
           alt={food.title}
           height="140px"

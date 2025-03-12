@@ -38,75 +38,6 @@ export class OrderController {
     private readonly rmqService: RMQService,
     private readonly socketGateway: SocketGateway
   ) {}
-  //TODO сделай получение по food и user
-  //   @Get('food/:id')
-  //   async getOrderByFoodId(@Param('id') id: number) {
-  //     try {
-  //       const [comments, ratings] = await Promise.all([
-  //         this.rmqService.send<
-  //           ReviewsCommentsFindByFoodId.Request,
-  //           ReviewsCommentsFindByFoodId.Response
-  //         >(
-  //           ReviewsCommentsFindByFoodId.topic,
-  //           { productId: id },
-  //           { headers: { requestId: 'adad' } }
-  //         ),
-  //         this.rmqService.send<
-  //           ReviewsRatingsFindByFoodId.Request,
-  //           ReviewsRatingsFindByFoodId.Response
-  //         >(
-  //           ReviewsRatingsFindByFoodId.topic,
-  //           { foodId: id },
-  //           { headers: { requestId: 'adad' } }
-  //         ),
-  //       ]);
-  //       const data = comments.comments.map((c) =P> ({
-  //         ...ratings.ratings.find(
-  //           (r) => r.userId === c.userId && r.foodId === c.productId
-  //         ),
-  //         ...c,
-  //       }));
-  //       return { reviews: data };
-  //     } catch (e) {
-  //       if (e instanceof Error) {
-  //         throw new UnauthorizedException(e.message);
-  //       }
-  //     }
-  //   }
-  //   @Get('user/:id')
-  //   async getOrderByUserId(@Param('id') id: number) {
-  //     try {
-  //       const [ratings, comments] = await Promise.all([
-  //         this.rmqService.send<
-  //           ReviewsRatingFindByUserId.Request,
-  //           ReviewsRatingFindByUserId.Response
-  //         >(
-  //           ReviewsRatingFindByUserId.topic,
-  //           { userId: id },
-  //           { headers: { requestId: 'adad' } }
-  //         ),
-  //         this.rmqService.send<
-  //           ReviewsCommentsFindByUserId.Request,
-  //           ReviewsCommentsFindByUserId.Response
-  //         >(
-  //           ReviewsRatingFindByUserId.topic,
-  //           { userId: id },
-  //           { headers: { requestId: 'adad' } }
-  //         ),
-  //       ]);
-  //       const data = comments.comments.map((c) => ({
-  //         ...ratings.ratings.find(
-  //           (r) => r.userId === c.userId && r.foodId === c.productId
-  //         ),
-  //         ...c,
-  //       }));
-  //       return { reviews: data };
-  //     } catch (e) {
-  //       if (e instanceof Error) {
-  //         throw new UnauthorizedException(e.message);
-  //       }
-  //     }
-  //   }
 
   @UseGuards(JWTAuthGuard)
   @Get()
@@ -137,12 +68,6 @@ export class OrderController {
   @Get('/my-purchased')
   async getPurchasedOrders(@UserId() userId) {
     try {
-      // const {
-      //   sort: { field = 'createdAt', direction = 'desc' },
-      //   filter = {},
-      //   page = 1,
-      //   pageSize = 20,
-      // } = query || {};
       return await this.rmqService.send<
         OrderGetPurchsedByUserId.Request,
         OrderGetPurchsedByUserId.Response

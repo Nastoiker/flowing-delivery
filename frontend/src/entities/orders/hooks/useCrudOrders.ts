@@ -15,16 +15,6 @@ import {
   getOrders,
 } from "../api/orders.api";
 import { ordersQueryKeys } from "./ordersQueryKeys";
-// export function useOrders() {
-//   const query = useQuery(["orders"], async () => getOrders(), {
-//     retry: false,
-//     staleTime: Infinity,
-//     onError: (err: AxiosError<{ message?: string }>) => {
-//       console.error(err);
-//     },
-//   });
-//   return query;
-// }
 export type OrderResult<T = any> = {
   readonly orders: T[];
   readonly allCount: number;
@@ -102,16 +92,18 @@ export function useCreateOrder() {
     "createOrder",
     async (order: Partial<IOrder>) => createOrder(order),
     {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries("orders");
-        await queryClient.invalidateQueries("shopping-carts");
-        await queryClient.invalidateQueries("foods");
-      },
-      onError: async () => {
-        await queryClient.invalidateQueries("orders");
-        await queryClient.invalidateQueries("shopping-carts");
-        await queryClient.invalidateQueries("foods");
-      },
+      onSuccess: async () =>
+        Promise.all([
+          queryClient.invalidateQueries("orders"),
+          queryClient.invalidateQueries("shopping-carts"),
+          queryClient.invalidateQueries("foods"),
+        ]),
+      onError: async () =>
+        Promise.all([
+          queryClient.invalidateQueries("orders"),
+          queryClient.invalidateQueries("shopping-carts"),
+          queryClient.invalidateQueries("foods"),
+        ]),
     }
   );
   return {
@@ -132,7 +124,6 @@ export function useUpdateOrder(id) {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries("order");
-        await queryClient.invalidateQueries([]);
       },
     }
   );

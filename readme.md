@@ -1,8 +1,10 @@
+## Desc
+
+Сервис доставки еды, сделанный на микросервисах (DDD, SRP)
+
+## Запуск всех контейнеров
+
 ```
-##Сервис доставки еды
-
-##Запуск всех контейнеров
-
 docker compose -f docker-compose.yml -d --build
 
 
@@ -11,13 +13,18 @@ docker compose -f docker-compose.yml -d --build
 docker compose -f docker-compose.local.yml up
 ```
 
-```
-##Запуск без докера
+## Запуск без докера
 
-backend:
+# backend:
+
+```
 nx run-many --target=serve --all --parallel=2
 
-frontend:
+```
+
+# frontend:
+
+```
 yarn
 yarn run dev
 ```

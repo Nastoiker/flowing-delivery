@@ -47,7 +47,7 @@ export class OrderController {
         sort: { field = 'createdAt', direction = 'desc' },
         filter = {},
         page = 1,
-        pageSize = 20,
+        pageSize = 10,
       } = query || {};
       return await this.rmqService.send<
         OrderGetAll.Request,

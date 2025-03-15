@@ -41,9 +41,6 @@ export function FoodCard(props: { food: IFood }) {
     () => myCarts?.data?.shoppingCart?.find((p) => p?.productId === food.id),
     [myCarts, food]
   );
-  // if (isAdded) {
-  //   alert(JSON.stringify(isAdded, null, 2));
-  // }
   const { deleteShoppingCart, isLoading: isLoadingDelete } =
     useDeleteShoppingCart();
   const { updateShoppingCart, isLoading: isUpdating } = useUpdateShoppingCart();

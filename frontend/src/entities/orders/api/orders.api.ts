@@ -4,7 +4,7 @@ import { IOrder } from "@/shared/interfaces/order.interface";
 export async function getOrders({
   filter = {},
   page = "1",
-  pageSize = "20",
+  pageSize = "10",
   sort = { field: "createdAt", direction: "desc" },
 }): Promise<{
   data: { orders: IOrder[]; allCount: number };

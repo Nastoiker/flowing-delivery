@@ -30,22 +30,13 @@ const getNextPageParam: GetNextPageParam = (lastPage, pages) => {
 export function useUsers({ pageSize, filter, sort, page }: FoodListParams) {
   return useInfiniteQuery(
     userQueryKeys.usersList({ page, pageSize, filter, sort }),
-    async () => getUsers({ page, pageSize, sort, filter }),
+    async ({ pageParam }) =>
+      getUsers({ page: pageParam, pageSize, sort, filter }),
     {
       getNextPageParam,
     }
   );
 }
-// export function useUsers() {
-//   //@ts-ignore TODO
-//   return useQuery(["users"], getUsers, {
-//     retry: false,
-//     staleTime: 3000,
-//     onError: (err: AxiosError<{ message?: string }>) => {
-//       console.error(err);
-//     },
-//   });
-// }
 export function useUpdateUsers() {
   const queryClient = useQueryClient();
   const {

@@ -7,7 +7,7 @@
 
 ## Start the app
 
-To start the development server run `nx serve backend`. Open your browser and navigate to http://localhost:4200/. Happy coding!R
+To start the development server run `nx serve backend`. Open your browser and navigate to http://localhost:4200/. Happy coding!
 
 
 ## Generate code

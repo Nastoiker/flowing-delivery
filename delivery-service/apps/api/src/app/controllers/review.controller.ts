@@ -45,7 +45,7 @@ export class ReviewController {
       sort: { field = 'createdAt', direction = 'desc' },
       filter = {},
       page = 1,
-      pageSize = 20,
+      pageSize = 10,
     } = query || {};
     try {
       const [ratings, { comments, allCount }] = await Promise.all([

@@ -32,16 +32,15 @@ type GetNextPageParam = <T = any>(
   pages: ResType<T>[]
 ) => number | undefined;
 const getNextPageParam: GetNextPageParam = (lastPage, pages) => {
-  const pagesCount = pages.reduce(
-    (acc, page) => acc + page.data.orders.length,
-    0
-  );
-  return lastPage?.data.allCount > pagesCount ? pages.length + 1 : undefined;
+  const pagesCount = pages.length;
+
+  return lastPage?.data.allCount > pagesCount * 20 ? pagesCount + 1 : undefined;
 };
 export function useOrders({ pageSize, filter, sort, page }: FoodListParams) {
   return useInfiniteQuery(
     ordersQueryKeys.foodList({ page, pageSize, filter, sort }),
-    async () => getOrders({ page, pageSize, sort, filter }),
+    async ({ pageParam = 1 }) =>
+      getOrders({ page: pageParam, pageSize, sort, filter }),
     {
       getNextPageParam,
     }

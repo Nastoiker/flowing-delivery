@@ -4,10 +4,9 @@ import { IFood } from "@/shared/interfaces/foods.interface";
 export async function getFoods({
   filter = {},
   page = "1",
-  pageSize = "20",
+  pageSize = "10",
   sort = { field: "createdAt", direction: "desc" },
 }): Promise<{
-  
   data: { foods: IFood[] };
 }> {
   return api.get("food", {

@@ -1,27 +1,26 @@
+import { useWindowSize } from "@/app/hooks/useWindowSize";
 import { useOrders } from "@/entities/orders/hooks/useCrudOrders";
 import { OrderCard } from "@/entities/orders/ui/OrderCard";
 import { FilterOrderDrawer } from "@/features/orders/Filter/FilterOrder";
+import { withGridWrapperCards } from "@/shared/containers/order/DekstopCard";
+import { withVirtualizeCards } from "@/shared/containers/order/MobileCards";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import styled from "styled-components";
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
-`;
-const GridEL = styled.div`
-  margin: 0 auto;
-`;
+
 export const OrdersPage = () => {
   const [filter, setFilter] = useState({});
-  const [sort, setSort] = useState({ field: "createdAt", direction: "desc" });
+  const [sort, setSort] = useState({ field: "id", direction: "asc" });
   //@ts-ignore
-  const { data, fetchNextPage } = useOrders({
+  const { data, fetchNextPage, isLoading, hasNextPage } = useOrders({
     filter,
     sort,
   });
+
   const { ref, inView } = useInView();
+  const { matches960 } = useWindowSize();
+
+  const allOrders = data?.pages.flatMap((p) => p.data.orders) ?? [];
   const handleChangeSort = (field, directon) => {
     setSort((prev) => ({ ...prev, field, directon }));
   };
@@ -34,6 +33,12 @@ export const OrdersPage = () => {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
+  if (isLoading) {
+    return <div>загрузка</div>;
+  }
+  const ContainersCard = matches960
+    ? withVirtualizeCards(OrderCard)
+    : withGridWrapperCards(OrderCard);
   return (
     <>
       <Box
@@ -48,16 +53,9 @@ export const OrdersPage = () => {
           onChangeSort={handleChangeSort}
         />
       </Box>
-      <Wrapper>
-        {data?.pages.map((p) => {
-          return p?.data?.orders?.map((o) => (
-            <GridEL key={o.id}>
-              <OrderCard order={o} />
-            </GridEL>
-          ));
-        })}
-        <div style={{ height: "20px" }} ref={ref}></div>
-      </Wrapper>
+      <ContainersCard hasNextPage={Boolean(hasNextPage)} allRows={allOrders} />
+
+      {hasNextPage && <div style={{ height: "20px" }} ref={ref}></div>}
     </>
   );
 };

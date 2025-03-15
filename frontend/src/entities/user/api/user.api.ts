@@ -14,7 +14,7 @@ export const updateMe = async () => {};
 export async function getUsers({
   filter = {},
   page = "1",
-  pageSize = "20",
+  pageSize = "10",
   sort = { field: "createdAt", direction: "desc" },
 }): Promise<{
   data: { users: IUser[]; allCount: number };

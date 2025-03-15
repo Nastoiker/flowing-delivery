@@ -8,7 +8,7 @@ import { FoodListParams, foodQueryKeys } from "./foods.queries";
 
 export function useFoods({
   page = "1",
-  pageSize = "100",
+  pageSize = "10",
   filter = {},
   sort = { field: "createdAt", direction: "desc" },
 }: FoodListParams) {

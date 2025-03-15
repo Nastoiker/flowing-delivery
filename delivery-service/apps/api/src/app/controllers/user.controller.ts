@@ -104,7 +104,7 @@ export class UserController {
         sort: { field = 'createdAt', direction = 'desc' },
         filter = {},
         page = 1,
-        pageSize = 20,
+        pageSize = 10,
       } = query;
       return await this.rmqService.send<
         AccountGetAll.Request,

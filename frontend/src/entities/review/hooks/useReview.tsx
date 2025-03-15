@@ -89,7 +89,8 @@ export function useAllReviews({
 }: FoodListParams) {
   return useInfiniteQuery(
     reviewQueryKeys.reviewList({ page, pageSize, filter, sort }),
-    async () => getAllReviews({ page, pageSize, sort, filter }),
+    async ({ pageParam }) =>
+      getAllReviews({ page: pageParam, pageSize, sort, filter }),
     {
       retry: false,
       staleTime: 3000,

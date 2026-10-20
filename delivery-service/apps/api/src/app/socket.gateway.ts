@@ -31,6 +31,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer()
   server: Server;
+  // REVIEW R9: local to one process and one socket per user. Keep one API
+  // replica until multi-connection rooms and cross-instance delivery exist.
   private clients = new Map<string, Socket>();
 
   // afterInit() {

@@ -1,11 +1,17 @@
-## Desc
+# Flowing Delivery
 
-Сервис доставки еды, сделанный на микросервисах (DDD, SRP)
+Сервис доставки еды на React и NestJS с обменом сообщениями через RabbitMQ.
+
+## Senior review и Kubernetes-лаборатория
+
+- [Ревью: задумка, приоритеты, критерии исправления и план развития](docs/SENIOR_REVIEW.md)
+- [Локальный Kubernetes: запуск, диагностика и упражнения](k8s/README.md)
+- [Проверки и ограничения ветки senior](docs/SENIOR_VALIDATION.md)
 
 ## Запуск всех контейнеров
 
 ```
-docker compose -f docker-compose.yml -d --build
+docker compose -f docker-compose.yml up -d --build
 
 ```
 

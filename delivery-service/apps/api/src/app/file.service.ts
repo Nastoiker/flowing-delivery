@@ -9,7 +9,7 @@ export class FilesService {
   async saveFile(file: MFile, folder?: string): Promise<FileElementResponse> {
     const dateFolder = format(new Date(), 'yyyy-MM-dd');
     const uploadFolder = `${path}/uploads/${dateFolder}`;
-    // Built-in fs avoids relying on a transitive dev dependency in the runtime image.
+    // Встроенный fs исключает зависимость рабочего образа от косвенно установленного fs-extra.
     await mkdir(uploadFolder, { recursive: true });
     await writeFile(`${uploadFolder}/${file.originalname}`, file.buffer);
     return {

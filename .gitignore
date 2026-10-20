@@ -1,6 +1,7 @@
 /dbdata
 
-# New local credentials and generated lab artifacts (tracked historical envs need a separate audit).
+# Новые локальные секреты и результаты сборки лаборатории.
+# Уже отслеживаемые env-файлы требуют отдельной проверки: это правило не удаляет их из Git.
 **/.env
 **/.*.env
 k8s/*.local.*

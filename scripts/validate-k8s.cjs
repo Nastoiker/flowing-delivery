@@ -1,4 +1,4 @@
-// Offline cross-resource checks. Not an API schema validator or runtime smoke test.
+// Локальная проверка связей ресурсов. Не заменяет проверку схемы API и запуск стенда.
 const { execFileSync } = require('node:child_process');
 const { join } = require('node:path');
 const assert = require('node:assert/strict');

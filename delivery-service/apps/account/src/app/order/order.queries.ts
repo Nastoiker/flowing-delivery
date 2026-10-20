@@ -101,9 +101,9 @@ export class OrderQueries {
     if (!cartItems.length) {
       throw new Error('Корзина пуста ' + dto.userId);
     }
-    // REVIEW R4/R6 (docs/SENIOR_REVIEW.md): this is one business operation.
-    // A failure after creation currently leaves partial state. Add a shared
-    // transaction, concurrent stock protection and an idempotency key together.
+    // РЕВЬЮ R4/R6 (docs/SENIOR_REVIEW.md): все изменения относятся к одной бизнес-операции.
+    // Ошибка после создания заказа сейчас оставляет частично сохранённые данные.
+    // Нужны общая транзакция, защита конкурентного списания и ключ идемпотентности.
     const order = await this.orderRepository.createOrder({ ...dto });
     await this.orderRepository.createFoodForOrder(cartItems, order.id);
     await this.shoppingCarTRep.clearedShoppingCart(dto.userId);

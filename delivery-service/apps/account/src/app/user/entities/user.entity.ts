@@ -1,6 +1,8 @@
 import { IDomainEvent, IUser, UserRole } from '@delivery-service/interfaces';
 import { compare, genSalt, hash } from 'bcryptjs';
 
+// РЕВЬЮ DDD: здесь уже есть поведение (хеширование и проверка пароля),
+// но общий IUser смешивает хранение, связи и публичные данные. Границу модели стоит уточнить.
 export class UserEntity implements IUser {
   id?: number;
   displayName?: string;
@@ -11,6 +13,7 @@ export class UserEntity implements IUser {
   status: string;
   password: string;
   roles: UserRole;
+  // Само поле событий ещё не реализует их создание и обработку; см. раздел DDD в ревью.
   events: IDomainEvent[] = [];
   constructor(user: IUser) {
     this.id = user.id;

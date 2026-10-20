@@ -15,6 +15,8 @@ import { RatingModule } from './rating/rating.module';
 import { ShoppingCartModule } from './shopping-cart/shopping-cart.module';
 import { UserModule } from './user/user.module';
 
+// РЕВЬЮ АРХИТЕКТУРЫ: account объединяет учётные записи, каталог, корзину и заказы.
+// Сначала определяем границы бизнес-модулей и владение данными, затем решаем, что выносить в процессы.
 @Module({
   imports: [
     AuthModule,

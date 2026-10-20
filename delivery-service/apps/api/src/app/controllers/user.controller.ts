@@ -46,8 +46,8 @@ export class UserController {
     }
   }
   @Put()
-  // REVIEW R1: Partial<IUser> is not an input policy. Allow-list profile fields
-  // and keep the authenticated ID separate; the body can override id below.
+  // РЕВЬЮ R1: Partial<IUser> не ограничивает разрешённые поля входящего запроса.
+  // Нужен явный список полей профиля: ниже тело запроса может перекрыть ID из авторизации.
   async updateMe(@UserId() userId: number, @Body() updateDto: Partial<IUser>) {
     try {
       return await this.rmqService.send<

@@ -11,6 +11,8 @@ import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Allow Nest providers to close connections when Kubernetes sends SIGTERM.
+  app.enableShutdownHooks();
   const configService = new ConfigService();
   await app.init();
   Logger.log(`🚀 Event is running`);

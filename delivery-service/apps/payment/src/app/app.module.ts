@@ -17,7 +17,7 @@ import { PaymentRepository } from './payment.repository';
     DatabaseModule,
     ConfigModule.forRoot({
       load: [configuration],
-      envFilePath: 'envs/.banner.env',
+      envFilePath: 'envs/.payment.env',
       isGlobal: true,
     }),
     HttpModule,

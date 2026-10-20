@@ -11,11 +11,13 @@ import { startSeedFood } from './app/food/food.seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Kubernetes sends SIGTERM; Nest must invoke provider shutdown hooks.
+  app.enableShutdownHooks();
+  await app.init();
   const hasCategories = await seedCategories();
   if (hasCategories) {
     await startSeedFood();
   }
-  await app.init();
 }
 
 bootstrap();

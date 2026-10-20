@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: flowing-delivery-lab
+resources:
+  - namespace.yaml
+  - infrastructure.yaml
+  - applications.yaml
+# Secret намеренно создаётся отдельным локальным скриптом: паролей в Git нет.
+configMapGenerator:
+  - name: delivery-config
+    literals:
+      - DB_HOST=postgres
+      - DB_TYPE=postgres
+      - DB_NAME=delivery
+      - DB_USER=delivery
+      - DB_BANNER_NAME=banner
+      - DB_BANNER_USER=delivery
+      - DB_EVENT_NAME=event
+      - DB_EVENT_USER=delivery
+      - DB_PAYMENT_NAME=payment
+      - DB_PAYMENT_USER=delivery
+      - DB_LOGGING=false
+      - LOG_QUERY_PARAMETERS=false
+      - AMQP_HOSTNAME=rabbitmq
+      - AMQP_USER=delivery
+      - AMQP_EXCHANGE=delivery
+      - PORT=3444
+  - name: postgres-init
+    files:
+      - 01-databases.sql=postgres-init.sql

@@ -1,1 +1,7 @@
 /dbdata
+
+# New local credentials and generated lab artifacts (tracked historical envs need a separate audit).
+**/.env
+**/.*.env
+k8s/*.local.*
+k8s/rendered*.yaml

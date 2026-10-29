@@ -16,6 +16,7 @@ const result = spawnSync(
     '--runTestsByPath',
     'apps/account/src/app/order/place-order.integration.spec.ts',
     'apps/account/src/app/order/saga/checkout-saga.integration.spec.ts',
+    ...process.argv.slice(2),
   ],
   { cwd: join(__dirname, '..'), stdio: 'inherit' }
 );

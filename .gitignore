@@ -7,3 +7,4 @@
 **/.*.env
 k8s/*.local.*
 k8s/rendered*.yaml
+**/test-results/

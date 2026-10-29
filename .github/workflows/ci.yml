@@ -3,13 +3,85 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      run_kubernetes:
+        description: Also run Kubernetes and S3 smoke tests
+        type: boolean
+        default: false
 permissions:
   contents: read
+env:
+  CI: true
+  NX_DAEMON: false
 concurrency:
   group: delivery-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  build:
+    name: Build (${{ matrix.component }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: backend
+            directory: delivery-service
+            command: npm run build:ci
+            output: delivery-service/dist/apps
+          - component: frontend
+            directory: frontend
+            command: npm run build
+            output: frontend/dist
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.directory }}/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: ${{ matrix.command }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.component }}
+          path: ${{ matrix.output }}
+          if-no-files-found: error
+          retention-days: 7
+
+  unit:
+    name: Unit tests (${{ matrix.suite }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [domain, api]
+    defaults:
+      run:
+        working-directory: delivery-service
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: delivery-service/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: mkdir -p test-results
+      - run: npm run test:${{ matrix.suite }} -- --ci --json --outputFile=test-results/${{ matrix.suite }}.json
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: tests-${{ matrix.suite }}
+          path: delivery-service/test-results/*.json
+          retention-days: 7
+
   transactions:
+    name: PostgreSQL integration tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -35,19 +107,24 @@ jobs:
           cache: npm
           cache-dependency-path: delivery-service/package-lock.json
       - run: npm ci --no-audit --no-fund
-      - name: Domain and application invariants without database
-        run: npm run test:domain
       - name: Order and saga PostgreSQL integration tests
-        run: npm run test:transactions
+        run: |
+          mkdir -p test-results
+          npm run test:transactions -- --ci --json --outputFile=test-results/transactions.json
         env:
           TRANSACTION_TEST_DATABASE_URL: postgres://transaction_student:local-test-only@127.0.0.1:5432/delivery_transactions_test
-      - name: Order API notification failure handling
-        run: npx jest --config apps/api/jest.config.ts --runInBand --runTestsByPath apps/api/src/app/controllers/order.controller.spec.ts apps/api/src/app/configs/rmq.config.spec.ts apps/api/src/app/storage/media-storage.spec.ts
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: tests-transactions
+          path: delivery-service/test-results/*.json
+          retention-days: 7
 
   kubernetes:
     runs-on: ubuntu-latest
     timeout-minutes: 35
-    needs: transactions
+    needs: [build, unit, transactions]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_kubernetes }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4

@@ -9,7 +9,7 @@
 - [Как работать с Kubernetes](docs/KUBERNETES_GUIDE.md): объекты проекта, команды, обновление и диагностика.
 - Транзакционное оформление и конкурентное списание остатков: `npm run test:transactions` в `delivery-service`.
 - [Durable checkout saga](docs/CHECKOUT_SAGA.md): компенсации, идемпотентность, восстановление после потери ответа; пока отдельный модуль с тестовыми участниками.
-- [GitHub Actions](.github/workflows/ci.yml): PostgreSQL integration tests, API tests, сборка пяти backend-сервисов и frontend, развёртывание в kind и smoke check API через RabbitMQ.
+- [GitHub Actions](docs/CI.md): сборка backend/frontend, доменные и API-тесты, интеграционные тесты PostgreSQL при каждом push/PR; Kubernetes и S3 smoke tests — по ручному запуску.
 - [Kubernetes](k8s/README.md): локальный стенд с PVC, probes, лимитами ресурсов и генерируемыми секретами.
 
 CI запускается при push/PR. Наличие workflow не означает, что он уже прошёл на GitHub.

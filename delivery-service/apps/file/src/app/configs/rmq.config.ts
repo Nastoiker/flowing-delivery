@@ -8,8 +8,9 @@ export const getRMQConfig = (): IRMQServiceAsyncOptions => ({
     exchangeName: configService.get('AMQP_EXCHANGE') ?? '',
     connections: [
       {
-        login: configService.get('AMQP_USER') ?? '',
-        password: configService.get('AMQP_PASSWORD') ?? '',
+        // nestjs-rmq interpolates these fields directly into an AMQP URI.
+        login: encodeURIComponent(configService.get('AMQP_USER') ?? ''),
+        password: encodeURIComponent(configService.get('AMQP_PASSWORD') ?? ''),
         host: configService.get('AMQP_HOSTNAME') ?? '',
       },
     ],

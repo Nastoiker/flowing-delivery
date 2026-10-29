@@ -1,49 +1,51 @@
-# Flowing Delivery
+﻿# Flowing Delivery
 
-Сервис доставки еды на React и NestJS с обменом сообщениями через RabbitMQ.
+Сервис доставки еды: React, NestJS, PostgreSQL, RabbitMQ. Оформление заказа с транзакциями, checkout saga и загрузка файлов в local/S3 storage.
 
-## Проверяемые инженерные сценарии
+## Локальный запуск
 
-- [Домен оформления заказа](docs/DDD_CHECKOUT.md): Money, агрегат со снимками позиций, application ports, PostgreSQL-адаптер и контролируемые переходы статуса.
-- [S3 storage](docs/S3_STORAGE.md): local/S3, закрытый bucket, MinIO-стенд и проверка сохранности файлов после замены Pod.
-- [Как работать с Kubernetes](docs/KUBERNETES_GUIDE.md): объекты проекта, команды, обновление и диагностика.
-- Транзакционное оформление и конкурентное списание остатков: `npm run test:transactions` в `delivery-service`.
-- [Durable checkout saga](docs/CHECKOUT_SAGA.md): компенсации, идемпотентность, восстановление после потери ответа; пока отдельный модуль с тестовыми участниками.
-- [GitHub Actions](docs/CI.md): сборка backend/frontend, доменные и API-тесты, интеграционные тесты PostgreSQL при каждом push/PR; Kubernetes и S3 smoke tests — по ручному запуску.
-- [Kubernetes](k8s/README.md): локальный стенд с PVC, probes, лимитами ресурсов и генерируемыми секретами.
+Нужны Docker с Linux containers, kubectl, kind и PowerShell. Команды выполнять из корня репозитория. Для Docker выделить около 4 CPU и 8 ГБ RAM.
 
-CI запускается при push/PR. Наличие workflow не означает, что он уже прошёл на GitHub.
+```powershell
+git clone git@github.com:Nastoiker/flowing-delivery.git
+cd flowing-delivery
+git checkout feature/ddd-checkout
 
-## Senior review и Kubernetes-лаборатория
-
-- [Ревью: задумка, приоритеты, критерии исправления и план развития](docs/SENIOR_REVIEW.md)
-- [Локальный Kubernetes: запуск, диагностика и упражнения](k8s/README.md)
-- [Проверки и ограничения ветки senior](docs/SENIOR_VALIDATION.md)
-- [Практикум: транзакции, конкурентные заказы и восстановление после ошибок](docs/TRANSACTIONS_LAB.md)
-
-## Запуск всех контейнеров
-
-```
-docker compose -f docker-compose.yml up -d --build
-
+.\k8s\Build-Lab.ps1
+kind create cluster --name flowing-delivery --wait 120s
+kind load docker-image --name flowing-delivery flowing-delivery-backend:senior flowing-delivery-frontend:senior
+.\k8s\Deploy-Lab.ps1 -Context kind-flowing-delivery
 ```
 
-## Запуск без докера
+Если кластер уже создан, повторять `kind create cluster` не нужно. При блокировке PowerShell-скриптов запускать их через `powershell -ExecutionPolicy Bypass -File <путь>`.
 
-```
-docker compose -f docker-compose.local.yml up --build
-```
+Открыть два терминала и оставить команды работающими:
 
-### backend:
-
-```
-nx run-many --target=serve --all --parallel=2
-
+```sh
+kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward svc/api 3444:3444
 ```
 
-### frontend:
+```sh
+kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward svc/frontend 5173:5173
+```
 
+Приложение: **http://localhost:5173/menu**. Проверка API: http://localhost:3444/api/categories. Зарегистрируй пользователя через интерфейс. Пароли инфраструктуры создаются автоматически; данные хранятся в PVC.
+
+## На сервере Kubernetes
+
+Нужны готовый кластер с default StorageClass, доступ через kubeconfig и registry для образов. [Команды сборки, публикации и развёртывания →](docs/SERVER_KUBERNETES.md)
+
+После развёртывания выполнить на своём компьютере с kubeconfig сервера, в двух терминалах:
+
+```sh
+kubectl --context YOUR_SERVER_CONTEXT -n flowing-delivery-lab port-forward svc/api 3444:3444
+kubectl --context YOUR_SERVER_CONTEXT -n flowing-delivery-lab port-forward svc/frontend 5173:5173
 ```
-yarn
-yarn run dev
-```
+
+Открыть тот же **http://localhost:5173/menu**. Это демонстрационный стенд: публичный домен/Ingress потребует настройки адреса API и CORS; текущий вариант использует port-forward.
+
+## Тесты и документация
+
+В `delivery-service`: `npm ci`, `npm run test:domain`, `npm run test:api`. Сборка: `npm run build:ci`. В `frontend`: `npm ci`, `npm run build`. В Windows можно использовать `npm.cmd`.
+
+[CI и PostgreSQL-тесты](docs/CI.md) · [DDD](docs/DDD_CHECKOUT.md) · [Saga](docs/CHECKOUT_SAGA.md) · [S3](docs/S3_STORAGE.md) · [Kubernetes: диагностика и остановка](k8s/README.md)

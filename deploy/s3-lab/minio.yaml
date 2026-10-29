@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+spec:
+  selector: {app: minio}
+  ports:
+    - {name: s3, port: 9000, targetPort: 9000}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  serviceName: minio
+  replicas: 1
+  selector:
+    matchLabels: {app: minio}
+  template:
+    metadata:
+      labels: {app: minio}
+    spec:
+      automountServiceAccountToken: false
+      securityContext: {fsGroup: 1000, runAsUser: 1000, runAsGroup: 1000, runAsNonRoot: true}
+      containers:
+        - name: minio
+          image: flowing-delivery-minio:lab
+          imagePullPolicy: Never
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef: {name: s3-lab-credentials, key: AWS_ACCESS_KEY_ID}
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: s3-lab-credentials, key: AWS_SECRET_ACCESS_KEY}
+          ports:
+            - {containerPort: 9000}
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {cpu: '1', memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          startupProbe:
+            httpGet: {path: /minio/health/live, port: 9000}
+            periodSeconds: 3
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: {path: /minio/health/ready, port: 9000}
+            periodSeconds: 5
+          volumeMounts:
+            - {name: data, mountPath: /data}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: {storage: 2Gi}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: s3-lab-create-bucket
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 180
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext: {runAsUser: 1000, runAsNonRoot: true}
+      containers:
+        - name: create-bucket
+          image: flowing-delivery-backend:senior
+          imagePullPolicy: Never
+          command: [node, -e]
+          args:
+            - |
+              const {S3Client, CreateBucketCommand, HeadBucketCommand} = require('@aws-sdk/client-s3');
+              const client = new S3Client({endpoint:'http://minio:9000',region:'us-east-1',forcePathStyle:true,maxAttempts:2});
+              (async () => {
+                try {
+                  for (let attempt=0; attempt<40; attempt++) {
+                    try {
+                      await client.send(new CreateBucketCommand({Bucket:'delivery-media'}), {abortSignal:AbortSignal.timeout(5000)});
+                      console.log('Private bucket ready'); return;
+                    } catch (error) {
+                      if (error.name === 'BucketAlreadyOwnedByYou') {
+                        await client.send(new HeadBucketCommand({Bucket:'delivery-media'}));
+                        console.log('Existing private bucket ready'); return;
+                      }
+                      if (attempt === 39) throw new Error('Bucket initialization failed');
+                      await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                  }
+                } finally {client.destroy();}
+              })().catch(error => {console.error(error.message);process.exitCode=1;});
+          envFrom:
+            - secretRef: {name: s3-lab-credentials}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 300m, memory: 192Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}

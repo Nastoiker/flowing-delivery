@@ -1,14 +1,14 @@
 param([string]$Context = 'docker-desktop')
 $ErrorActionPreference = 'Stop'
 # Пароли генерируются в памяти; не печатаются и не сохраняются в репозитории.
-if ($Context -ne 'docker-desktop') { throw 'This lab script targets docker-desktop only.' }
+if ($Context -notin @('docker-desktop', 'kind-flowing-delivery')) { throw 'Only the dedicated local lab contexts are allowed.' }
 & kubectl --context $Context get namespace flowing-delivery-lab -o name
 if ($LASTEXITCODE -ne 0) { throw 'Create the lab namespace first.' }
 $existing = & kubectl --context $Context -n flowing-delivery-lab get secret delivery-secrets --ignore-not-found -o name
 if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect secrets.' }
 if ($existing) {
     Write-Host 'Secret already exists; keeping credentials matched to persistent databases.'
-    exit 0
+    return
 }
 function New-RandomValue {
     $bytes = New-Object byte[] 32

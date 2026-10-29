@@ -54,8 +54,7 @@ export class BannerController {
             '.' +
             extension[extension.length - 1],
           buffer: Buffer.from(file.buffer),
-        }),
-        '/banner'
+        })
       );
       return await this.rmqService.send<
         BannerCreate.Request,

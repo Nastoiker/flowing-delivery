@@ -1,5 +1,31 @@
 # Kubernetes-лаборатория: от запуска до диагностики
 
+Начни с [краткого руководства по этому проекту](../docs/KUBERNETES_GUIDE.md).
+Опциональный [S3/MinIO overlay](../docs/S3_STORAGE.md) подключается после базового запуска.
+
+## Запуск в kind и CI
+
+Docker Desktop Kubernetes включать необязательно: альтернативный локальный кластер
+запускается через [kind](https://kind.sigs.k8s.io/docs/user/quick-start/).
+После установки kind и сборки образов (`Build-Lab.ps1`):
+
+```powershell
+kind create cluster --name flowing-delivery --wait 120s
+kind load docker-image --name flowing-delivery flowing-delivery-backend:senior flowing-delivery-frontend:senior
+.\k8s\Deploy-Lab.ps1 -Context kind-flowing-delivery
+```
+
+В командах ниже заменяй `--context docker-desktop` на `--context kind-flowing-delivery`.
+После двух port-forward выполни `node scripts/smoke.cjs` из корня репозитория.
+Проверяются HTML frontend и непустой список категорий через API → RabbitMQ → account.
+Этот же путь выполняет `.github/workflows/ci.yml` на одноразовом кластере.
+CI использует PostgreSQL service container для интеграционных тестов отдельно от
+базы приложения. Инструкция GitHub: [PostgreSQL services](https://docs.github.com/en/actions/tutorials/use-containerized-services/create-postgresql-service-containers).
+
+Для остановки kind с сохранением данных: `docker stop flowing-delivery-control-plane`;
+для повторного запуска: `docker start flowing-delivery-control-plane`.
+`kind delete cluster --name flowing-delivery` полностью удаляет локальный кластер и данные.
+
 Цель: самостоятельно объяснить Pod, Deployment, Service, ConfigMap, Secret и PVC; найти причину сбоя; проверить восстановление процесса и сохранность данных.
 
 Это локальная лаборатория существующего приложения. Реальные платежи не выполнять, наружу сервисы не публиковать: [ревью](../docs/SENIOR_REVIEW.md) содержит неисправленные P0. Проверки текущей ветки перечислены в [отчёте](../docs/SENIOR_VALIDATION.md).
@@ -25,12 +51,12 @@ Chat/email/file не запускаются как отдельные прило
 ## Требования
 
 - Windows PowerShell, Docker Desktop с Linux containers.
-- Kubernetes включён в Docker Desktop; контекст docker-desktop доступен.
+- Kubernetes включён в Docker Desktop (контекст docker-desktop) либо создан kind-flowing-delivery по инструкции выше.
 - Default StorageClass с динамическим созданием volume.
 - Ориентир для Docker Desktop: 4 CPU и 6–8 GiB RAM.
 - Свободные локальные порты 5173 и 3444.
 
-Скрипты намеренно принимают только docker-desktop. Они не переключают текущий контекст и не применяют изменения в другом кластере. Для kind/minikube потребуется отдельная адаптация загрузки образов.
+Скрипты принимают только docker-desktop и kind-flowing-delivery. Deploy не переключает текущий контекст и не применяет изменения в других кластерах. Для minikube потребуется отдельная адаптация.
 
 Образы приложений локальные, imagePullPolicy: Never. Если backend не может найти локальный образ, проверь видимость образов между Docker и runtime выбранного Docker Desktop кластера. ErrImageNeverPull означает проблему доступности образа, не приложения.
 

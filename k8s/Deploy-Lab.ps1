@@ -1,9 +1,9 @@
 param([string]$Context = 'docker-desktop')
 $ErrorActionPreference = 'Stop'
-if ($Context -ne 'docker-desktop') { throw 'This lab script targets docker-desktop only.' }
+if ($Context -notin @('docker-desktop', 'kind-flowing-delivery')) { throw 'Only the dedicated local lab contexts are allowed.' }
 # Явный context защищает от случайного применения в другом открытом кластере.
 & kubectl --context $Context cluster-info
-if ($LASTEXITCODE -ne 0) { throw 'Enable Kubernetes in Docker Desktop first.' }
+if ($LASTEXITCODE -ne 0) { throw 'Start the local Kubernetes cluster first.' }
 & kubectl --context $Context apply -f "$PSScriptRoot/namespace.yaml"
 if ($LASTEXITCODE -ne 0) { throw 'Namespace creation failed.' }
 & "$PSScriptRoot/New-LabSecret.ps1" -Context $Context

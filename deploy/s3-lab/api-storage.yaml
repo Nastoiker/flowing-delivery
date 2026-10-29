@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          env:
+            - {name: STORAGE_DRIVER, value: s3}
+            - {name: S3_BUCKET, value: delivery-media}
+            - {name: S3_ENDPOINT, value: 'http://minio:9000'}
+            - {name: AWS_REGION, value: us-east-1}
+            - {name: S3_FORCE_PATH_STYLE, value: 'true'}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef: {name: s3-lab-credentials, key: AWS_ACCESS_KEY_ID}
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef: {name: s3-lab-credentials, key: AWS_SECRET_ACCESS_KEY}
+# Keep the uploads PVC mounted so historical /uploads URLs remain readable.

@@ -1,0 +1,113 @@
+name: Delivery CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: delivery-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  transactions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-bookworm
+        env:
+          POSTGRES_DB: delivery_transactions_test
+          POSTGRES_USER: transaction_student
+          POSTGRES_PASSWORD: local-test-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U transaction_student -d delivery_transactions_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    defaults:
+      run:
+        working-directory: delivery-service
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: delivery-service/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - name: Order and saga PostgreSQL integration tests
+        run: npm run test:transactions
+        env:
+          TRANSACTION_TEST_DATABASE_URL: postgres://transaction_student:local-test-only@127.0.0.1:5432/delivery_transactions_test
+      - name: Order API notification failure handling
+        run: npx jest --config apps/api/jest.config.ts --runInBand --runTestsByPath apps/api/src/app/controllers/order.controller.spec.ts apps/api/src/app/configs/rmq.config.spec.ts apps/api/src/app/storage/media-storage.spec.ts
+
+  kubernetes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    needs: transactions
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: delivery-service/package-lock.json
+      - run: npm ci --prefix delivery-service --no-audit --no-fund
+      - name: Build backend (five services) and frontend with type checking
+        run: |
+          docker build -f delivery-service/Dockerfile.k8s -t flowing-delivery-backend:senior delivery-service
+          docker build -f frontend/Dockerfile.k8s -t flowing-delivery-frontend:senior frontend
+          docker build -f deploy/s3-lab/Dockerfile.minio -t flowing-delivery-minio:lab deploy/s3-lab
+      - name: Create disposable Kubernetes cluster
+        run: |
+          curl -fsSL https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-amd64 -o /tmp/kind
+          chmod +x /tmp/kind
+          /tmp/kind create cluster --name flowing-delivery --wait 120s
+          /tmp/kind load docker-image --name flowing-delivery flowing-delivery-backend:senior flowing-delivery-frontend:senior flowing-delivery-minio:lab
+      - name: Validate manifests
+        run: |
+          node scripts/validate-k8s.cjs
+          node scripts/validate-k8s.cjs deploy/s3-lab
+      - name: Deploy and wait for workloads
+        shell: pwsh
+        run: ./k8s/Deploy-Lab.ps1 -Context kind-flowing-delivery
+      - name: Smoke check frontend and API through RabbitMQ to account
+        shell: bash
+        run: |
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward service/api 3444:3444 > /tmp/api-forward.log 2>&1 &
+          API_PID=$!
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward service/frontend 5173:5173 > /tmp/frontend-forward.log 2>&1 &
+          FRONTEND_PID=$!
+          trap 'kill "$API_PID" "$FRONTEND_PID" || true' EXIT
+          node scripts/smoke.cjs
+          node scripts/smoke-storage.cjs write /tmp/local-media-proof.json local
+      - name: Enable S3 lab
+        shell: pwsh
+        run: ./k8s/Enable-S3Lab.ps1 -Context kind-flowing-delivery
+      - name: S3 upload survives API and object store pod recreation
+        shell: bash
+        run: |
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward service/api 3444:3444 > /tmp/s3-forward.log 2>&1 &
+          API_PID=$!
+          trap 'kill "$API_PID" || true' EXIT
+          curl --retry 20 --retry-connrefused --retry-delay 1 --max-time 10 -fsS http://127.0.0.1:3444/api/categories > /dev/null
+          node scripts/smoke-storage.cjs write /tmp/s3-media-proof.json s3
+          kill "$API_PID"
+          wait "$API_PID" || true
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab rollout restart deployment/api statefulset/minio
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab rollout status statefulset/minio --timeout=180s
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab rollout status deployment/api --timeout=180s
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward service/api 3444:3444 > /tmp/s3-forward.log 2>&1 &
+          API_PID=$!
+          node scripts/smoke-storage.cjs read /tmp/s3-media-proof.json
+          node scripts/smoke-storage.cjs read /tmp/local-media-proof.json
+      - name: Failure diagnostics
+        if: failure()
+        run: |
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab get pods,svc,pvc || true
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab get events --sort-by=.lastTimestamp || true
+          kubectl --context kind-flowing-delivery -n flowing-delivery-lab logs -l 'app in (api,account,payment,banner,event)' --all-containers --tail=80 --max-log-requests=5 || true
+      - name: Remove disposable cluster
+        if: always()
+        run: if [ -x /tmp/kind ]; then /tmp/kind delete cluster --name flowing-delivery; fi

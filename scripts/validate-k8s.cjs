@@ -4,7 +4,7 @@ const { join } = require('node:path');
 const assert = require('node:assert/strict');
 const YAML = require('../delivery-service/node_modules/yaml');
 const root = join(__dirname, '..');
-const rendered = execFileSync('kubectl', ['kustomize', join(root, 'k8s')], { encoding: 'utf8' });
+const rendered = execFileSync('kubectl', ['kustomize', join(root, process.argv[2] || 'k8s')], { encoding: 'utf8' });
 const resources = YAML.parseAllDocuments(rendered).map(d => {
   assert.equal(d.errors.length, 0, 'Invalid YAML');
   return d.toJSON();
@@ -13,8 +13,11 @@ const namespace = 'flowing-delivery-lab';
 const byKind = kind => resources.filter(r => r.kind === kind);
 const configs = new Set(byKind('ConfigMap').map(r => r.metadata.name));
 const pvcs = new Set(byKind('PersistentVolumeClaim').map(r => r.metadata.name));
-const workloads = resources.filter(r => ['Deployment', 'StatefulSet'].includes(r.kind));
-const knownSecretKeys = new Set(['JWT_SECRET', 'AMQP_PASSWORD', 'DB_PASSWORD']);
+const workloads = resources.filter(r => ['Deployment', 'StatefulSet', 'Job'].includes(r.kind));
+const knownSecrets = {
+  'delivery-secrets': new Set(['JWT_SECRET', 'AMQP_PASSWORD', 'DB_PASSWORD']),
+  's3-lab-credentials': new Set(['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY']),
+};
 assert.equal(byKind('Secret').length, 0, 'Credentials must not be embedded in manifests');
 assert.equal(new Set(resources.map(r => r.kind + '/' + r.metadata.name)).size, resources.length);
 for (const r of resources) {
@@ -23,7 +26,7 @@ for (const r of resources) {
 for (const w of workloads) {
   const spec = w.spec.template.spec;
   assert.equal(spec.automountServiceAccountToken, false);
-  for (const [key, value] of Object.entries(w.spec.selector.matchLabels)) {
+  for (const [key, value] of Object.entries(w.spec.selector?.matchLabels || {})) {
     assert.equal(w.spec.template.metadata.labels[key], value, 'Selector mismatch');
   }
   const volumeNames = new Set([
@@ -39,11 +42,12 @@ for (const w of workloads) {
     for (const v of c.volumeMounts || []) assert(volumeNames.has(v.name), 'Missing mounted volume');
     for (const env of c.envFrom || []) {
       if (env.configMapRef) assert(configs.has(env.configMapRef.name), 'Missing env ConfigMap');
+      if (env.secretRef) assert(knownSecrets[env.secretRef.name], 'Unknown env Secret');
     }
     for (const env of c.env || []) {
       if (env.valueFrom?.secretKeyRef) {
-        assert.equal(env.valueFrom.secretKeyRef.name, 'delivery-secrets');
-        assert(knownSecretKeys.has(env.valueFrom.secretKeyRef.key), 'Unknown Secret key');
+        const ref = env.valueFrom.secretKeyRef;
+        assert(knownSecrets[ref.name]?.has(ref.key), 'Unknown Secret or key');
       }
     }
     if (c.image.startsWith('flowing-delivery-')) assert.equal(c.imagePullPolicy, 'Never');
@@ -55,7 +59,7 @@ for (const w of workloads) {
 }
 for (const svc of byKind('Service')) {
   const selected = workloads.filter(w => Object.entries(svc.spec.selector).every(
-    ([k, v]) => w.spec.template.metadata.labels[k] === v));
+    ([k, v]) => w.spec.template.metadata?.labels?.[k] === v));
   assert(selected.length, 'Service selects no workload: ' + svc.metadata.name);
   const ports = selected.flatMap(w => w.spec.template.spec.containers.flatMap(c => c.ports || []));
   for (const p of svc.spec.ports) assert(ports.some(c => c.containerPort === p.targetPort), 'Service target port mismatch');

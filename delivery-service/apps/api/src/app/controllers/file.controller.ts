@@ -35,6 +35,7 @@ export class FileController {
     @UploadedFile() file: Express.Multer.File
     // @Query() params: PayloadDto
   ): Promise<FileElementResponse> {
+    if (!file) throw new BadRequestException('Image is required');
     const saveFile: MFile = new MFile(file);
     if (!file.mimetype.includes('image')) {
       throw new BadRequestException('Неверный формат файла');

@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
+import { MAX_IMAGE_BYTES, mediaStorageProvider } from './storage/media-storage';
+import { MediaController } from './storage/media.controller';
 
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -34,6 +37,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     RMQModule.forRootAsync(getRMQConfig()),
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule,
+    MulterModule.register({ limits: { fileSize: MAX_IMAGE_BYTES, files: 1 } }),
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: `${path}/uploads`,
@@ -41,6 +45,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [
+    MediaController,
     AuthController,
     UserController,
     PaymentController,
@@ -52,6 +57,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     CategoryController,
     FileController,
   ],
-  providers: [JwtStrategy, SocketGateway, FilesService],
+  providers: [JwtStrategy, SocketGateway, FilesService, mediaStorageProvider],
 })
 export class AppModule {}

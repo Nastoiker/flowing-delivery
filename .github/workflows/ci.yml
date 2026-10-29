@@ -35,6 +35,8 @@ jobs:
           cache: npm
           cache-dependency-path: delivery-service/package-lock.json
       - run: npm ci --no-audit --no-fund
+      - name: Domain and application invariants without database
+        run: npm run test:domain
       - name: Order and saga PostgreSQL integration tests
         run: npm run test:transactions
         env:

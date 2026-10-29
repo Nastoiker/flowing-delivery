@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build": "nx build",
-    "test:transactions": "node scripts/test-transactions.cjs"
+    "test:transactions": "node scripts/test-transactions.cjs",
+    "test:domain": "jest --config apps/account/jest.config.ts --runInBand --runTestsByPath apps/account/src/app/order/domain/checkout-order.spec.ts apps/account/src/app/order/application/place-order.spec.ts"
   },
   "private": true,
   "dependencies": {

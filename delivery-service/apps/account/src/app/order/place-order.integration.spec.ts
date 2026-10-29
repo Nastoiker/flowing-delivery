@@ -15,6 +15,11 @@ import { OrderFood } from './order-food.model';
 import { Order } from './order.model';
 import { OrderRepository } from './order.repository';
 import { PlaceOrderService } from './place-order.service';
+import { SequelizeCheckout } from './infrastructure/sequelize-checkout';
+import { ChangeOrderStatus } from './application/change-order-status';
+import { SequelizeOrderStatus } from './infrastructure/sequelize-order-status';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const databaseUrl = process.env.TRANSACTION_TEST_DATABASE_URL;
 // Обычный запуск unit-тестов не требует PostgreSQL. Специальный npm-скрипт
@@ -63,9 +68,7 @@ describeWithDatabase(
       await db.sync({ force: true });
       carts = new ShoppingCartRepository(ShoppingCart, Food);
       service = new PlaceOrderService(
-        db,
-        new OrderRepository(Order, OrderFood, Food),
-        carts
+        new SequelizeCheckout(db, carts, Order, OrderFood, Food)
       );
     }, 30000);
 
@@ -119,6 +122,90 @@ describeWithDatabase(
       expect(product.in_stock).toBe(1);
       expect(await ShoppingCart.count()).toBe(0);
       expect((await OrderFood.findOne()).quantity).toBe(2);
+    });
+
+    it('сохраняет цену и название покупки после изменения каталога', async () => {
+      const buyer = await user('snapshot');
+      const product = await food(3, 125.5);
+      await add(buyer.id, product.id, 2);
+      const { order } = await service.execute(command(buyer.id));
+      await product.update({ title: 'Новое название', price: 999 });
+      const line = await OrderFood.findOne();
+      expect(line.unitPriceMinor).toBe('12550');
+      expect(line.productTitle).toBe('Тестовое блюдо');
+      const view = await new OrderRepository(Order).findOrder(order.id);
+      expect(view.products[0].title).toBe('Тестовое блюдо');
+      expect(view.products[0].price).toBe(125.5);
+      expect(view.totalPrice).toBe(261);
+      expect(view.allowedStatuses).toEqual(['created', 'confirmed']);
+    });
+
+    it('миграция оставляет исторические снимки неизвестными и применяется повторно', async () => {
+      const buyer = await user('historical');
+      const product = await food(2);
+      await add(buyer.id, product.id);
+      await service.execute(command(buyer.id));
+      await db.query(
+        'ALTER TABLE "OrderFoods" DROP COLUMN "productTitle", DROP COLUMN "unitPriceMinor"'
+      );
+      const sql = readFileSync(
+        resolve(
+          __dirname,
+          '../../../../../migrations/002-order-line-snapshots.sql'
+        ),
+        'utf8'
+      );
+      await db.query(sql);
+      await db.query(sql);
+      const historical = await OrderFood.findOne();
+      expect(historical.productTitle).toBeNull();
+      expect(historical.unitPriceMinor).toBeNull();
+      expect(historical.quantity).toBe(1);
+    });
+
+    it('не округляет дробные копейки и не оставляет изменений', async () => {
+      const buyer = await user('fraction');
+      const product = await food(2, 1.001);
+      await add(buyer.id, product.id);
+      await expect(service.execute(command(buyer.id))).rejects.toThrow(
+        'двух знаков'
+      );
+      expect(await Order.count()).toBe(0);
+      expect((await product.reload()).count).toBe(2);
+      expect(await ShoppingCart.count()).toBe(1);
+    });
+
+    it('конкурентные команды статуса не обходят переходы и не меняют деньги', async () => {
+      const buyer = await user('progress');
+      const product = await food(3);
+      await add(buyer.id, product.id);
+      const { order } = await service.execute(command(buyer.id));
+      const change = new ChangeOrderStatus(new SequelizeOrderStatus(Order));
+      const confirm = { id: order.id, status: 'confirmed' };
+      await Promise.all([change.execute(confirm), change.execute(confirm)]);
+      await expect(
+        change.execute({ id: order.id, status: 'received' })
+      ).rejects.toThrow('Недопустимый');
+      const tampered = {
+        id: order.id,
+        status: 'delivery',
+        totalPrice: 0,
+        isPaid: true,
+        completed: true,
+        userId: 99,
+      };
+      await expect(change.execute(tampered)).rejects.toThrow('только id');
+      const before = await Order.findByPk(order.id);
+      expect(before.status).toBe('confirmed');
+      expect(before.isPaid).toBe(false);
+      expect(before.completed).toBe(false);
+      expect(before.userId).toBe(buyer.id);
+      expect(before.totalPrice).toBe(135.5);
+      await change.execute({ id: order.id, status: 'delivery' });
+      await change.execute({ id: order.id, status: 'received' });
+      const stored = await Order.findByPk(order.id);
+      expect(stored.completed).toBe(true);
+      await expect(change.execute(confirm)).rejects.toThrow('Недопустимый');
     });
 
     it('откатывает первое списание и заказ, если второго товара недостаточно', async () => {

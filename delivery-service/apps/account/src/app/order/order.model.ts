@@ -11,8 +11,7 @@ import { Food } from '../food/models/food.model';
 import { User } from '../user/models/user.model';
 import { OrderFood } from './order-food.model';
 
-// РЕВЬЮ DDD: это модель хранения. Правила суммы и переходов статуса
-// стоит выразить в модели заказа или доменных функциях и вызывать из прикладного сценария.
+// Persistence model only. Business invariants live in domain/, orchestration in application/.
 @Table({ timestamps: true })
 export class Order extends Model {
   @Column({

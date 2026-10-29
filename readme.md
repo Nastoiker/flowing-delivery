@@ -4,6 +4,7 @@
 
 ## Проверяемые инженерные сценарии
 
+- [Домен оформления заказа](docs/DDD_CHECKOUT.md): Money, агрегат со снимками позиций, application ports, PostgreSQL-адаптер и контролируемые переходы статуса.
 - [S3 storage](docs/S3_STORAGE.md): local/S3, закрытый bucket, MinIO-стенд и проверка сохранности файлов после замены Pod.
 - [Как работать с Kubernetes](docs/KUBERNETES_GUIDE.md): объекты проекта, команды, обновление и диагностика.
 - Транзакционное оформление и конкурентное списание остатков: `npm run test:transactions` в `delivery-service`.

@@ -197,7 +197,11 @@ export const OrderById = () => {
                   }}
                 >
                   {optionsStatuses.map((m, index) => (
-                    <MenuItem key={index} value={m.status}>
+                    <MenuItem
+                      key={index}
+                      value={m.status}
+                      disabled={!(order.data.order.allowedStatuses ?? [order.data.order.status]).includes(m.status)}
+                    >
                       {m.status}
                     </MenuItem>
                   ))}

@@ -4,6 +4,7 @@ import { IUser } from './user.interface';
 export interface IOrder {
   id: number;
   status: string;
+  allowedStatuses?: string[];
   deliveryAddress: string;
   deliveryPrice: number;
   priceFood: number;

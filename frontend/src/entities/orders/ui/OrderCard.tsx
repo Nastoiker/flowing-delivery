@@ -72,7 +72,11 @@ export const OrderCard = ({ order }: { order: IOrder }) => {
           }}
         >
           {optionsStatuses.map((m, index) => (
-            <MenuItem key={index} value={m.status}>
+            <MenuItem
+              key={index}
+              value={m.status}
+              disabled={!(order.allowedStatuses ?? [order.status]).includes(m.status)}
+            >
               {m.status}
             </MenuItem>
           ))}

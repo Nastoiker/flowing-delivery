@@ -7,6 +7,10 @@ import { Order } from './order.model';
 import { OrderQueries } from './order.queries';
 import { OrderRepository } from './order.repository';
 import { PlaceOrderService } from './place-order.service';
+import { CHECKOUT_UNIT_OF_WORK } from './application/checkout.ports';
+import { SequelizeCheckout } from './infrastructure/sequelize-checkout';
+import { SequelizeOrderStatus } from './infrastructure/sequelize-order-status';
+import { ChangeOrderStatus } from './application/change-order-status';
 
 @Module({
   imports: [
@@ -14,7 +18,18 @@ import { PlaceOrderService } from './place-order.service';
     ShoppingCartModule,
     FoodModule,
   ],
-  providers: [OrderRepository, PlaceOrderService],
+  providers: [
+    OrderRepository,
+    PlaceOrderService,
+    SequelizeCheckout,
+    SequelizeOrderStatus,
+    {
+      provide: ChangeOrderStatus,
+      useFactory: (store: SequelizeOrderStatus) => new ChangeOrderStatus(store),
+      inject: [SequelizeOrderStatus],
+    },
+    { provide: CHECKOUT_UNIT_OF_WORK, useExisting: SequelizeCheckout },
+  ],
   exports: [OrderRepository],
   controllers: [OrderQueries],
 })

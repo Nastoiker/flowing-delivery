@@ -11,12 +11,14 @@ import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { OrderRepository } from './order.repository';
 import { PlaceOrderService } from './place-order.service';
+import { ChangeOrderStatus } from './application/change-order-status';
 
 @Controller()
 export class OrderQueries {
   constructor(
     private readonly orderRepository: OrderRepository,
-    private readonly placeOrder: PlaceOrderService
+    private readonly placeOrder: PlaceOrderService,
+    private readonly changeOrderStatus: ChangeOrderStatus
   ) {}
   @RMQValidate()
   @RMQRoute(OrderFindById.topic)
@@ -84,7 +86,7 @@ export class OrderQueries {
   async updateOrder(
     @Body() dto: OrderUpdate.Request
   ): Promise<OrderUpdate.Response> {
-    const updatedOrder = await this.orderRepository.updateOrder(dto);
+    const updatedOrder = await this.changeOrderStatus.execute(dto);
     return {
       message: 'Обновлено',
       userId: updatedOrder.userId,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { Food } from '../food/models/food.model';
 import { Rating } from '../rating/rating.model';
 import { ShoppingCart } from '../shopping-cart/model/shopping-cart.model';
@@ -20,35 +20,91 @@ export class OrderRepository {
     private readonly foodModel: typeof Food
   ) {}
 
-  async createOrder(order: any) {
-    const orderCreated = await this.orderModel.create({
-      ...order,
-    });
+  async createOrder(order: Partial<Order>, transaction: Transaction) {
+    const orderCreated = await this.orderModel.create(
+      { ...order },
+      { transaction }
+    );
     if (!orderCreated) {
       throw new Error('Ошибка создания заказа');
     }
     return orderCreated;
   }
-  async createFoodForOrder(shoppingCarts: ShoppingCart[], orderId: number) {
-    for (const item of shoppingCarts) {
-      const food = await this.foodModel.findByPk(item.productId);
-      if (food.in_stock < item.count || food.count < item.count) {
+  async createFoodForOrder(
+    shoppingCarts: ShoppingCart[],
+    orderId: number,
+    transaction: Transaction
+  ): Promise<number> {
+    let totalMinor = 0;
+    // Единый порядок захвата товарных строк уменьшает риск взаимных блокировок:
+    // корзины [A, B] и [B, A] обе блокируют A, затем B.
+    const sorted = [...shoppingCarts].sort((a, b) => a.productId - b.productId);
+    for (const item of sorted) {
+      if (!Number.isSafeInteger(item.count) || item.count <= 0) {
         throw new Error(
-          'Извините, но у нас нет такого количество товара. Измените количестов'
+          'Количество товара должно быть положительным целым числом'
         );
       }
-      await Promise.all([
-        food.update({
+      const food = await this.foodModel.findByPk(item.productId, {
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+      if (!food) throw new Error('Товар больше не существует');
+      // PostgreSQL не поддерживает UNSIGNED: пометка ORM не заменяет
+      // проверку данных и будущие CHECK-ограничения в миграции.
+      if (
+        !Number.isSafeInteger(food.count) ||
+        food.count < 0 ||
+        !Number.isSafeInteger(food.in_stock) ||
+        food.in_stock < 0
+      ) {
+        throw new Error('Некорректный остаток товара');
+      }
+      // FOR UPDATE удерживается до конца общей транзакции. Конкурентный заказ
+      // ждёт, затем при READ COMMITTED читает уже обновлённый остаток.
+      if (food.in_stock < item.count || food.count < item.count) {
+        throw new Error('Недостаточно товара для оформления заказа');
+      }
+      const unitMinor = Math.round(food.price * 100);
+      const lineMinor = unitMinor * item.count;
+      if (
+        !Number.isFinite(food.price) ||
+        food.price < 0 ||
+        !Number.isSafeInteger(unitMinor) ||
+        !Number.isSafeInteger(lineMinor) ||
+        !Number.isSafeInteger(totalMinor + lineMinor)
+      ) {
+        throw new Error('Некорректная цена товара');
+      }
+      totalMinor += lineMinor;
+      // Не запускаем запросы одной транзакции через Promise.all: они используют
+      // одно соединение, а последовательность делает точку ошибки понятной.
+      await food.update(
+        {
           in_stock: food.in_stock - item.count,
           count: food.count - item.count,
-        }),
-        this.orderFoodModel.create({
+        },
+        { transaction }
+      );
+      await this.orderFoodModel.create(
+        {
           orderId,
           foodId: item.productId,
-          quantity: item.count, // Передаем количество из корзины
-        }),
-      ]);
+          quantity: item.count,
+        },
+        { transaction }
+      );
     }
+    return totalMinor;
+  }
+
+  async setTotals(
+    order: Order,
+    priceFood: number,
+    totalPrice: number,
+    transaction: Transaction
+  ) {
+    return order.update({ priceFood, totalPrice }, { transaction });
   }
   async updateOrder({ id, ...rest }) {
     const order = await this.orderModel.findByPk(id);

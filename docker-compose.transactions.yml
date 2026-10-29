@@ -1,0 +1,19 @@
+# Одноразовая БД только для обучения. Рабочие env-файлы и тома не используются.
+name: flowing-delivery-transactions-lab
+services:
+  postgres:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: delivery_transactions_test
+      POSTGRES_USER: transaction_student
+      POSTGRES_PASSWORD: local-test-only
+    ports:
+      - "127.0.0.1:55432:5432"
+    # Данные учебных тестов не сохраняются после удаления контейнера.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U transaction_student -d delivery_transactions_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30

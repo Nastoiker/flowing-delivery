@@ -6,6 +6,7 @@ import { OrderFood } from './order-food.model';
 import { Order } from './order.model';
 import { OrderQueries } from './order.queries';
 import { OrderRepository } from './order.repository';
+import { PlaceOrderService } from './place-order.service';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { OrderRepository } from './order.repository';
     ShoppingCartModule,
     FoodModule,
   ],
-  providers: [OrderRepository],
+  providers: [OrderRepository, PlaceOrderService],
   exports: [OrderRepository],
   controllers: [OrderQueries],
 })

@@ -13,6 +13,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -167,29 +168,38 @@ export class OrderController {
         OrderCreate.Response
       >(
         OrderCreate.topic,
-        { userId, ...orderDto },
+        // Идентификатор из авторизации имеет приоритет над полем из body.
+        { ...orderDto, userId },
         {
           headers: { requestId: 'adad' },
         }
       );
-      const adminIds = await this.rmqService.send<
-        AccountGetAdminsAll.Request,
-        AccountGetAdminsAll.Response
-      >(
-        AccountGetAdminsAll.topic,
-        {},
-        {
-          headers: { requestId: 'adad' },
-        }
-      );
-      console.log('sendusers');
-      console.log([...adminIds.ids, userId]);
-      this.socketGateway.sendNewNotifications({
-        type: 'new-order',
-        message: `Новая заявка ${newOrder.order.id}`,
-        priority: '1',
-        userIds: [...new Set([...adminIds.ids, userId])],
-      });
+      // Заказ уже зафиксирован в account. Сбой уведомления нельзя выдавать
+      // клиенту как неуспешное оформление. Это временная доставка без гарантии;
+      // outbox нужен следующим этапом для восстановления после падения процесса.
+      try {
+        const adminIds = await this.rmqService.send<
+          AccountGetAdminsAll.Request,
+          AccountGetAdminsAll.Response
+        >(
+          AccountGetAdminsAll.topic,
+          {},
+          {
+            headers: { requestId: 'adad' },
+          }
+        );
+        this.socketGateway.sendNewNotifications({
+          type: 'new-order',
+          message: `Новая заявка ${newOrder.order.id}`,
+          priority: '1',
+          userIds: [...new Set([...adminIds.ids, userId])],
+        });
+      } catch {
+        Logger.warn(
+          'Заказ создан, но уведомление не доставлено',
+          OrderController.name
+        );
+      }
       return newOrder;
     } catch (e) {
       if (e instanceof Error) {

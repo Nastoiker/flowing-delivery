@@ -9,14 +9,14 @@ import {
 } from '@delivery-service/contracts';
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
-import { ShoppingCartRepository } from '../shopping-cart/repositories/Shopping-cart.repositories';
 import { OrderRepository } from './order.repository';
+import { PlaceOrderService } from './place-order.service';
 
 @Controller()
 export class OrderQueries {
   constructor(
     private readonly orderRepository: OrderRepository,
-    private readonly shoppingCarTRep: ShoppingCartRepository
+    private readonly placeOrder: PlaceOrderService
   ) {}
   @RMQValidate()
   @RMQRoute(OrderFindById.topic)
@@ -95,20 +95,7 @@ export class OrderQueries {
   async orderCreate(
     @Body() dto: OrderCreate.Request
   ): Promise<OrderCreate.Response> {
-    const cartItems = await this.shoppingCarTRep.getShoppingCardByUserId(
-      dto.userId
-    );
-    if (!cartItems.length) {
-      throw new Error('Корзина пуста ' + dto.userId);
-    }
-    // РЕВЬЮ R4/R6 (docs/SENIOR_REVIEW.md): все изменения относятся к одной бизнес-операции.
-    // Ошибка после создания заказа сейчас оставляет частично сохранённые данные.
-    // Нужны общая транзакция, защита конкурентного списания и ключ идемпотентности.
-    const order = await this.orderRepository.createOrder({ ...dto });
-    await this.orderRepository.createFoodForOrder(cartItems, order.id);
-    await this.shoppingCarTRep.clearedShoppingCart(dto.userId);
-    return {
-      order,
-    };
+    // Транспорт принимает команду; границей транзакции владеет прикладной сценарий.
+    return this.placeOrder.execute(dto);
   }
 }

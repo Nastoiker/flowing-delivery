@@ -4,6 +4,8 @@ import { IOrder } from '@delivery-service/interfaces';
 export namespace OrderCreate {
   export const topic = 'order.create.command';
   export class Request {
+    deliveryAddress?: string;
+    isPickUp?: boolean;
     status: string | undefined;
     deliveryPrice: number | undefined;
     priceFood: number | undefined;

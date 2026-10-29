@@ -1,6 +1,7 @@
 import { IShoppingCart } from '@delivery-service/interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op, Transaction } from 'sequelize';
 import { Food } from '../../food/models/food.model';
 import { User } from '../../user/models/user.model';
 import { ShoppingCart } from '../model/shopping-cart.model';
@@ -56,6 +57,30 @@ export class ShoppingCartRepository {
       where: { userId },
       include: [{ model: User }, { model: Food }],
     });
+  }
+  async getForCheckout(userId: number, transaction: Transaction) {
+    // Отдельный запрос без include: блокируем именно позиции корзины,
+    // а строки товаров затем захватываем в едином порядке productId.
+    return this.shoppingCartModel.findAll({
+      where: { userId },
+      order: [['id', 'ASC']],
+      transaction,
+      lock: transaction.LOCK.UPDATE,
+    });
+  }
+
+  async removeCheckedOut(
+    userId: number,
+    ids: number[],
+    transaction: Transaction
+  ) {
+    const removed = await this.shoppingCartModel.destroy({
+      where: { userId, id: { [Op.in]: ids } },
+      transaction,
+    });
+    if (removed !== ids.length) {
+      throw new Error('Состав корзины изменился во время оформления');
+    }
   }
   async clearedShoppingCart(userId: number) {
     return this.shoppingCartModel.destroy({

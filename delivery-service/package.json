@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nx build",
     "build:ci": "nx run-many -t build -p api account banner event payment --parallel=2 --skip-nx-cache",
-    "test:api": "jest --config apps/api/jest.config.ts --runInBand --runTestsByPath apps/api/src/app/controllers/order.controller.spec.ts apps/api/src/app/configs/rmq.config.spec.ts apps/api/src/app/storage/media-storage.spec.ts",
+    "test:api": "jest --config apps/api/jest.config.ts --runInBand --runTestsByPath apps/api/src/app/controllers/order.controller.spec.ts apps/api/src/app/configs/rmq.config.spec.ts apps/api/src/app/storage/media-storage.spec.ts apps/api/src/app/socket.gateway.spec.ts",
     "test:transactions": "node scripts/test-transactions.cjs",
     "test:domain": "jest --config apps/account/jest.config.ts --runInBand --runTestsByPath apps/account/src/app/order/domain/checkout-order.spec.ts apps/account/src/app/order/application/place-order.spec.ts"
   },

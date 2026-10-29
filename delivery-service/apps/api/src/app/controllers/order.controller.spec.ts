@@ -7,6 +7,23 @@ import { OrderController } from './order.controller';
 describe('Результат оформления и уведомления', () => {
   afterEach(() => jest.restoreAllMocks());
 
+  it('сбой уведомления не отменяет успешное изменение статуса', async () => {
+    jest.spyOn(Logger, 'warn').mockImplementation(() => undefined);
+    const controller = new OrderController(
+      {
+        send: jest.fn().mockResolvedValue({ userId: 7 }),
+      } as unknown as RMQService,
+      {
+        sendNewNotification: () => {
+          throw new Error('Socket unavailable');
+        },
+      } as unknown as SocketGateway
+    );
+    await expect(
+      controller.update({ id: 10, status: 'confirmed' })
+    ).resolves.toEqual({ id: 10, status: 'confirmed' });
+  });
+
   it('ошибка поиска администраторов не отменяет созданный заказ', async () => {
     const response = { order: { id: 10, userId: 7 } };
     const send = jest

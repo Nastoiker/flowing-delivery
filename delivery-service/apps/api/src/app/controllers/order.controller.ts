@@ -127,14 +127,21 @@ export class OrderController {
         headers: { requestId: 'adad' },
       });
       if (orderUpdateDto.status) {
-        this.socketGateway.sendNewNotification({
-          type: 'update-order',
-          message: `Изменился статус заявки ${orderUpdateDto.id},\nстатус: ${
-            statusTranslations[orderUpdateDto.status]
-          }`,
-          priority: '1',
-          userId: orderUpdated.userId,
-        });
+        try {
+          this.socketGateway.sendNewNotification({
+            type: 'update-order',
+            message: `Изменился статус заявки ${orderUpdateDto.id},\nстатус: ${
+              statusTranslations[orderUpdateDto.status]
+            }`,
+            priority: '1',
+            userId: orderUpdated.userId,
+          });
+        } catch {
+          Logger.warn(
+            'Статус заказа изменён, но уведомление не доставлено',
+            OrderController.name
+          );
+        }
       }
 
       return orderUpdateDto;

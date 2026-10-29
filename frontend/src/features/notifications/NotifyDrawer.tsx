@@ -1,105 +1,203 @@
-import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
+﻿import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
 import { HOST } from "@/helpers/api";
 import { getItem } from "@/helpers/localStorage";
-import { Drawer, IconButton, Typography } from "@mui/material";
-import { Bell } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import {
+  Alert,
+  Badge,
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { Bell, X } from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
-import styled from "styled-components";
-interface Props {
-  //   isOpenNavigationDrawer: boolean;
-  //   onToggleNavigationDrawer: () => void;
-  //   onCloseNavigationDrawer: () => void;
+
+interface Notification {
+  id: string;
+  type: string;
+  message: string;
+  createdAt: string;
+  read: boolean;
 }
-const Container = styled.div<{ $isShowPmBlock: boolean }>`
-  display: flex;
-  flex-direction: column;
-  padding: 50px;
-  gap: 50px;
-  transition: width 0.3s ease-in;
-  height: 100%;
-  padding-bottom: ${({ $isShowPmBlock }) => ($isShowPmBlock ? "172px" : "0px")};
 
-  @media screen and (max-width: 640px) {
-    width: 100%;
+function isNotification(value: unknown): value is Notification {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Notification;
+  return (
+    typeof item.id === "string" &&
+    typeof item.type === "string" &&
+    typeof item.message === "string" &&
+    typeof item.createdAt === "string" &&
+    Number.isFinite(Date.parse(item.createdAt))
+  );
+}
+
+// A bounded browser history, not a substitute for a server inbox/outbox.
+function loadHistory(key: string): Notification[] {
+  try {
+    const data: unknown = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(data)
+      ? data
+          .filter(isNotification)
+          .slice(0, 100)
+          .map((item) => ({ ...item, read: item.read === true }))
+      : [];
+  } catch {
+    return [];
   }
-`;
-const StyledBasketDiv = styled.div`
-  background: white;
-  border-radius: 50px;
-  width: 15px;
-  height: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  color: #4c7c7d;
-  right: 2px;
-  font-size: 10px;
-`;
-export const NotifyDrawer = () => {
-  const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<any>([]);
-  const currentUser = useCurrentUser();
-  const [readed, setReaded] = useState<number>(0);
+}
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
+export const NotifyDrawer = () => {
+  const userId = useCurrentUser()?.id;
+  const token = getItem("token");
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [connected, setConnected] = useState(false);
+  const history = useRef<Notification[]>([]);
+  const storageKey = userId ? `delivery.notifications.${userId}` : null;
+
+  const save = (items: Notification[]) => {
+    history.current = items;
+    setNotifications(items);
+    if (storageKey) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(items));
+      } catch {
+        /* Storage can be disabled. */
+      }
+    }
   };
-  const handleClickNotify = () => {
-    setReaded(0);
-    setOpen(true);
-  };
+
   useEffect(() => {
-    const socket = io(HOST, {
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 10,
-      withCredentials: true,
-      query: {
-        token: getItem("token"), // Передача токена как параметра запроса
-      },
-      // withCredentials: true,
-    });
-    socket.on("newNotification", (notification) => {
-      toast(notification);
-      setReaded((v) => v + 1);
-      setNotifications((prevNotifications) => [
-        ...prevNotifications,
-        notification,
-      ]);
-    });
-    socket.on("connect", function () {
-      console.log("Connected");
-    });
-    return () => {
-      socket.disconnect();
+    setOpen(false);
+    setConnected(false);
+    history.current = storageKey ? loadHistory(storageKey) : [];
+    setNotifications(history.current);
+    if (!storageKey || !token) return;
+    const socket = io(HOST, { auth: { token }, withCredentials: true });
+    const receive = (value: unknown) => {
+      if (
+        !isNotification(value) ||
+        history.current.some((item) => item.id === value.id)
+      )
+        return;
+      const items = [{ ...value, read: false }, ...history.current].slice(
+        0,
+        100
+      );
+      history.current = items;
+      setNotifications(items);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(items));
+      } catch {
+        /* Keep in memory. */
+      }
+      toast(value.message, { id: value.id, icon: "🔔" });
     };
-  }, [currentUser]);
+    const sync = (event: StorageEvent) => {
+      if (event.key !== storageKey) return;
+      history.current = loadHistory(storageKey);
+      setNotifications(history.current);
+    };
+    socket.on("newNotification", receive);
+    socket.on("connect", () => setConnected(true));
+    socket.on("disconnect", () => setConnected(false));
+    socket.on("connect_error", () => setConnected(false));
+    window.addEventListener("storage", sync);
+    return () => {
+      socket.removeAllListeners();
+      socket.disconnect();
+      window.removeEventListener("storage", sync);
+    };
+  }, [storageKey, token]);
+
+  const unread = notifications.filter((item) => !item.read).length;
   return (
     <>
-      <IconButton sx={{ position: "relative" }} onClick={handleClickNotify}>
-        <Bell size={"30px"} />
-        {notifications?.length > 0 && readed > 0 && (
-          <StyledBasketDiv>{notifications?.length}</StyledBasketDiv>
-        )}
+      <IconButton
+        aria-label={`Уведомления, непрочитанных: ${unread}`}
+        onClick={() => setOpen(true)}
+      >
+        <Badge badgeContent={unread} color="error" max={99}>
+          <Bell size={30} />
+        </Badge>
       </IconButton>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        <Container $isShowPmBlock={false}>
-          {notifications?.length > 0 ? (
-            <div>
-              {notifications.map((notification, index) => (
-                <p key={index}>{notification}</p>
-              ))}
-            </div>
-          ) : (
-            <Typography margin="20px 0" variant="h5">
-              Уведомлений нету
-            </Typography>
+      <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+        <Box
+          sx={{ width: { xs: "100vw", sm: 400 }, p: 3 }}
+          role="region"
+          aria-label="Уведомления"
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h6">Уведомления</Typography>
+            <IconButton
+              aria-label="Закрыть уведомления"
+              onClick={() => setOpen(false)}
+            >
+              <X />
+            </IconButton>
+          </Stack>
+          {!connected && (
+            <Alert severity="warning" sx={{ my: 2 }}>
+              Нет соединения. Уведомления в реальном времени временно недоступны.
+            </Alert>
           )}
-        </Container>
+          <Stack direction="row" spacing={1} sx={{ my: 2 }}>
+            <Button
+              disabled={!unread}
+              onClick={() =>
+                save(history.current.map((item) => ({ ...item, read: true })))
+              }
+            >
+              Прочитать все
+            </Button>
+            <Button disabled={!notifications.length} onClick={() => save([])}>
+              Очистить
+            </Button>
+          </Stack>
+          {!notifications.length ? (
+            <Typography color="text.secondary" sx={{ py: 4 }}>
+              Здесь появятся уведомления о ваших заказах.
+            </Typography>
+          ) : (
+            <List disablePadding>
+              {notifications.map((item) => (
+                <ListItemButton
+                  key={item.id}
+                  selected={!item.read}
+                  aria-label={`${item.read ? "Прочитано" : "Не прочитано"}: ${
+                    item.message
+                  }`}
+                  onClick={() =>
+                    save(
+                      history.current.map((entry) =>
+                        entry.id === item.id ? { ...entry, read: true } : entry
+                      )
+                    )
+                  }
+                  sx={{ borderRadius: 2, mb: 1 }}
+                >
+                  <ListItemText
+                    primary={item.message}
+                    primaryTypographyProps={{ sx: { whiteSpace: "pre-line" } }}
+                    secondary={new Date(item.createdAt).toLocaleString("ru-RU")}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          )}
+        </Box>
       </Drawer>
     </>
   );

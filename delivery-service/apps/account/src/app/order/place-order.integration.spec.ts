@@ -83,6 +83,30 @@ describeWithDatabase(
       if (db) await db.close();
     });
 
+    it('демодамп импортируется повторно без дублей и сброса остатков', async () => {
+      const sql = readFileSync(resolve(__dirname, '../../../../../../deploy/server/demo.sql'), 'utf8');
+      await db.query('DROP TABLE IF EXISTS demo_imports');
+      try {
+        await db.query(sql);
+        const demoFoods = await Food.findAll();
+        expect(demoFoods).toHaveLength(5);
+        expect(await Order.count()).toBe(5);
+        expect(await OrderFood.count()).toBe(5);
+        expect(await User.count()).toBe(1);
+        expect((await User.findOne()).password).toBe('!LOGIN_DISABLED!');
+        await demoFoods[0].update({ in_stock: 3 });
+        await db.query(sql);
+        expect(await Food.count()).toBe(5);
+        expect(await Order.count()).toBe(5);
+        expect((await Food.findByPk(demoFoods[0].id)).in_stock).toBe(3);
+        const line = await OrderFood.findOne();
+        const food = await Food.findByPk(line.foodId);
+        expect(Number(line.unitPriceMinor)).toBe(food.price * 100);
+      } finally {
+        await db.query('DROP TABLE IF EXISTS demo_imports');
+      }
+    });
+
     const user = (name: string) =>
       User.create({
         email: name + '@example.test',

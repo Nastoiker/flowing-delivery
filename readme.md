@@ -33,6 +33,8 @@ kubectl --context kind-flowing-delivery -n flowing-delivery-lab port-forward svc
 
 ## На сервере Kubernetes
 
+**Бесплатный демостенд + GitHub Actions:** [Oracle Always Free, k3s и тестовый дамп →](docs/FREE_DEMO_DEPLOY.md)
+
 Нужны готовый кластер с default StorageClass, доступ через kubeconfig и registry для образов. [Команды сборки, публикации и развёртывания →](docs/SERVER_KUBERNETES.md)
 
 После развёртывания выполнить на своём компьютере с kubeconfig сервера, в двух терминалах:

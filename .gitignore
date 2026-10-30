@@ -8,3 +8,5 @@
 k8s/*.local.*
 k8s/rendered*.yaml
 **/test-results/
+deploy/server/manifests.yaml
+deploy/server/snapshots.sql

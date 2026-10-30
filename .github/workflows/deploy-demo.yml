@@ -1,0 +1,105 @@
+name: Deploy demo
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: deploy-demo
+  cancel-in-progress: false
+jobs:
+  checks:
+    if: vars.DEPLOY_ENABLED == 'true'
+    uses: ./.github/workflows/ci.yml
+
+  images:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: backend
+            directory: delivery-service
+          - component: frontend
+            directory: frontend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image name
+        id: image
+        env:
+          REPOSITORY: ${{ github.repository }}
+          COMPONENT: ${{ matrix.component }}
+        run: echo "name=ghcr.io/${REPOSITORY,,}/$COMPONENT" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.directory }}
+          file: ${{ matrix.directory }}/Dockerfile.k8s
+          platforms: ${{ vars.DEPLOY_PLATFORM || 'linux/arm64' }}
+          push: true
+          tags: ${{ steps.image.outputs.name }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          cache-from: type=gha,scope=${{ matrix.component }}-${{ vars.DEPLOY_PLATFORM || 'linux/arm64' }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.component }}-${{ vars.DEPLOY_PLATFORM || 'linux/arm64' }}
+
+  deploy:
+    needs: images
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: demo
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: delivery-service/package-lock.json
+      - run: npm ci --prefix delivery-service --no-audit --no-fund
+      - name: Prepare deployment bundle
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node --test scripts/render-server.test.cjs
+          node scripts/render-server.cjs "ghcr.io/${REPOSITORY,,}/backend:$GITHUB_SHA" "ghcr.io/${REPOSITORY,,}/frontend:$GITHUB_SHA" > deploy/server/manifests.yaml
+          cp delivery-service/migrations/002-order-line-snapshots.sql deploy/server/snapshots.sql
+          tar -czf "$RUNNER_TEMP/deploy.tgz" -C deploy/server deploy.sh demo.sql snapshots.sql manifests.yaml
+      - name: Deploy over verified SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]]
+          [[ "$DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          test -n "$DEPLOY_SSH_KEY"
+          test -n "$DEPLOY_KNOWN_HOSTS"
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_SSH_KEY" > "$HOME/.ssh/deploy_key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/deploy_key" "$HOME/.ssh/known_hosts"
+          trap 'rm -f "$HOME/.ssh/deploy_key"' EXIT
+          options=(-i "$HOME/.ssh/deploy_key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=20)
+          target="$DEPLOY_USER@$DEPLOY_HOST"
+          remote_dir=$(ssh "${options[@]}" "$target" 'mktemp -d /tmp/flowing-delivery.XXXXXXXX')
+          [[ "$remote_dir" =~ ^/tmp/flowing-delivery\.[a-zA-Z0-9]{8}$ ]]
+          scp "${options[@]}" "$RUNNER_TEMP/deploy.tgz" "$target:$remote_dir/deploy.tgz"
+          # Expand the validated temporary path locally; it contains only safe characters.
+          # shellcheck disable=SC2029
+          ssh "${options[@]}" "$target" "tar -xzf '$remote_dir/deploy.tgz' -C '$remote_dir' && bash '$remote_dir/deploy.sh'"
+          echo '### Demo deployment succeeded' >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"

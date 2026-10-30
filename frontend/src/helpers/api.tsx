@@ -1,8 +1,8 @@
 import type { AxiosHeaders } from "axios";
 import axios from "axios";
 import { getItem } from "./localStorage";
-export const HOST = "http://localhost:3444";
-export const PREFIX = "http://localhost:3444/api/" as const;
+export const HOST = window.location.origin;
+export const PREFIX = `${HOST}/api/`;
 export const api = axios.create({
   baseURL: PREFIX,
   paramsSerializer: {

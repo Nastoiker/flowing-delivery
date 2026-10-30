@@ -1,7 +1,7 @@
 import { getItem } from "@/helpers/localStorage";
 import type { AxiosHeaders } from "axios";
 import axios from "axios";
-export const PREFIX = "http://localhost:3444/api" as const;
+export const PREFIX = `${window.location.origin}/api`;
 const instance = axios.create({
   baseURL: PREFIX,
   paramsSerializer: {

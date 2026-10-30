@@ -1,0 +1,112 @@
+﻿name: flowing-delivery-demo
+x-backend: &backend
+  image: flowing-delivery-backend:demo
+  restart: unless-stopped
+  env_file: .demo.local.env
+  environment: &app-env
+    DB_HOST: postgres
+    DB_TYPE: postgres
+    DB_NAME: delivery
+    DB_USER: delivery
+    DB_BANNER_NAME: banner
+    DB_BANNER_USER: delivery
+    DB_EVENT_NAME: event
+    DB_EVENT_USER: delivery
+    DB_PAYMENT_NAME: payment
+    DB_PAYMENT_USER: delivery
+    DB_LOGGING: 'false'
+    AMQP_HOSTNAME: rabbitmq
+    AMQP_USER: delivery
+    AMQP_EXCHANGE: delivery
+    PORT: '3444'
+  depends_on:
+    postgres:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+services:
+  backend:
+    image: flowing-delivery-backend:demo
+    build:
+      context: ./delivery-service
+      dockerfile: Dockerfile.k8s
+    profiles: [build]
+  postgres:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_USER: delivery
+      POSTGRES_DB: delivery
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Run scripts/start-demo.sh first}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./k8s/postgres-init.sql:/docker-entrypoint-initdb.d/01-databases.sql:ro
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U delivery -d delivery']
+      interval: 5s
+      timeout: 3s
+      retries: 40
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    environment:
+      RABBITMQ_DEFAULT_USER: delivery
+      RABBITMQ_DEFAULT_PASS: ${AMQP_PASSWORD:?Run scripts/start-demo.sh first}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: [CMD, rabbitmq-diagnostics, -q, ping]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+  account:
+    <<: *backend
+    environment:
+      <<: *app-env
+      AMQP_QUEUE: delivery.account
+    command: [dist/apps/account/main.js]
+  banner:
+    <<: *backend
+    environment:
+      <<: *app-env
+      AMQP_QUEUE: delivery.banner
+    command: [dist/apps/banner/main.js]
+  event:
+    <<: *backend
+    environment:
+      <<: *app-env
+      AMQP_QUEUE: delivery.event
+    command: [dist/apps/event/main.js]
+  payment:
+    <<: *backend
+    environment:
+      <<: *app-env
+      AMQP_QUEUE: delivery.payment
+    command: [dist/apps/payment/main.js]
+  api:
+    <<: *backend
+    command: [dist/apps/api/main.js]
+    volumes:
+      - uploads:/app/uploads
+    healthcheck:
+      test: [CMD, node, -e, 'fetch("http://127.0.0.1:3444/api/categories", {signal:AbortSignal.timeout(5000)}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))']
+      interval: 5s
+      timeout: 7s
+      retries: 40
+  frontend:
+    image: flowing-delivery-frontend:demo
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.k8s
+    ports:
+      - '127.0.0.1:${DEMO_PORT:-5173}:8080'
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:8080/menu']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  postgres-data:
+  rabbitmq-data:
+  uploads:

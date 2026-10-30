@@ -1,0 +1,40 @@
+name: Codespaces demo smoke
+on:
+  push:
+    paths:
+      - '.devcontainer/**'
+      - 'docker-compose.demo.yml'
+      - 'scripts/*demo*'
+      - 'frontend/**'
+      - 'delivery-service/**'
+      - 'deploy/server/demo.sql'
+      - '.github/workflows/demo-smoke.yml'
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: demo-smoke-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build, start, import synthetic data and check browser routes
+        run: bash scripts/start-demo.sh
+      - name: Verify repeated startup
+        run: bash scripts/start-demo.sh
+      - name: Diagnostics
+        if: failure()
+        run: docker compose --env-file .demo.local.env -f docker-compose.demo.yml logs --tail=80
+      - name: Stop disposable demo
+        if: always()
+        run: |
+          if [ -f .demo.local.env ]; then
+            docker compose --env-file .demo.local.env -f docker-compose.demo.yml down -v
+          fi

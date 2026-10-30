@@ -4,6 +4,8 @@
 
 ## Локальный запуск
 
+**Демо в браузере без банковской карты:** [запустить в GitHub Codespaces](https://codespaces.new/Nastoiker/flowing-delivery?ref=feature%2Fddd-checkout&quickstart=1) → дождаться сборки → открыть порт **5173**. [Инструкция и бесплатные лимиты](docs/CODESPACES.md).
+
 Нужны Docker с Linux containers, kubectl, kind и PowerShell. Команды выполнять из корня репозитория. Для Docker выделить около 4 CPU и 8 ГБ RAM.
 
 ```powershell

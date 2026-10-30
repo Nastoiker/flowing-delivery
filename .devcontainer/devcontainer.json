@@ -1,0 +1,14 @@
+{
+  "name": "Flowing Delivery demo",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {}
+  },
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": { "label": "Flowing Delivery", "onAutoForward": "notify" }
+  },
+  "postStartCommand": "bash scripts/start-demo.sh",
+  "remoteUser": "node"
+}

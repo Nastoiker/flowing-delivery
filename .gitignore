@@ -10,3 +10,4 @@ k8s/rendered*.yaml
 **/test-results/
 deploy/server/manifests.yaml
 deploy/server/snapshots.sql
+.demo-host/

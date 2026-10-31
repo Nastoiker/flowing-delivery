@@ -84,7 +84,7 @@ export function useOrderById(orderId: number) {
 export function useCreateOrder() {
   const queryClient = useQueryClient();
   const {
-    mutate: createOrderFetch,
+    mutateAsync: createOrderFetch,
     isLoading,
     error,
   } = useMutation(
@@ -94,6 +94,7 @@ export function useCreateOrder() {
       onSuccess: async () =>
         Promise.all([
           queryClient.invalidateQueries("orders"),
+          queryClient.invalidateQueries("my-orders"),
           queryClient.invalidateQueries("shopping-carts"),
           queryClient.invalidateQueries("foods"),
         ]),

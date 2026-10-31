@@ -187,10 +187,11 @@ export const FoodById = () => {
                 </ActionsButttons>
               ) : (
                 <Button
+                  aria-label={`Добавить в корзину: ${data.data.food.title}`}
                   disabled={
                     isLoadingDelete ||
                     isLoadingCreate ||
-                    data.data.food.count === 0 ||
+                    data.data.food.count <= 0 || data.data.food.in_stock <= 0 ||
                     !currentUser?.email
                   }
                   sx={{ width: "70px" }}

@@ -28,7 +28,7 @@ BEGIN
     ('Демо: лимонад', 190, 30)
   ) AS menu(title, price, stock) LOOP
     INSERT INTO "Food" (title, price, count, in_stock, description, pictures, "categoryId", "createdAt", "updatedAt")
-    VALUES (item.title, item.price, 0, item.stock, 'Синтетические данные демонстрационного стенда', '', category_id, now(), now())
+    VALUES (item.title, item.price, item.stock, item.stock, 'Синтетические данные демонстрационного стенда', '', category_id, now(), now())
     RETURNING id INTO food_id;
     INSERT INTO "Orders" (status, "deliveryAddress", "priceFood", "deliveryPrice", "isPickUp", completed, "isPaid", "totalPrice", "userId", "createdAt", "updatedAt")
     VALUES ('created', 'Тестовый город, Демонстрационная улица, 1', item.price, 0, true, false, false, item.price, user_id, now(), now())
@@ -37,5 +37,18 @@ BEGIN
     VALUES (order_id, food_id, 1, item.title, item.price * 100);
   END LOOP;
   INSERT INTO demo_imports(version) VALUES ('catalog-orders-v1');
+END $$;
+-- Repair the original demo import once; never replenish stock on later imports.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM demo_imports WHERE version = 'catalog-stock-v2') THEN RETURN; END IF;
+  UPDATE "Food" AS food
+  SET count = food.in_stock, "updatedAt" = now()
+  FROM "Categories" AS category
+  WHERE food."categoryId" = category.id
+    AND category.slug = 'demo-menu-v1'
+    AND food.count = 0
+    AND food.in_stock > 0;
+  INSERT INTO demo_imports(version) VALUES ('catalog-stock-v2');
 END $$;
 COMMIT;

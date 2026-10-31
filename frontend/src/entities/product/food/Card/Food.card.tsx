@@ -166,10 +166,11 @@ export function FoodCard(props: { food: IFood }) {
               </ActionsButttons>
             ) : (
               <Button
+                aria-label={`Добавить в корзину: ${food.title}`}
                 disabled={
                   isLoadingDelete ||
                   isLoadingCreate ||
-                  food.count === 0 ||
+                  food.count <= 0 || food.in_stock <= 0 ||
                   !currentUser?.email
                 }
                 onClick={() => handleAddToCart()}

@@ -107,6 +107,41 @@ describeWithDatabase(
       }
     });
 
+    it('обновляет остатки старого демодампа один раз, не затрагивая другие товары', async () => {
+      const sql = readFileSync(resolve(__dirname, '../../../../../../deploy/server/demo.sql'), 'utf8');
+      await db.query('DROP TABLE IF EXISTS demo_imports');
+      try {
+        await db.query(sql);
+        const demo = await Food.findOne({ where: { title: 'Демо: лимонад' } });
+        expect(demo.count).toBe(demo.in_stock);
+        // Reproduce the earlier v1 import without the stock migration marker.
+        await demo.update({ count: 0, in_stock: 30 });
+        await db.query("DELETE FROM demo_imports WHERE version = 'catalog-stock-v2'");
+        const unrelated = await Food.create({ title: 'Обычный товар', price: 100, count: 0, in_stock: 8 });
+        const depleted = await Food.findOne({ where: { title: 'Демо: чизкейк' } });
+        await depleted.update({ count: 0, in_stock: 0 });
+
+        await db.query(sql);
+        await demo.reload();
+        expect(demo.count).toBe(30);
+        expect(demo.in_stock).toBe(30);
+        expect((await unrelated.reload()).count).toBe(0);
+        expect((await depleted.reload()).count).toBe(0);
+        expect(depleted.in_stock).toBe(0);
+
+        // Re-import must not restore stock even when only one counter is empty.
+        await demo.update({ count: 0, in_stock: 2 });
+        await db.query(sql);
+        await demo.reload();
+        expect(demo.count).toBe(0);
+        expect(demo.in_stock).toBe(2);
+        expect(await Food.count()).toBe(6);
+        expect(await Order.count()).toBe(5);
+      } finally {
+        await db.query('DROP TABLE IF EXISTS demo_imports');
+      }
+    });
+
     const user = (name: string) =>
       User.create({
         email: name + '@example.test',

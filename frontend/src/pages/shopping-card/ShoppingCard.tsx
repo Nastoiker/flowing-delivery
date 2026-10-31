@@ -26,6 +26,7 @@ export const ShoppingCardPage = () => {
   // const { register, handleSubmit, reset } = useForm<ICreateOrder>(); TODO
   //orderCreate: ICreateOrder
   const submit = async () => {
+    if (isLoading) return;
     try {
       if (!address && !isPickup) {
         toast.error("Выберите адрес");
@@ -41,7 +42,7 @@ export const ShoppingCardPage = () => {
       });
       toast.success("Успешное создание");
     } catch (e: any) {
-      toast.error(e?.response?.data?.message);
+      toast.error(e?.response?.data?.message || "Не удалось оформить заказ. Попробуйте ещё раз.");
     }
   };
   if (isError || !shoppingCarts) {
@@ -125,6 +126,7 @@ export const ShoppingCardPage = () => {
               </Typography>
             </Box>
             <Button
+              disabled={isLoading}
               onClick={() => submit()}
               variant="outlined"
               size="large"

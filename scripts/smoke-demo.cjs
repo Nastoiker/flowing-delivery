@@ -1,6 +1,12 @@
 const assert = require('node:assert/strict');
 async function main() {
   const base = process.env.DEMO_URL || 'http://127.0.0.1:5173';
+  for (const endpoint of ['live', 'ready']) {
+    const health = await fetch(`${base}/api/health/${endpoint}`, { signal: AbortSignal.timeout(5000) });
+    assert.equal(health.status, 200, `${endpoint} health`);
+    assert.equal((await health.json()).status, 'ok');
+    assert.equal(health.headers.get('cache-control'), 'no-store');
+  }
   const page = await fetch(`${base}/menu`);
   assert.equal(page.status, 200);
   assert.match(await page.text(), /<div id="root"><\/div>/);

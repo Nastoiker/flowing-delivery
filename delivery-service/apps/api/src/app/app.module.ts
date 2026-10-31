@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { MAX_IMAGE_BYTES, mediaStorageProvider } from './storage/media-storage';
 import { MediaController } from './storage/media.controller';
+import { HealthController } from './controllers/health.controller';
 
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -45,6 +46,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [
+    HealthController,
     MediaController,
     AuthController,
     UserController,

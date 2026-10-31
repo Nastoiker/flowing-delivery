@@ -54,4 +54,4 @@ kubectl --context YOUR_SERVER_CONTEXT -n flowing-delivery-lab port-forward svc/f
 
 В `delivery-service`: `npm ci`, `npm run test:domain`, `npm run test:api`. Сборка: `npm run build:ci`. В `frontend`: `npm ci`, `npm run build`. В Windows можно использовать `npm.cmd`.
 
-[CI и PostgreSQL-тесты](docs/CI.md) · [DDD](docs/DDD_CHECKOUT.md) · [Saga](docs/CHECKOUT_SAGA.md) · [S3](docs/S3_STORAGE.md) · [Kubernetes: диагностика и остановка](k8s/README.md)
+[CI и PostgreSQL-тесты](docs/CI.md) · [Health checks](docs/HEALTH_CHECKS.md) · [DDD](docs/DDD_CHECKOUT.md) · [Saga](docs/CHECKOUT_SAGA.md) · [S3](docs/S3_STORAGE.md) · [Kubernetes: диагностика и остановка](k8s/README.md)

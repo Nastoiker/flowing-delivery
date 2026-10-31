@@ -1,11 +1,15 @@
 name: Codespaces demo smoke
 on:
+  workflow_call:
   push:
     paths:
       - '.devcontainer/**'
       - 'docker-compose.demo.yml'
       - 'scripts/*demo*'
       - 'scripts/test-auth-browser.cjs'
+      - 'scripts/test-site-browser.cjs'
+      - 'scripts/test-checkout-browser.cjs'
+      - 'scripts/test-health.cjs'
       - 'frontend/**'
       - 'delivery-service/**'
       - 'deploy/server/demo.sql'
@@ -15,7 +19,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: demo-smoke-${{ github.ref }}
+  group: demo-smoke-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   demo:
@@ -37,9 +41,23 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Register and log in through the browser
         run: node scripts/test-auth-browser.cjs
+      - name: Browse catalog on desktop and mobile
+        run: node scripts/test-site-browser.cjs
+      - name: Place a pickup order through the browser
+        run: node scripts/test-checkout-browser.cjs
+      - name: Health failure and recovery
+        run: node scripts/test-health.cjs
       - name: Diagnostics
         if: failure()
         run: docker compose --env-file .demo.local.env -f docker-compose.demo.yml logs --tail=80
+      - name: Browser failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failures
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Stop disposable demo
         if: always()
         run: |

@@ -5,6 +5,7 @@ on:
       - '.devcontainer/**'
       - 'docker-compose.demo.yml'
       - 'scripts/*demo*'
+      - 'scripts/test-auth-browser.cjs'
       - 'frontend/**'
       - 'delivery-service/**'
       - 'deploy/server/demo.sql'
@@ -29,6 +30,13 @@ jobs:
         run: bash scripts/start-demo.sh
       - name: Verify repeated startup
         run: bash scripts/start-demo.sh
+      - name: Install browser test dependencies
+        run: |
+          npm ci --prefix frontend --no-audit --no-fund
+          cd frontend
+          npx playwright install --with-deps chromium
+      - name: Register and log in through the browser
+        run: node scripts/test-auth-browser.cjs
       - name: Diagnostics
         if: failure()
         run: docker compose --env-file .demo.local.env -f docker-compose.demo.yml logs --tail=80

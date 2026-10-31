@@ -1,24 +1,24 @@
-import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
-
-import { ReactSmartCaptcha } from "@/app/Captcha/ReactSmartCaptcha";
-import { useCurrentUser } from "@/entities/user/hooks/useCurrentUser";
-import { Button, Checkbox, Input, Typography } from "@mui/material";
+﻿import {
+  Alert,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { api } from "../../../helpers/api";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "@/helpers/api";
 import styles from "../Login/Login.module.css";
 
-export type RegisterForm = {
-  email: {
-    value: string;
-  };
-  password: {
-    value: string;
-  };
-  name: {
-    value: string;
-  };
+type RegisterForm = {
+  email: string;
+  password: string;
+  name: string;
+  surname: string;
+  username: string;
+  consent: boolean;
 };
 export enum STATUS_CAPTCHA {
   VISIBLE = "visible",
@@ -29,141 +29,129 @@ export enum STATUS_CAPTCHA {
 
 export function Register() {
   const navigate = useNavigate();
-  const currentUser = useCurrentUser();
-  const [token, setToken] = useState("");
-
+  const [serverError, setServerError] = useState("");
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
-  } = useForm<{
-    email: string;
-    password: string;
-    name: string;
-    username: string;
-    surname: string;
-  }>();
-  const submit = async (data: {
-    name: string;
-    email: string;
-    password: string;
-    username: string;
-    surname: string;
-  }) => {
+  } = useForm<RegisterForm>();
+  const nameRules = {
+    required: "Заполните поле",
+    setValueAs: (value: string) => value.trim(),
+    pattern: {
+      value: /^[\p{L}\p{M}][\p{L}\p{M} '\u2019-]*$/u,
+      message: "Используйте буквы, пробел, дефис или апостроф",
+    },
+  };
+  const submit = async ({
+    email,
+    password,
+    name,
+    surname,
+    username,
+  }: RegisterForm) => {
+    setServerError("");
     try {
-      const { name, email, password, username, surname } = data;
       await api.post("auth/register", {
         email,
         password,
         name,
-        username,
         surname,
+        username,
       });
-      toast.success("Успешная регистрация");
-      navigate("/auth/login");
-    } catch (e: any) {
-      toast.error(e?.response?.data?.message);
+      navigate("/auth/login", { state: { registered: true, email } });
+    } catch (error: any) {
+      const message = error?.response?.data?.message;
+      setServerError(
+        Array.isArray(message)
+          ? message.join(". ")
+          : typeof message === "string"
+          ? message
+          : "Не удалось зарегистрироваться. Проверьте соединение и попробуйте ещё раз."
+      );
     }
   };
-
   return (
-    <div className={styles["login"]}>
-      <Typography margin={"50px 0"} variant="h4">
+    <div className={styles.login}>
+      <Typography margin="50px 0" variant="h4">
         Регистрация
       </Typography>
-      <form className={styles["form"]} onSubmit={handleSubmit(submit)}>
-        <div className={styles["field"]}>
-          <label htmlFor="email">Ваш email</label>
-          <Input
-            id="email"
-            {...register("email", {
-              required: { value: true, message: "Заполните email" },
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Нужен email",
-              },
-            })}
-            error={Boolean(errors.email)}
-            name="email"
-            placeholder="Email"
-          />
-        </div>
-        <div className={styles["field"]}>
-          <label htmlFor="password">Ваш пароль</label>
-          <Input
-            {...register("password", {
-              required: { value: true, message: "Заполните login" },
-            })}
-            error={Boolean(errors.password)}
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Пароль"
-          />
-        </div>
-        <div className={styles["field"]}>
-          <label htmlFor="name">Ваше имя</label>
-
-          <Input
-            placeholder="Имя"
-            error={Boolean(errors.name)}
-            {...register("name", {
-              required: { value: true, message: "Заполните имя" },
-              pattern: {
-                value: /^[А-ЯЁё]+$/i,
-                message: "В имени только русские буквы",
-              },
-            })}
-          />
-        </div>
-        <div className={styles["field"]}>
-          <label htmlFor="surname">Ваша фамилия</label>
-          <Input
-            id="surname"
-            error={Boolean(errors.surname)}
-            {...register("surname", {
-              required: { value: true, message: "Заполните Фамилию" },
-              pattern: {
-                value: /^[А-ЯЁё]+$/i,
-                message: "В имени только русские буквы",
-              },
-            })}
-            placeholder="Фамилия"
-          />
-        </div>
-        <div className={styles["field"]}>
-          <label htmlFor="username">Ваше пользовательское имя</label>
-          <Input
-            id="username"
-            error={Boolean(errors.username)}
-            {...register("username", {
-              required: { value: true, message: "Заполните username" },
-            })}
-            name="username"
-            placeholder="Имя"
-          />
-        </div>
-        <Button variant="contained" type="submit">
-          Зарегистрироваться
+      <form className={styles.form} onSubmit={handleSubmit(submit)} noValidate>
+        {serverError && (
+          <Alert severity="error" role="alert">
+            {serverError}
+          </Alert>
+        )}
+        <TextField
+          label="Ваш email"
+          autoComplete="email"
+          type="email"
+          {...register("email", {
+            required: "Заполните email",
+            setValueAs: (value) => value.trim(),
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Введите корректный email",
+            },
+          })}
+          error={!!errors.email}
+          helperText={errors.email?.message}
+        />
+        <TextField
+          label="Ваш пароль"
+          autoComplete="new-password"
+          type="password"
+          {...register("password", { required: "Заполните пароль" })}
+          error={!!errors.password}
+          helperText={errors.password?.message}
+        />
+        <TextField
+          label="Ваше имя"
+          autoComplete="given-name"
+          {...register("name", nameRules)}
+          error={!!errors.name}
+          helperText={errors.name?.message}
+        />
+        <TextField
+          label="Ваша фамилия"
+          autoComplete="family-name"
+          {...register("surname", nameRules)}
+          error={!!errors.surname}
+          helperText={errors.surname?.message}
+        />
+        <TextField
+          label="Ваше пользовательское имя"
+          autoComplete="username"
+          {...register("username", {
+            required: "Заполните имя пользователя",
+            setValueAs: (value) => value.trim(),
+          })}
+          error={!!errors.username}
+          helperText={errors.username?.message}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              {...register("consent", {
+                required: "Подтвердите согласие на обработку данных",
+              })}
+            />
+          }
+          label="Я согласен на обработку персональных данных"
+        />
+        {errors.consent && (
+          <Typography color="error" role="alert">
+            {errors.consent.message}
+          </Typography>
+        )}
+        <Link to="/politics">Условия обработки данных</Link>
+        <Button variant="contained" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Регистрация…" : "Зарегистрироваться"}
         </Button>
-        <Typography>
-          <Checkbox required />Я согласен на обработку моих персональных данных
-          в соответствии с{" "}
-          <Link style={{ color: "#4C7C7D" }} to="/politics">
-            Условиями
-          </Link>
-        </Typography>
-        <div>
-          <ReactSmartCaptcha token={token} setToken={setToken} />
-        </div>
       </form>
-      <div className={styles["links"]}>
-        <div>Есть акканут?</div>
-        <Link to="/auth/login">
-          <Typography color="primary">Войти</Typography>
-        </Link>
+      <div className={styles.links}>
+        <Typography>Есть аккаунт?</Typography>
+        <Link to="/auth/login">Войти</Link>
       </div>
     </div>
   );

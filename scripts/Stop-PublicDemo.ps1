@@ -8,3 +8,6 @@ if ($process -and $process.Path -eq $binary -and $process.StartTime.ToUniversalT
     Stop-Process -Id $process.Id
     Write-Host 'External access stopped. Application data and containers are preserved.'
 } else { Write-Host 'Saved tunnel process is no longer running.' }
+
+Remove-Item -LiteralPath $stateFile
+Write-Host 'Saved tunnel address removed.'
